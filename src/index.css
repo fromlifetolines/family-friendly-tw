@@ -1,0 +1,73 @@
+:root {
+  /* Color Palette - Premium Family Friendly */
+  --color-primary: #FF8FA3; /* Soft Coral/Pink - Warm & Welcoming */
+  --color-primary-dark: #E67A8F;
+  --color-secondary: #88D4C3; /* Mint Green - Calm & Fresh */
+  --color-accent: #FFD166; /* Soft Yellow - Playful */
+  --color-background: #FDFBF7; /* Warm Off-White */
+  --color-surface: #FFFFFF;
+  --color-text-main: #2D3436;
+  --color-text-muted: #636E72;
+  --color-border: #EFEFEF;
+
+  /* Shadows - Soft & Glassy */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.12);
+
+  /* Typography */
+  --font-family: 'Inter', 'Noto Sans TC', system-ui, sans-serif;
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--color-background);
+  color: var(--color-text-main);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Utility Classes */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: var(--shadow-md);
+}

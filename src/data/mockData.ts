@@ -1,0 +1,932 @@
+import type { Location } from './types';
+
+// Import local images
+import mallImg from '../assets/images/mall.jpg';
+import parkImg from '../assets/images/park.jpg';
+import museumImg from '../assets/images/museum.jpg';
+import transitImg from '../assets/images/transit.jpg';
+
+export const LOCATIONS: Location[] = [
+  // ==========================================
+  // 台北市 - 南港區 (Taipei City - Nangang)
+  // ==========================================
+  {
+    id: 'tp-ng-citylink',
+    name: 'CITYLINK 南港店',
+    category: 'Department Store',
+    address: '台北市南港區忠孝東路七段369號',
+    city: '台北市',
+    imageUrl: mallImg,
+    websiteUrl: 'https://www.citylink.tw/nangang/',
+    amenities: ['nursing_room', 'stroller_rental', 'play_area', 'family_toilet', 'elevator', 'diaper_changing'],
+    description: '與南港車站共構，以「親子樂園」為主題，擁有全台最大蔦屋書店親子區與多樣兒童設施。',
+    openingHours: '11:00 - 21:30',
+    phone: '02-2652-9000'
+  },
+  {
+    id: 'tp-ng-global',
+    name: 'Global Mall 環球購物中心 南港車站',
+    category: 'Department Store',
+    address: '台北市南港區忠孝東路七段371號B1',
+    city: '台北市',
+    imageUrl: mallImg,
+    websiteUrl: 'https://www.twglobalmall.com/web/global/index.html?shopid=TWA2',
+    amenities: ['nursing_room', 'elevator', 'family_toilet'],
+    description: '位於南港車站地下樓層，交通便利，適合轉乘旅客與周邊居民用餐購物。',
+    openingHours: '11:00 - 22:00',
+    phone: '02-2789-3289'
+  },
+  {
+    id: 'tp-ng-ctbc',
+    name: '中國信託金融園區',
+    category: 'Department Store',
+    address: '台北市南港區經貿二路168號',
+    city: '台北市',
+    imageUrl: mallImg,
+    websiteUrl: 'http://www.ctbcfinancialpark.com/',
+    amenities: ['nursing_room', 'elevator', 'family_toilet', 'play_area', 'hot_water'],
+    description: '擁有戶外滑冰場（冬季）與大型噴水池，腹地廣大，非常適合親子週末放電。',
+    openingHours: '11:00 - 21:30',
+    phone: '02-3327-7777'
+  },
+
+  // ==========================================
+  // 全台公共設施與景點 (Public Facilities)
+  // ==========================================
+  {
+    id: 'tp-children-park',
+    name: '臺北市立兒童新樂園',
+    category: 'Park',
+    address: '台北市士林區承德路五段55號',
+    city: '台北市',
+    imageUrl: parkImg,
+    websiteUrl: 'https://www.tcap.taipei/',
+    amenities: ['nursing_room', 'stroller_rental', 'play_area', 'family_toilet', 'diaper_changing', 'hot_water', 'elevator', 'priority_queue'],
+    description: '專為兒童設計的遊樂園，設施豐富且收費親民，是台北親子必遊景點。',
+    openingHours: '09:00 - 17:00',
+    phone: '02-2833-3823'
+  },
+  {
+    id: 'tp-zoo',
+    name: '臺北市立動物園 (木柵動物園)',
+    category: 'Park',
+    address: '台北市文山區新光路二段30號',
+    city: '台北市',
+    imageUrl: parkImg,
+    websiteUrl: 'https://www.zoo.gov.taipei/',
+    amenities: ['nursing_room', 'stroller_rental', 'family_toilet', 'diaper_changing', 'hot_water', 'elevator'],
+    description: '全台最大動物園，腹地廣大，建議攜帶或租借嬰兒車。園區內設有多處哺乳室與飲水機。',
+    openingHours: '09:00 - 17:00',
+    phone: '02-2938-2300'
+  },
+  {
+    id: 'tc-nmns',
+    name: '國立自然科學博物館 (科博館)',
+    category: 'Public Facility',
+    address: '台中市北區館前路1號',
+    city: '台中市',
+    imageUrl: museumImg,
+    websiteUrl: 'https://www.nmns.edu.tw/',
+    amenities: ['nursing_room', 'stroller_rental', 'elevator', 'family_toilet', 'diaper_changing'],
+    description: '寓教於樂的最佳場所，擁有巨大的恐龍模型與科學互動設施，非常適合學齡兒童。',
+    openingHours: '09:00 - 17:00',
+    phone: '04-2322-6940'
+  },
+  {
+    id: 'tn-chimei',
+    name: '奇美博物館',
+    category: 'Public Facility',
+    address: '台南市仁德區文華路二段66號',
+    city: '台南市',
+    imageUrl: museumImg,
+    websiteUrl: 'https://www.chimeimuseum.org/',
+    amenities: ['nursing_room', 'stroller_rental', 'elevator', 'family_toilet', 'diaper_changing'],
+    description: '擁有廣大的戶外園區適合野餐奔跑，館內展覽豐富，無障礙設施完善。',
+    openingHours: '09:30 - 17:30',
+    phone: '06-266-0808'
+  },
+  {
+    id: 'kh-nstm',
+    name: '國立科學工藝博物館 (科工館)',
+    category: 'Public Facility',
+    address: '高雄市三民區九如一路720號',
+    city: '高雄市',
+    imageUrl: museumImg,
+    websiteUrl: 'https://www.nstm.gov.tw/',
+    amenities: ['nursing_room', 'stroller_rental', 'elevator', 'family_toilet', 'play_area'],
+    description: '南台灣最大的科學博物館，設有兒童科學園，互動性極高。',
+    openingHours: '09:00 - 17:00',
+    phone: '07-380-0089'
+  },
+
+  // ==========================================
+  // 台北市 (Taipei City)
+  // ==========================================
+  {
+    id: 'tp-xy-a8',
+    name: '新光三越 台北信義新天地 A8',
+    category: 'Department Store',
+    address: '台北市信義區松高路12號',
+    city: '台北市',
+    imageUrl: mallImg,
+    websiteUrl: 'https://www.skm.com.tw/store_branch/A8',
+    amenities: ['nursing_room', 'stroller_rental', 'diaper_changing', 'hot_water', 'elevator', 'play_area'],
+    description: '4樓與5樓為兒童專區，設有寬敞舒適的哺乳室與戶外遊戲區，是信義區最受親子歡迎的百貨。',
+    openingHours: '11:00 - 21:30',
+    phone: '02-8780-9966',
+    floorInfo: {
+      nursing_room: '4F, 6F',
+      stroller_rental: '1F 服務台',
+      play_area: '5F 戶外區',
+      diaper_changing: '各樓層',
+      hot_water: '4F, 6F',
+      elevator: '全館'
+    }
+  },
+  {
+    id: 'tp-xy-a11',
+    name: '新光三越 台北信義新天地 A11',
+    category: 'Department Store',
+    address: '台北市信義區松壽路11號',
+    city: '台北市',
+    imageUrl: mallImg,
+    websiteUrl: 'https://www.skm.com.tw/store_branch/A11',
+    amenities: ['nursing_room', 'stroller_rental', 'diaper_changing', 'elevator', 'hot_water'],
+    description: '與A8相連，6樓常舉辦親子展覽活動。哺乳室設備完善，位於兒童樓層。',
+    openingHours: '11:00 - 21:30',
+    phone: '02-8780-1000'
+  },
+  {
+    id: 'tp-xy-101',
+    name: '台北 101 購物中心',
+    category: 'Department Store',
+    address: '台北市信義區市府路45號',
+    city: '台北市',
+    imageUrl: mallImg,
+    websiteUrl: 'https://www.taipei101.com.tw/tw/shopping',
+    amenities: ['nursing_room', 'stroller_rental', 'diaper_changing', 'elevator', 'priority_queue', 'family_toilet'],
+    description: '4樓設有頂級哺乳室，空間寬敞且隱密性高。B1服務台可租借嬰兒車。',
+    openingHours: '11:00 - 21:30',
+    phone: '02-8101-8800'
+  },
+  {
+    id: 'tp-zs-sogo',
+    name: 'SOGO 復興館',
+    category: 'Department Store',
+    address: '台北市大安區忠孝東路三段300號',
+    city: '台北市',
+    imageUrl: mallImg,
+    websiteUrl: 'https://www.sogo.com.tw/tp2',
+    amenities: ['nursing_room', 'stroller_rental', 'elevator', 'hot_water', 'family_toilet'],
+    description: '位於捷運忠孝復興站上方，交通極為便利。9樓有日式庭園與寬敞的哺乳育嬰空間。',
+    openingHours: '11:00 - 21:30',
+    phone: '02-2776-5555'
+  },
+  {
+    id: 'tp-miramar',
+    name: '美麗華百樂園 Miramar',
+    category: 'Department Store',
+    address: '台北市中山區敬業三路20號',
+    city: '台北市',
+    imageUrl: mallImg,
+    websiteUrl: 'https://www.miramar.com.tw/',
+    amenities: ['nursing_room', 'stroller_rental', 'play_area', 'family_toilet', 'elevator'],
+    description: '擁有著名的摩天輪與旋轉木馬，非常適合親子同樂。哺乳室設施齊全。',
+    openingHours: '11:00 - 22:00',
+    phone: '02-2175-3456'
+  },
+
+  // ==========================================
+  // 新北市 (New Taipei City)
+  // ==========================================
+  {
+    id: 'ntp-honhui',
+    name: '宏匯廣場 Honhui Plaza',
+    category: 'Department Store',
+    address: '新北市新莊區新北大道四段3號',
+    city: '新北市',
+    imageUrl: mallImg,
+    websiteUrl: 'https://www.honhui.com.tw/',
+    amenities: ['nursing_room', 'stroller_rental', 'play_area', 'family_toilet', 'diaper_changing', 'hot_water'],
+    description: '新莊最大購物中心，擁有VR主題樂園與室內攀岩場。親子設施新穎且完善。',
+    openingHours: '11:00 - 21:30',
+    phone: '02-8522-8888'
+  },
+  {
+    id: 'ntp-bq-mega',
+    name: '板橋大遠百 Mega City',
+    category: 'Department Store',
+    address: '新北市板橋區新站路28號',
+    city: '新北市',
+    imageUrl: mallImg,
+    websiteUrl: 'https://www.feds.com.tw/tw/54',
+    amenities: ['nursing_room', 'stroller_rental', 'diaper_changing', 'hot_water', 'elevator', 'play_area'],
+    description: '5樓為兒童館，哺乳室空間大且舒適。9樓有威尼斯造景與貢多拉船，適合全家拍照。',
+    openingHours: '11:00 - 22:00',
+    phone: '02-7705-4168'
+  },
+  {
+    id: 'ntp-bq-fe',
+    name: '遠東百貨 板橋中山店',
+    category: 'Department Store',
+    address: '新北市板橋區中山路一段152號',
+    city: '新北市',
+    imageUrl: mallImg,
+    websiteUrl: 'https://www.feds.com.tw/tw/53',
+    amenities: ['nursing_room', 'stroller_rental', 'elevator', 'family_toilet'],
+    description: '位於板橋熱鬧商圈，雖較小巧但親子設施維護良好，適合鄰近居民。',
+    openingHours: '11:00 - 22:00',
+    phone: '02-8952-5678'
+  },
+  {
+    id: 'ntp-lk-mitsui',
+    name: 'MITSUI OUTLET PARK 林口',
+    category: 'Department Store',
+    address: '新北市林口區文化三路一段356號',
+    city: '新北市',
+    imageUrl: mallImg,
+    websiteUrl: 'https://www.mop.com.tw/linkou/tw/index.html',
+    amenities: ['nursing_room', 'stroller_rental', 'diaper_changing', 'hot_water', 'play_area', 'family_toilet'],
+    description: '北台灣大型Outlet，戶外空間寬敞，適合推嬰兒車。設有室內外兒童遊戲區。',
+    openingHours: '11:00 - 21:30',
+    phone: '02-2606-8666'
+  },
+  {
+    id: 'ntp-global-mall',
+    name: 'Global Mall 環球購物中心 新北中和',
+    category: 'Department Store',
+    address: '新北市中和區中山路三段122號',
+    city: '新北市',
+    imageUrl: mallImg,
+    websiteUrl: 'https://www.twglobalmall.com/web/global/index.html?shopid=TWA1',
+    amenities: ['nursing_room', 'stroller_rental', 'play_area', 'family_toilet', 'diaper_changing'],
+    description: '主打親子家庭客群，3樓設有大型親子樂園與完善的哺乳育嬰設施。',
+    openingHours: '11:00 - 22:00',
+    phone: '02-7731-7999'
+  },
+
+  // ==========================================
+  // 桃園市 (Taoyuan City)
+  // ==========================================
+  {
+    id: 'ty-gloria',
+    name: '華泰名品城 Gloria Outlets',
+    category: 'Department Store',
+    address: '桃園市中壢區春德路189號',
+    city: '桃園市',
+    imageUrl: mallImg,
+    websiteUrl: 'https://www.gloriaoutlets.com/',
+    amenities: ['nursing_room', 'stroller_rental', 'play_area', 'family_toilet', 'elevator'],
+    description: '美式露天Outlet，緊鄰高鐵桃園站。戶外空間大，設有兒童遊戲區，非常適合親子同遊。',
+    openingHours: '11:00 - 21:00',
+    phone: '03-273-8666'
+  },
+  {
+    id: 'ty-taimall',
+    name: '台茂購物中心 TaiMall',
+    category: 'Department Store',
+    address: '桃園市蘆竹區南崁路一段112號',
+    city: '桃園市',
+    imageUrl: mallImg,
+    websiteUrl: 'https://www.taimall.com.tw/',
+    amenities: ['nursing_room', 'stroller_rental', 'play_area', 'diaper_changing', 'hot_water', 'family_toilet'],
+    description: '擁有著名的「卡通尼樂園」與戶外大型城堡公園。是桃園地區溜小孩的首選之地。',
+    openingHours: '11:00 - 22:00',
+    phone: '03-311-1234'
+  },
+  {
+    id: 'ty-metrowalk',
+    name: '大江國際購物中心 Metro Walk',
+    category: 'Department Store',
+    address: '桃園市中壢區中園路二段501號',
+    city: '桃園市',
+    imageUrl: mallImg,
+    websiteUrl: 'https://www.metrowalk.com.tw/',
+    amenities: ['nursing_room', 'stroller_rental', 'family_toilet', 'diaper_changing'],
+    description: '全年免費停車，非常適合開車的家庭。館內裝置藝術豐富，哺乳室溫馨舒適。',
+    openingHours: '11:00 - 22:00',
+    phone: '03-468-0999'
+  },
+
+  // ==========================================
+  // 新竹市 (Hsinchu City)
+  // ==========================================
+  {
+    id: 'hc-big-city',
+    name: 'Big City 遠東巨城購物中心',
+    category: 'Department Store',
+    address: '新竹市東區中央路229號',
+    city: '新竹市',
+    imageUrl: mallImg,
+    websiteUrl: 'https://www.febigcity.com/',
+    amenities: ['nursing_room', 'stroller_rental', 'diaper_changing', 'hot_water', 'elevator', 'play_area', 'family_toilet'],
+    description: '新竹最大的購物地標，擁有湯姆熊歡樂世界與大型室內遊戲區，哺乳室數量充足。',
+    openingHours: '11:00 - 21:30',
+    phone: '03-623-8000'
+  },
+  {
+    id: 'hc-sogo',
+    name: 'SOGO 新竹店',
+    category: 'Department Store',
+    address: '新竹市東區中央路239號',
+    city: '新竹市',
+    imageUrl: mallImg,
+    websiteUrl: 'https://www.sogo.com.tw/hc',
+    amenities: ['nursing_room', 'stroller_rental', 'elevator', 'family_toilet'],
+    description: '與巨城連通，提供更多元的購物選擇。哺乳室環境優雅舒適。',
+    openingHours: '11:00 - 21:30',
+    phone: '03-620-0000'
+  },
+
+  // ==========================================
+  // 台中市 (Taichung City)
+  // ==========================================
+  {
+    id: 'tc-skm',
+    name: '新光三越 台中中港店',
+    category: 'Department Store',
+    address: '台中市西屯區台灣大道三段301號',
+    city: '台中市',
+    imageUrl: mallImg,
+    websiteUrl: 'https://www.skm.com.tw/store_branch/TC',
+    amenities: ['nursing_room', 'stroller_rental', 'diaper_changing', 'hot_water', 'elevator', 'play_area'],
+    description: '台中百貨龍頭，6樓兒童館設施豐富，哺乳室空間大且設備新穎。',
+    openingHours: '11:00 - 22:00',
+    phone: '04-2255-3333'
+  },
+  {
+    id: 'tc-top-city',
+    name: 'Top City 台中大遠百',
+    category: 'Department Store',
+    address: '台中市西屯區台灣大道三段251號',
+    city: '台中市',
+    imageUrl: mallImg,
+    websiteUrl: 'https://www.feds.com.tw/tw/42',
+    amenities: ['nursing_room', 'stroller_rental', 'family_toilet', 'elevator'],
+    description: '與新光三越相鄰，擁有復古美食街與寬敞的購物空間。',
+    openingHours: '11:00 - 22:00',
+    phone: '04-3702-2168'
+  },
+  {
+    id: 'tc-lalaport',
+    name: 'Mitsui Shopping Park LaLaport 台中',
+    category: 'Department Store',
+    address: '台中市東區進德路600號',
+    city: '台中市',
+    imageUrl: mallImg,
+    websiteUrl: 'https://www.mitsui-shopping-park.com.tw/lalaport/taichung/tw/index.html',
+    amenities: ['nursing_room', 'stroller_rental', 'play_area', 'family_toilet', 'diaper_changing', 'hot_water'],
+    description: '全台首座LaLaport，主打親子家庭，擁有超大親子遊樂區與完善的育兒設施。',
+    openingHours: '11:00 - 22:00',
+    phone: '04-2215-6991'
+  },
+  {
+    id: 'tc-mitsui-outlet',
+    name: 'MITSUI OUTLET PARK 台中港',
+    category: 'Department Store',
+    address: '台中市梧棲區臺灣大道十段168號',
+    city: '台中市',
+    imageUrl: mallImg,
+    websiteUrl: 'https://www.mop.com.tw/taichung/tw/index.html',
+    amenities: ['nursing_room', 'stroller_rental', 'play_area', 'family_toilet'],
+    description: '全台首座海港型Outlet，擁有摩天輪與戲雪樂園，非常適合全家一日遊。',
+    openingHours: '11:00 - 21:30',
+    phone: '04-2521-8999'
+  },
+
+  // ==========================================
+  // 嘉義市 (Chiayi City)
+  // ==========================================
+  {
+    id: 'cy-skm',
+    name: '新光三越 嘉義垂楊店',
+    category: 'Department Store',
+    address: '嘉義市西區垂楊路726號',
+    city: '嘉義市',
+    imageUrl: mallImg,
+    websiteUrl: 'https://www.skm.com.tw/store_branch/CY',
+    amenities: ['nursing_room', 'stroller_rental', 'elevator', 'diaper_changing'],
+    description: '嘉義市區指標百貨，提供舒適的購物環境與基本的親子友善設施。',
+    openingHours: '11:00 - 22:00',
+    phone: '05-222-4888'
+  },
+  {
+    id: 'cy-fe',
+    name: '遠東百貨 嘉義店',
+    category: 'Department Store',
+    address: '嘉義市西區垂楊路537號',
+    city: '嘉義市',
+    imageUrl: mallImg,
+    websiteUrl: 'https://www.feds.com.tw/tw/61',
+    amenities: ['nursing_room', 'stroller_rental', 'elevator', 'family_toilet'],
+    description: '鄰近火車站，交通便利。設有溫馨的哺乳室供家長使用。',
+    openingHours: '11:00 - 22:00',
+    phone: '05-236-5137'
+  },
+
+  // ==========================================
+  // 台南市 (Tainan City)
+  // ==========================================
+  {
+    id: 'tn-skm-xm',
+    name: '新光三越 台南新天地',
+    category: 'Department Store',
+    address: '台南市中西區西門路一段658號',
+    city: '台南市',
+    imageUrl: mallImg,
+    websiteUrl: 'https://www.skm.com.tw/store_branch/TN',
+    amenities: ['nursing_room', 'stroller_rental', 'diaper_changing', 'hot_water', 'elevator', 'play_area'],
+    description: '南部最大百貨公司，腹地廣大。兒童樓層設施極為完善，是台南親子首選。',
+    openingHours: '11:00 - 22:00',
+    phone: '06-303-0999'
+  },
+  {
+    id: 'tn-ts-mall',
+    name: '南紡購物中心 T.S. Mall',
+    category: 'Department Store',
+    address: '台南市東區中華東路一段366號',
+    city: '台南市',
+    imageUrl: mallImg,
+    websiteUrl: 'https://www.tsrd.com.tw/',
+    amenities: ['nursing_room', 'stroller_rental', 'play_area', 'family_toilet', 'elevator'],
+    description: '空間寬敞舒適，擁有大型影城與多樣化的親子餐廳與遊樂設施。',
+    openingHours: '11:00 - 22:00',
+    phone: '06-236-6222'
+  },
+  {
+    id: 'tn-mitsui',
+    name: 'MITSUI OUTLET PARK 台南',
+    category: 'Department Store',
+    address: '台南市歸仁區歸仁大道101號',
+    city: '台南市',
+    imageUrl: mallImg,
+    websiteUrl: 'https://www.mop.com.tw/tainan/tw/index.html',
+    amenities: ['nursing_room', 'stroller_rental', 'play_area', 'family_toilet', 'diaper_changing'],
+    description: '緊鄰高鐵台南站，交通極為便利。建築設計融入古都特色，親子設施完善。',
+    openingHours: '11:00 - 21:30',
+    phone: '06-303-3666'
+  },
+
+  // ==========================================
+  // 高雄市 (Kaohsiung City)
+  // ==========================================
+  {
+    id: 'kh-hanshin-arena',
+    name: '漢神巨蛋購物廣場',
+    category: 'Department Store',
+    address: '高雄市左營區博愛二路777號',
+    city: '高雄市',
+    imageUrl: mallImg,
+    websiteUrl: 'https://www.hanshinarena.com.tw/',
+    amenities: ['nursing_room', 'stroller_rental', 'diaper_changing', 'hot_water', 'elevator', 'play_area'],
+    description: '北高雄最熱鬧的百貨，6樓設有史努比親子樂園與完善的育嬰中心。',
+    openingHours: '11:00 - 22:00',
+    phone: '07-555-9688'
+  },
+  {
+    id: 'kh-dream-mall',
+    name: '夢時代購物中心 Dream Mall',
+    category: 'Department Store',
+    address: '高雄市前鎮區中華五路789號',
+    city: '高雄市',
+    imageUrl: mallImg,
+    websiteUrl: 'https://www.dream-mall.com.tw/',
+    amenities: ['nursing_room', 'stroller_rental', 'play_area', 'family_toilet', 'elevator', 'diaper_changing'],
+    description: '擁有頂樓摩天輪與快樂100遊樂園，空間極大，非常適合推嬰兒車逛上一整天。',
+    openingHours: '11:00 - 22:00',
+    phone: '07-813-5678'
+  },
+  {
+    id: 'kh-skm-zuoying',
+    name: '新光三越 高雄左營店',
+    category: 'Department Store',
+    address: '高雄市左營區高鐵路123號',
+    city: '高雄市',
+    imageUrl: mallImg,
+    websiteUrl: 'https://www.skm.com.tw/store_branch/KS',
+    amenities: ['nursing_room', 'stroller_rental', 'elevator', 'family_toilet'],
+    description: '與高鐵左營站共構，交通最為便利。設有兒童專區與舒適的休息空間。',
+    openingHours: '11:00 - 22:00',
+    phone: '07-346-9999'
+  },
+  {
+    id: 'kh-eda',
+    name: '義大世界購物廣場',
+    category: 'Department Store',
+    address: '高雄市大樹區學城路一段12號',
+    city: '高雄市',
+    imageUrl: mallImg,
+    websiteUrl: 'http://www.edamall.com.tw/',
+    amenities: ['nursing_room', 'stroller_rental', 'play_area', 'family_toilet', 'elevator'],
+    description: '結合遊樂園與飯店的大型度假區，擁有超大室內滑冰場與各式親子娛樂設施。',
+    openingHours: '11:00 - 22:00',
+    phone: '07-656-8100'
+  },
+
+  // ==========================================
+  // 環球購物中心系列 (Global Mall Series)
+  // ==========================================
+  {
+    id: 'gm-a8',
+    name: 'Global Mall 環球購物中心 桃園A8',
+    category: 'Department Store',
+    address: '桃園市龜山區復興一路8號',
+    city: '桃園市',
+    imageUrl: mallImg,
+    websiteUrl: 'https://www.twglobalmall.com/web/global/index.html?shopid=TWA8',
+    amenities: ['nursing_room', 'elevator', 'family_toilet', 'diaper_changing'],
+    description: '與機捷A8站及長庚醫院共構，提供便利的餐飲與購物選擇，適合就醫或轉乘家庭。',
+    openingHours: '11:00 - 22:00',
+    phone: '03-328-7599'
+  },
+  {
+    id: 'gm-a9',
+    name: 'Global Mall 環球購物中心 林口A9',
+    category: 'Department Store',
+    address: '新北市林口區文化三路一段2號',
+    city: '新北市',
+    imageUrl: mallImg,
+    websiteUrl: 'https://www.twglobalmall.com/web/global/index.html?shopid=TWA9',
+    amenities: ['nursing_room', 'elevator', 'family_toilet', 'play_area'],
+    description: '位於機捷A9站，擁有豐富的異國美食與親子手作教室，是林口居民的休閒好去處。',
+    openingHours: '11:00 - 22:00',
+    phone: '02-2606-9668'
+  },
+  {
+    id: 'gm-a19',
+    name: 'Global Mall 環球購物中心 桃園A19',
+    category: 'Department Store',
+    address: '桃園市中壢區高鐵南路二段352號',
+    city: '桃園市',
+    imageUrl: mallImg,
+    websiteUrl: 'https://www.twglobalmall.com/web/global/index.html?shopid=TWA9',
+    amenities: ['nursing_room', 'elevator', 'family_toilet', 'play_area'],
+    description: '主打「運動、親子、生活」，設有攀岩場與滑雪場，是桃園最新的親子娛樂地標。',
+    openingHours: '11:00 - 22:00',
+    phone: '03-287-6999'
+  },
+
+  // ==========================================
+  // 交通樞紐 - 捷運 (MRT)
+  // ==========================================
+  {
+    id: 'mrt-main',
+    name: '捷運 台北車站',
+    category: 'Transit',
+    address: '台北市中正區',
+    city: '台北市',
+    imageUrl: transitImg,
+    websiteUrl: 'https://www.metro.taipei/',
+    amenities: ['nursing_room', 'elevator', 'family_toilet', 'diaper_changing'],
+    description: '全台最大交通樞紐，B1層設有哺乳室，全站皆有完善的無障礙電梯與引導。',
+    openingHours: '06:00 - 24:00'
+  },
+  {
+    id: 'mrt-cityhall',
+    name: '捷運 市政府站',
+    category: 'Transit',
+    address: '台北市信義區',
+    city: '台北市',
+    imageUrl: transitImg,
+    websiteUrl: 'https://www.metro.taipei/',
+    amenities: ['elevator', 'family_toilet', 'diaper_changing'],
+    description: '信義商圈的重要入口，連通統一時代百貨與微風信義，設有親子友善廁所。',
+    openingHours: '06:00 - 24:00'
+  },
+  {
+    id: 'mrt-zs',
+    name: '捷運 中山站',
+    category: 'Transit',
+    address: '台北市中山區',
+    city: '台北市',
+    imageUrl: transitImg,
+    websiteUrl: 'https://www.metro.taipei/',
+    amenities: ['nursing_room', 'elevator', 'family_toilet'],
+    description: '線形公園沿線，周邊百貨林立。站內設有哺乳室與尿布台。',
+    openingHours: '06:00 - 24:00'
+  },
+  {
+    id: 'mrt-bq',
+    name: '捷運 板橋站',
+    category: 'Transit',
+    address: '新北市板橋區',
+    city: '新北市',
+    imageUrl: transitImg,
+    websiteUrl: 'https://www.metro.taipei/',
+    amenities: ['nursing_room', 'elevator', 'family_toilet', 'hot_water'],
+    description: '三鐵共構車站，連通大遠百與市民廣場。哺乳室設施完善。',
+    openingHours: '06:00 - 24:00'
+  },
+
+  // ==========================================
+  // 交通樞紐 - 台鐵 (TRA)
+  // ==========================================
+  {
+    id: 'tra-taipei',
+    name: '台鐵 台北車站',
+    category: 'Transit',
+    address: '台北市中正區北平西路3號',
+    city: '台北市',
+    imageUrl: transitImg,
+    websiteUrl: 'https://www.railway.gov.tw/',
+    amenities: ['nursing_room', 'elevator', 'family_toilet', 'hot_water', 'priority_queue'],
+    description: '台鐵最大站，一樓大廳寬敞，設有完善的哺集乳室與親子廁所。',
+    openingHours: '06:00 - 24:00'
+  },
+  {
+    id: 'tra-banqiao',
+    name: '台鐵 板橋車站',
+    category: 'Transit',
+    address: '新北市板橋區縣民大道二段7號',
+    city: '新北市',
+    imageUrl: transitImg,
+    websiteUrl: 'https://www.railway.gov.tw/',
+    amenities: ['nursing_room', 'elevator', 'family_toilet'],
+    description: '與高鐵、捷運共構，B1連通大遠百，交通轉乘極為便利。',
+    openingHours: '06:00 - 24:00'
+  },
+  {
+    id: 'tra-taoyuan',
+    name: '台鐵 桃園車站',
+    category: 'Transit',
+    address: '桃園市桃園區中正路1號',
+    city: '桃園市',
+    imageUrl: transitImg,
+    websiteUrl: 'https://www.railway.gov.tw/',
+    amenities: ['nursing_room', 'elevator', 'family_toilet'],
+    description: '桃園地區重要樞紐，新站體設有寬敞的無障礙設施與育嬰空間。',
+    openingHours: '06:00 - 24:00'
+  },
+  {
+    id: 'tra-hsinchu',
+    name: '台鐵 新竹車站',
+    category: 'Transit',
+    address: '新竹市東區中華路二段445號',
+    city: '新竹市',
+    imageUrl: transitImg,
+    websiteUrl: 'https://www.railway.gov.tw/',
+    amenities: ['elevator', 'family_toilet', 'nursing_room'],
+    description: '百年古蹟車站，雖歷史悠久但已增設無障礙電梯與親子廁所。',
+    openingHours: '06:00 - 24:00'
+  },
+  {
+    id: 'tra-taichung',
+    name: '台鐵 台中車站',
+    category: 'Transit',
+    address: '台中市中區台灣大道一段1號',
+    city: '台中市',
+    imageUrl: transitImg,
+    websiteUrl: 'https://www.railway.gov.tw/',
+    amenities: ['nursing_room', 'elevator', 'family_toilet', 'play_area'],
+    description: '新站體高架化設計，空間極為寬敞，站前廣場常有市集活動。',
+    openingHours: '06:00 - 24:00'
+  },
+  {
+    id: 'tra-tainan',
+    name: '台鐵 台南車站',
+    category: 'Transit',
+    address: '台南市東區北門路二段4號',
+    city: '台南市',
+    imageUrl: transitImg,
+    websiteUrl: 'https://www.railway.gov.tw/',
+    amenities: ['nursing_room', 'elevator', 'family_toilet'],
+    description: '古蹟車站，正在進行地下化工程，現有站體仍提供基本的無障礙服務。',
+    openingHours: '06:00 - 24:00'
+  },
+  {
+    id: 'tra-kaohsiung',
+    name: '台鐵 高雄車站',
+    category: 'Transit',
+    address: '高雄市三民區建國二路318號',
+    city: '高雄市',
+    imageUrl: transitImg,
+    websiteUrl: 'https://www.railway.gov.tw/',
+    amenities: ['nursing_room', 'elevator', 'family_toilet', 'play_area'],
+    description: '全新地下化車站，擁有超大雲朵天棚設計，地面層為綠地公園。',
+    openingHours: '06:00 - 24:00'
+  },
+
+  // ==========================================
+  // 交通樞紐 - 高鐵 (HSR)
+  // ==========================================
+  {
+    id: 'hsr-nangang',
+    name: '高鐵 南港站',
+    category: 'Transit',
+    address: '台北市南港區',
+    city: '台北市',
+    imageUrl: transitImg,
+    websiteUrl: 'https://www.thsrc.com.tw/',
+    amenities: ['nursing_room', 'elevator', 'family_toilet', 'hot_water'],
+    description: '三鐵共構起點站，人潮較台北站少，環境相對清幽舒適。',
+    openingHours: '06:00 - 24:00'
+  },
+  {
+    id: 'hsr-taipei',
+    name: '高鐵 台北站',
+    category: 'Transit',
+    address: '台北市中正區',
+    city: '台北市',
+    imageUrl: transitImg,
+    websiteUrl: 'https://www.thsrc.com.tw/',
+    amenities: ['nursing_room', 'elevator', 'family_toilet', 'hot_water'],
+    description: '與台鐵、捷運共構，位於B2層，設有獨立的哺乳室與親子廁所。',
+    openingHours: '06:00 - 24:00'
+  },
+  {
+    id: 'hsr-banqiao',
+    name: '高鐵 板橋站',
+    category: 'Transit',
+    address: '新北市板橋區',
+    city: '新北市',
+    imageUrl: transitImg,
+    websiteUrl: 'https://www.thsrc.com.tw/',
+    amenities: ['nursing_room', 'elevator', 'family_toilet', 'hot_water'],
+    description: '新北地區重要樞紐，站內空間寬敞，轉乘標示清晰。',
+    openingHours: '06:00 - 24:00'
+  },
+  {
+    id: 'hsr-taoyuan',
+    name: '高鐵 桃園站',
+    category: 'Transit',
+    address: '桃園市中壢區',
+    city: '桃園市',
+    imageUrl: transitImg,
+    websiteUrl: 'https://www.thsrc.com.tw/',
+    amenities: ['nursing_room', 'elevator', 'family_toilet', 'hot_water', 'stroller_rental'],
+    description: '鄰近機場與Outlet，大廳極為寬敞，是出國旅客的必經之地。',
+    openingHours: '06:00 - 24:00'
+  },
+  {
+    id: 'hsr-hsinchu',
+    name: '高鐵 新竹站',
+    category: 'Transit',
+    address: '新竹縣竹北市',
+    city: '新竹縣',
+    imageUrl: transitImg,
+    websiteUrl: 'https://www.thsrc.com.tw/',
+    amenities: ['nursing_room', 'elevator', 'family_toilet', 'hot_water'],
+    description: '獲得建築大獎的車站，空間設計感強，站前有大片綠地。',
+    openingHours: '06:00 - 24:00'
+  },
+  {
+    id: 'hsr-taichung',
+    name: '高鐵 台中站',
+    category: 'Transit',
+    address: '台中市烏日區',
+    city: '台中市',
+    imageUrl: transitImg,
+    websiteUrl: 'https://www.thsrc.com.tw/',
+    amenities: ['nursing_room', 'elevator', 'family_toilet', 'hot_water', 'play_area'],
+    description: '全台運量第二大站，站內商店豐富，設有兒童閱讀區。',
+    openingHours: '06:00 - 24:00'
+  },
+  {
+    id: 'hsr-chiayi',
+    name: '高鐵 嘉義站',
+    category: 'Transit',
+    address: '嘉義縣太保市',
+    city: '嘉義縣',
+    imageUrl: transitImg,
+    websiteUrl: 'https://www.thsrc.com.tw/',
+    amenities: ['nursing_room', 'elevator', 'family_toilet', 'hot_water'],
+    description: '通往阿里山與故宮南院的門戶，環境寧靜舒適。',
+    openingHours: '06:00 - 24:00'
+  },
+  {
+    id: 'hsr-tainan',
+    name: '高鐵 台南站',
+    category: 'Transit',
+    address: '台南市歸仁區',
+    city: '台南市',
+    imageUrl: transitImg,
+    websiteUrl: 'https://www.thsrc.com.tw/',
+    amenities: ['nursing_room', 'elevator', 'family_toilet', 'hot_water'],
+    description: '緊鄰MITSUI OUTLET PARK，到站即可購物，非常方便。',
+    openingHours: '06:00 - 24:00'
+  },
+  {
+    id: 'hsr-zuoying',
+    name: '高鐵 左營站',
+    category: 'Transit',
+    address: '高雄市左營區',
+    city: '高雄市',
+    imageUrl: transitImg,
+    websiteUrl: 'https://www.thsrc.com.tw/',
+    amenities: ['nursing_room', 'elevator', 'family_toilet', 'hot_water', 'stroller_rental'],
+    description: '南台灣門戶，與新光三越、捷運共構，生活機能極佳。',
+    openingHours: '06:00 - 24:00'
+  },
+
+  // ==========================================
+  // 交通樞紐 - 機場捷運 (Airport MRT)
+  // ==========================================
+  {
+    id: 'air-mrt-a1',
+    name: '機捷 A1 台北車站',
+    category: 'Transit',
+    address: '台北市中正區',
+    city: '台北市',
+    imageUrl: transitImg,
+    websiteUrl: 'https://www.tymetro.com.tw/',
+    amenities: ['nursing_room', 'elevator', 'diaper_changing', 'hot_water'],
+    description: '預辦登機大廳旁設有舒適的哺乳室，方便出國前的親子旅客使用。',
+    openingHours: '06:00 - 24:00'
+  },
+  {
+    id: 'air-mrt-a3',
+    name: '機捷 A3 新北產業園區站',
+    category: 'Transit',
+    address: '新北市新莊區',
+    city: '新北市',
+    imageUrl: transitImg,
+    websiteUrl: 'https://www.tymetro.com.tw/',
+    amenities: ['elevator', 'family_toilet', 'nursing_room'],
+    description: '鄰近宏匯廣場，是新莊地區重要的轉運站，設有直達車停靠。',
+    openingHours: '06:00 - 24:00'
+  },
+  {
+    id: 'air-mrt-a8',
+    name: '機捷 A8 長庚醫院站',
+    category: 'Transit',
+    address: '桃園市龜山區',
+    city: '桃園市',
+    imageUrl: transitImg,
+    websiteUrl: 'https://www.tymetro.com.tw/',
+    amenities: ['nursing_room', 'elevator', 'family_toilet', 'hot_water'],
+    description: '與Global Mall及長庚醫院共構，生活機能完善，哺乳室設施齊全。',
+    openingHours: '06:00 - 24:00'
+  },
+  {
+    id: 'air-mrt-a9',
+    name: '機捷 A9 林口站',
+    category: 'Transit',
+    address: '新北市林口區',
+    city: '新北市',
+    imageUrl: transitImg,
+    websiteUrl: 'https://www.tymetro.com.tw/',
+    amenities: ['nursing_room', 'elevator', 'family_toilet'],
+    description: '鄰近三井Outlet與Global Mall，是林口親子遊玩的起點。',
+    openingHours: '06:00 - 24:00'
+  },
+  {
+    id: 'air-mrt-a12',
+    name: '機捷 A12 機場第一航廈站',
+    category: 'Transit',
+    address: '桃園市大園區',
+    city: '桃園市',
+    imageUrl: transitImg,
+    websiteUrl: 'https://www.tymetro.com.tw/',
+    amenities: ['nursing_room', 'elevator', 'family_toilet', 'hot_water', 'stroller_rental'],
+    description: '連通桃園機場第一航廈，提供出國旅客最便捷的交通服務。',
+    openingHours: '06:00 - 24:00'
+  },
+  {
+    id: 'air-mrt-a13',
+    name: '機捷 A13 機場第二航廈站',
+    category: 'Transit',
+    address: '桃園市大園區',
+    city: '桃園市',
+    imageUrl: transitImg,
+    websiteUrl: 'https://www.tymetro.com.tw/',
+    amenities: ['nursing_room', 'elevator', 'family_toilet', 'hot_water', 'stroller_rental'],
+    description: '連通桃園機場第二航廈，站體寬敞，設有完善的無障礙設施。',
+    openingHours: '06:00 - 24:00'
+  },
+  {
+    id: 'air-mrt-a18',
+    name: '機捷 A18 高鐵桃園站',
+    category: 'Transit',
+    address: '桃園市中壢區',
+    city: '桃園市',
+    imageUrl: transitImg,
+    websiteUrl: 'https://www.tymetro.com.tw/',
+    amenities: ['nursing_room', 'elevator', 'family_toilet'],
+    description: '連通華泰名品城與Xpark水族館，是桃園親子旅遊的重要轉運點。',
+    openingHours: '06:00 - 24:00'
+  },
+  {
+    id: 'air-mrt-a19',
+    name: '機捷 A19 桃園體育園區站',
+    category: 'Transit',
+    address: '桃園市中壢區',
+    city: '桃園市',
+    imageUrl: transitImg,
+    websiteUrl: 'https://www.tymetro.com.tw/',
+    amenities: ['nursing_room', 'elevator', 'family_toilet'],
+    description: '與Global Mall A19連通，鄰近樂天桃園棒球場，適合親子觀賽購物。',
+    openingHours: '06:00 - 24:00'
+  },
+  {
+    id: 'air-mrt-a21',
+    name: '機捷 A21 環北站',
+    category: 'Transit',
+    address: '桃園市中壢區',
+    city: '桃園市',
+    imageUrl: transitImg,
+    websiteUrl: 'https://www.tymetro.com.tw/',
+    amenities: ['elevator', 'family_toilet', 'nursing_room'],
+    description: '中壢市區的重要門戶，周邊生活機能豐富。',
+    openingHours: '06:00 - 24:00'
+  }
+];
