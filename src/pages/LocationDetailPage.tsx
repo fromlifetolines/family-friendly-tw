@@ -6,7 +6,7 @@ import { SEO } from '../components/SEO';
 import { LocationJsonLd } from '../components/JsonLd';
 import { AdUnit } from '../components/AdUnit';
 import { AffiliateLinks } from '../components/AffiliateLinks';
-import { FacebookShareButton, LineShareButton, FacebookIcon, LineIcon } from 'react-share';
+
 
 export const LocationDetailPage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -31,8 +31,6 @@ export const LocationDetailPage: React.FC = () => {
     const displayImage = imageError
         ? 'https://images.unsplash.com/photo-1519567241046-7f570eee3c9e?auto=format&fit=crop&w=800&q=80'
         : location.imageUrl;
-
-    const shareUrl = window.location.href;
 
     return (
         <div className="location-detail-page" style={{ maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
@@ -62,15 +60,6 @@ export const LocationDetailPage: React.FC = () => {
 
                 <div className="detail-body" style={{ padding: '30px' }}>
                     <h1 style={{ fontSize: '2rem', marginBottom: '10px', color: '#1a1a1a' }}>{location.name}</h1>
-
-                    <div className="share-buttons" style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
-                        <FacebookShareButton url={shareUrl}>
-                            <FacebookIcon size={32} round />
-                        </FacebookShareButton>
-                        <LineShareButton url={shareUrl}>
-                            <LineIcon size={32} round />
-                        </LineShareButton>
-                    </div>
 
                     <div className="info-grid" style={{ display: 'grid', gap: '12px', marginBottom: '30px', color: '#4a4a4a' }}>
                         <div className="info-row">📍 {location.address}</div>
