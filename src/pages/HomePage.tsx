@@ -2,14 +2,14 @@ import React, { useState, useMemo } from 'react';
 import { Hero } from '../components/Hero';
 import { FilterBar } from '../components/FilterBar';
 import { LocationList } from '../components/LocationList';
-import { LocationDetail } from '../components/LocationDetail';
+import { RegionSwitch } from '../components/RegionSwitch';
 import { LOCATIONS } from '../data/mockData';
-import type { Location, Amenity } from '../data/types';
+import type { Amenity } from '../data/types';
 
 export const HomePage: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedAmenities, setSelectedAmenities] = useState<Amenity[]>([]);
-    const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
+    const [currentRegion, setCurrentRegion] = useState<'TW' | 'JP'>('TW');
 
     const handleToggleAmenity = (amenity: Amenity) => {
         setSelectedAmenities((prev) =>
@@ -21,6 +21,9 @@ export const HomePage: React.FC = () => {
 
     const filteredLocations = useMemo(() => {
         return LOCATIONS.filter((location) => {
+            // Filter by region
+            if (location.country !== currentRegion) return false;
+
             // Filter by search term
             const matchesSearch =
                 location.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -34,11 +37,13 @@ export const HomePage: React.FC = () => {
 
             return matchesSearch && matchesAmenities;
         });
-    }, [searchTerm, selectedAmenities]);
+    }, [searchTerm, selectedAmenities, currentRegion]);
 
     return (
         <div className="home-page">
             <Hero searchTerm={searchTerm} onSearchChange={setSearchTerm} />
+
+            <RegionSwitch currentRegion={currentRegion} onRegionChange={setCurrentRegion} />
 
             <FilterBar
                 selectedAmenities={selectedAmenities}
@@ -47,15 +52,7 @@ export const HomePage: React.FC = () => {
 
             <LocationList
                 locations={filteredLocations}
-                onLocationClick={setSelectedLocation}
             />
-
-            {selectedLocation && (
-                <LocationDetail
-                    location={selectedLocation}
-                    onClose={() => setSelectedLocation(null)}
-                />
-            )}
         </div>
     );
 };

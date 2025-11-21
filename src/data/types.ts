@@ -11,7 +11,8 @@ export type Amenity =
 export interface Location {
     id: string;
     name: string;
-    category: 'Department Store' | 'Public Facility' | 'Transit' | 'Park';
+    country: 'TW' | 'JP';
+    category: 'Department Store' | 'Public Facility' | 'Transit' | 'Park' | 'Theme Park';
     address: string;
     city: string;
     imageUrl: string;
@@ -25,4 +26,10 @@ export interface Location {
         lng: number;
     };
     floorInfo?: Partial<Record<Amenity, string>>;
+    affiliateLinks?: {
+        provider: string;
+        url: string;
+        label: string;
+    }[];
+    isSponsored?: boolean;
 }

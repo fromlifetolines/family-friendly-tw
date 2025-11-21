@@ -13,6 +13,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'tp-ng-citylink',
     name: 'CITYLINK 南港店',
+    country: 'TW',
     category: 'Department Store',
     address: '台北市南港區忠孝東路七段369號',
     city: '台北市',
@@ -26,6 +27,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'tp-ng-global',
     name: 'Global Mall 環球購物中心 南港車站',
+    country: 'TW',
     category: 'Department Store',
     address: '台北市南港區忠孝東路七段371號B1',
     city: '台北市',
@@ -39,6 +41,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'tp-ng-ctbc',
     name: '中國信託金融園區',
+    country: 'TW',
     category: 'Department Store',
     address: '台北市南港區經貿二路168號',
     city: '台北市',
@@ -56,6 +59,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'tp-children-park',
     name: '臺北市立兒童新樂園',
+    country: 'TW',
     category: 'Park',
     address: '台北市士林區承德路五段55號',
     city: '台北市',
@@ -69,6 +73,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'tp-zoo',
     name: '臺北市立動物園 (木柵動物園)',
+    country: 'TW',
     category: 'Park',
     address: '台北市文山區新光路二段30號',
     city: '台北市',
@@ -82,6 +87,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'tc-nmns',
     name: '國立自然科學博物館 (科博館)',
+    country: 'TW',
     category: 'Public Facility',
     address: '台中市北區館前路1號',
     city: '台中市',
@@ -95,6 +101,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'tn-chimei',
     name: '奇美博物館',
+    country: 'TW',
     category: 'Public Facility',
     address: '台南市仁德區文華路二段66號',
     city: '台南市',
@@ -108,6 +115,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'kh-nstm',
     name: '國立科學工藝博物館 (科工館)',
+    country: 'TW',
     category: 'Public Facility',
     address: '高雄市三民區九如一路720號',
     city: '高雄市',
@@ -125,6 +133,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'tp-xy-a8',
     name: '新光三越 台北信義新天地 A8',
+    country: 'TW',
     category: 'Department Store',
     address: '台北市信義區松高路12號',
     city: '台北市',
@@ -144,8 +153,44 @@ export const LOCATIONS: Location[] = [
     }
   },
   {
+    id: 'jp-1',
+    name: '東京迪士尼樂園',
+    country: 'JP',
+    category: 'Theme Park',
+    address: '1-1 Maihama, Urayasu, Chiba 279-0031',
+    city: 'Tokyo',
+    imageUrl: 'https://images.unsplash.com/photo-1545580124-ba2a7e77e676?auto=format&fit=crop&w=800&q=80',
+    amenities: ['nursing_room', 'stroller_rental', 'diaper_changing', 'play_area', 'family_toilet', 'priority_queue'],
+    description: '日本最受歡迎的主題樂園，擁有豐富的遊樂設施與精彩的遊行表演，絕對是親子同遊的首選。園區內設有完善的嬰兒中心，提供哺乳室、換尿布台與熱水。',
+    openingHours: '09:00 - 21:00',
+    websiteUrl: 'https://www.tokyodisneyresort.jp/tc/tdl/',
+    affiliateLinks: [
+      { provider: 'Klook', url: 'https://www.klook.com/zh-TW/activity/695-tokyo-disney-resort-1-day-pass-tokyo/', label: '購買一日護照' },
+      { provider: 'KKday', url: 'https://www.kkday.com/zh-tw/product/2247', label: '預訂門票' }
+    ],
+    coordinates: { lat: 35.6329, lng: 139.8804 }
+  },
+  {
+    id: 'jp-2',
+    name: '大阪海遊館',
+    country: 'JP',
+    category: 'Public Facility',
+    address: '1 Chome-1-10 Kaigandori, Minato Ward, Osaka',
+    city: 'Osaka',
+    imageUrl: 'https://images.unsplash.com/photo-1575326936381-67404452372d?auto=format&fit=crop&w=800&q=80',
+    amenities: ['nursing_room', 'elevator', 'diaper_changing', 'family_toilet'],
+    description: '世界最大級的水族館之一，擁有巨大的太平洋水槽，可以近距離觀賞鯨鯊。館內設計無障礙，非常適合推嬰兒車參觀。',
+    openingHours: '10:00 - 20:00',
+    websiteUrl: 'https://www.kaiyukan.com/language/chinese_traditional/',
+    affiliateLinks: [
+      { provider: 'Klook', url: 'https://www.klook.com/zh-TW/activity/598-osaka-aquarium-kaiyukan-osaka/', label: '購買門票' }
+    ],
+    coordinates: { lat: 34.6545, lng: 135.4289 }
+  },
+  {
     id: 'tp-xy-a11',
     name: '新光三越 台北信義新天地 A11',
+    country: 'TW',
     category: 'Department Store',
     address: '台北市信義區松壽路11號',
     city: '台北市',
@@ -159,6 +204,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'tp-xy-101',
     name: '台北 101 購物中心',
+    country: 'TW',
     category: 'Department Store',
     address: '台北市信義區市府路45號',
     city: '台北市',
@@ -172,6 +218,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'tp-zs-sogo',
     name: 'SOGO 復興館',
+    country: 'TW',
     category: 'Department Store',
     address: '台北市大安區忠孝東路三段300號',
     city: '台北市',
@@ -185,6 +232,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'tp-miramar',
     name: '美麗華百樂園 Miramar',
+    country: 'TW',
     category: 'Department Store',
     address: '台北市中山區敬業三路20號',
     city: '台北市',
@@ -202,6 +250,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'ntp-honhui',
     name: '宏匯廣場 Honhui Plaza',
+    country: 'TW',
     category: 'Department Store',
     address: '新北市新莊區新北大道四段3號',
     city: '新北市',
@@ -215,6 +264,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'ntp-bq-mega',
     name: '板橋大遠百 Mega City',
+    country: 'TW',
     category: 'Department Store',
     address: '新北市板橋區新站路28號',
     city: '新北市',
@@ -228,6 +278,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'ntp-bq-fe',
     name: '遠東百貨 板橋中山店',
+    country: 'TW',
     category: 'Department Store',
     address: '新北市板橋區中山路一段152號',
     city: '新北市',
@@ -241,6 +292,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'ntp-lk-mitsui',
     name: 'MITSUI OUTLET PARK 林口',
+    country: 'TW',
     category: 'Department Store',
     address: '新北市林口區文化三路一段356號',
     city: '新北市',
@@ -254,6 +306,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'ntp-global-mall',
     name: 'Global Mall 環球購物中心 新北中和',
+    country: 'TW',
     category: 'Department Store',
     address: '新北市中和區中山路三段122號',
     city: '新北市',
@@ -271,6 +324,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'ty-gloria',
     name: '華泰名品城 Gloria Outlets',
+    country: 'TW',
     category: 'Department Store',
     address: '桃園市中壢區春德路189號',
     city: '桃園市',
@@ -284,6 +338,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'ty-taimall',
     name: '台茂購物中心 TaiMall',
+    country: 'TW',
     category: 'Department Store',
     address: '桃園市蘆竹區南崁路一段112號',
     city: '桃園市',
@@ -297,6 +352,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'ty-metrowalk',
     name: '大江國際購物中心 Metro Walk',
+    country: 'TW',
     category: 'Department Store',
     address: '桃園市中壢區中園路二段501號',
     city: '桃園市',
@@ -314,6 +370,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'hc-big-city',
     name: 'Big City 遠東巨城購物中心',
+    country: 'TW',
     category: 'Department Store',
     address: '新竹市東區中央路229號',
     city: '新竹市',
@@ -327,6 +384,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'hc-sogo',
     name: 'SOGO 新竹店',
+    country: 'TW',
     category: 'Department Store',
     address: '新竹市東區中央路239號',
     city: '新竹市',
@@ -344,6 +402,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'tc-skm',
     name: '新光三越 台中中港店',
+    country: 'TW',
     category: 'Department Store',
     address: '台中市西屯區台灣大道三段301號',
     city: '台中市',
@@ -357,6 +416,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'tc-top-city',
     name: 'Top City 台中大遠百',
+    country: 'TW',
     category: 'Department Store',
     address: '台中市西屯區台灣大道三段251號',
     city: '台中市',
@@ -370,6 +430,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'tc-lalaport',
     name: 'Mitsui Shopping Park LaLaport 台中',
+    country: 'TW',
     category: 'Department Store',
     address: '台中市東區進德路600號',
     city: '台中市',
@@ -383,6 +444,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'tc-mitsui-outlet',
     name: 'MITSUI OUTLET PARK 台中港',
+    country: 'TW',
     category: 'Department Store',
     address: '台中市梧棲區臺灣大道十段168號',
     city: '台中市',
@@ -400,6 +462,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'cy-skm',
     name: '新光三越 嘉義垂楊店',
+    country: 'TW',
     category: 'Department Store',
     address: '嘉義市西區垂楊路726號',
     city: '嘉義市',
@@ -413,6 +476,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'cy-fe',
     name: '遠東百貨 嘉義店',
+    country: 'TW',
     category: 'Department Store',
     address: '嘉義市西區垂楊路537號',
     city: '嘉義市',
@@ -430,6 +494,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'tn-skm-xm',
     name: '新光三越 台南新天地',
+    country: 'TW',
     category: 'Department Store',
     address: '台南市中西區西門路一段658號',
     city: '台南市',
@@ -443,6 +508,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'tn-ts-mall',
     name: '南紡購物中心 T.S. Mall',
+    country: 'TW',
     category: 'Department Store',
     address: '台南市東區中華東路一段366號',
     city: '台南市',
@@ -456,6 +522,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'tn-mitsui',
     name: 'MITSUI OUTLET PARK 台南',
+    country: 'TW',
     category: 'Department Store',
     address: '台南市歸仁區歸仁大道101號',
     city: '台南市',
@@ -473,6 +540,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'kh-hanshin-arena',
     name: '漢神巨蛋購物廣場',
+    country: 'TW',
     category: 'Department Store',
     address: '高雄市左營區博愛二路777號',
     city: '高雄市',
@@ -486,6 +554,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'kh-dream-mall',
     name: '夢時代購物中心 Dream Mall',
+    country: 'TW',
     category: 'Department Store',
     address: '高雄市前鎮區中華五路789號',
     city: '高雄市',
@@ -499,6 +568,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'kh-skm-zuoying',
     name: '新光三越 高雄左營店',
+    country: 'TW',
     category: 'Department Store',
     address: '高雄市左營區高鐵路123號',
     city: '高雄市',
@@ -512,6 +582,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'kh-eda',
     name: '義大世界購物廣場',
+    country: 'TW',
     category: 'Department Store',
     address: '高雄市大樹區學城路一段12號',
     city: '高雄市',
@@ -529,6 +600,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'gm-a8',
     name: 'Global Mall 環球購物中心 桃園A8',
+    country: 'TW',
     category: 'Department Store',
     address: '桃園市龜山區復興一路8號',
     city: '桃園市',
@@ -542,6 +614,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'gm-a9',
     name: 'Global Mall 環球購物中心 林口A9',
+    country: 'TW',
     category: 'Department Store',
     address: '新北市林口區文化三路一段2號',
     city: '新北市',
@@ -555,6 +628,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'gm-a19',
     name: 'Global Mall 環球購物中心 桃園A19',
+    country: 'TW',
     category: 'Department Store',
     address: '桃園市中壢區高鐵南路二段352號',
     city: '桃園市',
@@ -572,6 +646,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'mrt-main',
     name: '捷運 台北車站',
+    country: 'TW',
     category: 'Transit',
     address: '台北市中正區',
     city: '台北市',
@@ -584,6 +659,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'mrt-cityhall',
     name: '捷運 市政府站',
+    country: 'TW',
     category: 'Transit',
     address: '台北市信義區',
     city: '台北市',
@@ -596,6 +672,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'mrt-zs',
     name: '捷運 中山站',
+    country: 'TW',
     category: 'Transit',
     address: '台北市中山區',
     city: '台北市',
@@ -608,6 +685,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'mrt-bq',
     name: '捷運 板橋站',
+    country: 'TW',
     category: 'Transit',
     address: '新北市板橋區',
     city: '新北市',
@@ -624,6 +702,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'tra-taipei',
     name: '台鐵 台北車站',
+    country: 'TW',
     category: 'Transit',
     address: '台北市中正區北平西路3號',
     city: '台北市',
@@ -636,6 +715,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'tra-banqiao',
     name: '台鐵 板橋車站',
+    country: 'TW',
     category: 'Transit',
     address: '新北市板橋區縣民大道二段7號',
     city: '新北市',
@@ -648,6 +728,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'tra-taoyuan',
     name: '台鐵 桃園車站',
+    country: 'TW',
     category: 'Transit',
     address: '桃園市桃園區中正路1號',
     city: '桃園市',
@@ -660,6 +741,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'tra-hsinchu',
     name: '台鐵 新竹車站',
+    country: 'TW',
     category: 'Transit',
     address: '新竹市東區中華路二段445號',
     city: '新竹市',
@@ -673,6 +755,7 @@ export const LOCATIONS: Location[] = [
     id: 'tra-taichung',
     name: '台鐵 台中車站',
     category: 'Transit',
+    country: 'TW',
     address: '台中市中區台灣大道一段1號',
     city: '台中市',
     imageUrl: transitImg,
@@ -684,6 +767,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'tra-tainan',
     name: '台鐵 台南車站',
+    country: 'TW',
     category: 'Transit',
     address: '台南市東區北門路二段4號',
     city: '台南市',
@@ -696,6 +780,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'tra-kaohsiung',
     name: '台鐵 高雄車站',
+    country: 'TW',
     category: 'Transit',
     address: '高雄市三民區建國二路318號',
     city: '高雄市',
@@ -712,6 +797,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'hsr-nangang',
     name: '高鐵 南港站',
+    country: 'TW',
     category: 'Transit',
     address: '台北市南港區',
     city: '台北市',
@@ -724,6 +810,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'hsr-taipei',
     name: '高鐵 台北站',
+    country: 'TW',
     category: 'Transit',
     address: '台北市中正區',
     city: '台北市',
@@ -736,6 +823,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'hsr-banqiao',
     name: '高鐵 板橋站',
+    country: 'TW',
     category: 'Transit',
     address: '新北市板橋區',
     city: '新北市',
@@ -748,6 +836,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'hsr-taoyuan',
     name: '高鐵 桃園站',
+    country: 'TW',
     category: 'Transit',
     address: '桃園市中壢區',
     city: '桃園市',
@@ -760,6 +849,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'hsr-hsinchu',
     name: '高鐵 新竹站',
+    country: 'TW',
     category: 'Transit',
     address: '新竹縣竹北市',
     city: '新竹縣',
@@ -772,6 +862,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'hsr-taichung',
     name: '高鐵 台中站',
+    country: 'TW',
     category: 'Transit',
     address: '台中市烏日區',
     city: '台中市',
@@ -784,6 +875,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'hsr-chiayi',
     name: '高鐵 嘉義站',
+    country: 'TW',
     category: 'Transit',
     address: '嘉義縣太保市',
     city: '嘉義縣',
@@ -796,6 +888,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'hsr-tainan',
     name: '高鐵 台南站',
+    country: 'TW',
     category: 'Transit',
     address: '台南市歸仁區',
     city: '台南市',
@@ -808,6 +901,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'hsr-zuoying',
     name: '高鐵 左營站',
+    country: 'TW',
     category: 'Transit',
     address: '高雄市左營區',
     city: '高雄市',
@@ -824,6 +918,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'air-mrt-a1',
     name: '機捷 A1 台北車站',
+    country: 'TW',
     category: 'Transit',
     address: '台北市中正區',
     city: '台北市',
@@ -836,6 +931,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'air-mrt-a3',
     name: '機捷 A3 新北產業園區站',
+    country: 'TW',
     category: 'Transit',
     address: '新北市新莊區',
     city: '新北市',
@@ -848,6 +944,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'air-mrt-a8',
     name: '機捷 A8 長庚醫院站',
+    country: 'TW',
     category: 'Transit',
     address: '桃園市龜山區',
     city: '桃園市',
@@ -860,6 +957,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'air-mrt-a9',
     name: '機捷 A9 林口站',
+    country: 'TW',
     category: 'Transit',
     address: '新北市林口區',
     city: '新北市',
@@ -872,6 +970,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'air-mrt-a12',
     name: '機捷 A12 機場第一航廈站',
+    country: 'TW',
     category: 'Transit',
     address: '桃園市大園區',
     city: '桃園市',
@@ -884,6 +983,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'air-mrt-a13',
     name: '機捷 A13 機場第二航廈站',
+    country: 'TW',
     category: 'Transit',
     address: '桃園市大園區',
     city: '桃園市',
@@ -896,6 +996,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'air-mrt-a18',
     name: '機捷 A18 高鐵桃園站',
+    country: 'TW',
     category: 'Transit',
     address: '桃園市中壢區',
     city: '桃園市',
@@ -908,6 +1009,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'air-mrt-a19',
     name: '機捷 A19 桃園體育園區站',
+    country: 'TW',
     category: 'Transit',
     address: '桃園市中壢區',
     city: '桃園市',
@@ -920,6 +1022,7 @@ export const LOCATIONS: Location[] = [
   {
     id: 'air-mrt-a21',
     name: '機捷 A21 環北站',
+    country: 'TW',
     category: 'Transit',
     address: '桃園市中壢區',
     city: '桃園市',

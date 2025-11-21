@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import type { Location } from '../data/types';
 import { AMENITY_LABELS } from '../data/constants';
 import './components.css';
 
 interface LocationCardProps {
     location: Location;
-    onClick: (location: Location) => void;
+    onClick?: (location: Location) => void; // Optional now, or remove
 }
 
-export const LocationCard: React.FC<LocationCardProps> = ({ location, onClick }) => {
+export const LocationCard: React.FC<LocationCardProps> = ({ location }) => {
     const [imageError, setImageError] = useState(false);
 
     // Fallback image if the main one fails
@@ -17,7 +18,7 @@ export const LocationCard: React.FC<LocationCardProps> = ({ location, onClick })
         : location.imageUrl;
 
     return (
-        <div className="location-card" onClick={() => onClick(location)}>
+        <Link to={`/location/${location.id}`} className="location-card" style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
             <img
                 src={displayImage}
                 alt={location.name}
@@ -42,6 +43,6 @@ export const LocationCard: React.FC<LocationCardProps> = ({ location, onClick })
                     )}
                 </div>
             </div>
-        </div>
+        </Link>
     );
 };

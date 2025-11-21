@@ -1,20 +1,18 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './components.css';
 
-interface HeaderProps {
-    onNavigate: (page: 'home' | 'about') => void;
-}
-
-export const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
+export const Header: React.FC = () => {
     return (
         <header className="header">
             <div className="container header-content">
-                <div className="logo" onClick={() => onNavigate('home')} style={{ cursor: 'pointer' }}>
+                <Link to="/" className="logo" style={{ textDecoration: 'none', color: 'inherit' }}>
                     <span>👶</span> 親子友善地圖
-                </div>
+                </Link>
                 <nav className="nav-links">
-                    <button onClick={() => onNavigate('home')} className="nav-link">首頁</button>
-                    <button onClick={() => onNavigate('about')} className="nav-link">關於我們</button>
+                    <Link to="/" className="nav-link">首頁</Link>
+                    <Link to="/about" className="nav-link">關於我們</Link>
+                    <Link to="/partner" className="nav-link">合作洽談</Link>
                 </nav>
             </div>
         </header>
