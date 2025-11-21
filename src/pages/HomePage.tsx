@@ -156,7 +156,7 @@ export const HomePage: React.FC = () => {
                             textAlign: 'center'
                         }}
                     >
-                        <option value="">全部縣市</option>
+                        <option value="">地區選擇</option>
                         {availableCities.map(city => (
                             <option key={city} value={city}>{city}</option>
                         ))}
