@@ -25,6 +25,7 @@ export interface Location {
         lat: number;
         lng: number;
     };
+    distance?: number; // Optional distance from user
     floorInfo?: Partial<Record<Amenity, string>>;
     affiliateLinks?: {
         provider: string;

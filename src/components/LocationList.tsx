@@ -22,7 +22,7 @@ export const LocationList: React.FC<LocationListProps> = ({ locations }) => {
         <div className="container">
             <div className="location-grid">
                 {locations.map((location) => (
-                    <LocationCard key={location.id} location={location} />
+                    <LocationCard key={location.id} location={location} distance={location.distance} />
                 ))}
             </div>
         </div>

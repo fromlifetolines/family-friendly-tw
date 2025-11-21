@@ -10,6 +10,9 @@ export const HomePage: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedAmenities, setSelectedAmenities] = useState<Amenity[]>([]);
     const [currentRegion, setCurrentRegion] = useState<'TW' | 'JP'>('TW');
+    const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+    const [isLocating, setIsLocating] = useState(false);
+    const [locationError, setLocationError] = useState<string | null>(null);
 
     const handleToggleAmenity = (amenity: Amenity) => {
         setSelectedAmenities((prev) =>
@@ -19,8 +22,57 @@ export const HomePage: React.FC = () => {
         );
     };
 
+    const handleFindNearest = () => {
+        setIsLocating(true);
+        setLocationError(null);
+
+        if (!navigator.geolocation) {
+            setLocationError('您的瀏覽器不支援地理定位功能');
+            setIsLocating(false);
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                setUserLocation({
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                });
+                setIsLocating(false);
+            },
+            (error) => {
+                console.error('Geolocation error:', error);
+                let errorMessage = '無法取得您的位置';
+                if (error.code === 1) errorMessage = '請允許瀏覽器存取您的位置以使用此功能';
+                else if (error.code === 2) errorMessage = '無法偵測到您的位置';
+                else if (error.code === 3) errorMessage = '定位逾時，請稍後再試';
+
+                setLocationError(errorMessage);
+                setIsLocating(false);
+            },
+            { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+        );
+    };
+
+    // Haversine formula to calculate distance in km
+    const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+        const R = 6371; // Radius of the earth in km
+        const dLat = deg2rad(lat2 - lat1);
+        const dLon = deg2rad(lon2 - lon1);
+        const a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c;
+    };
+
+    const deg2rad = (deg: number) => {
+        return deg * (Math.PI / 180);
+    };
+
     const filteredLocations = useMemo(() => {
-        return LOCATIONS.filter((location) => {
+        let locations = LOCATIONS.filter((location) => {
             // Filter by region
             if (location.country !== currentRegion) return false;
 
@@ -37,13 +89,60 @@ export const HomePage: React.FC = () => {
 
             return matchesSearch && matchesAmenities;
         });
-    }, [searchTerm, selectedAmenities, currentRegion]);
+
+        // Sort by distance if user location is available
+        if (userLocation) {
+            locations = locations.map(location => {
+                if (!location.coordinates) return { ...location, distance: Infinity };
+                const distance = calculateDistance(
+                    userLocation.lat,
+                    userLocation.lng,
+                    location.coordinates.lat,
+                    location.coordinates.lng
+                );
+                return { ...location, distance };
+            }).sort((a, b) => (a.distance || Infinity) - (b.distance || Infinity));
+        }
+
+        return locations;
+    }, [searchTerm, selectedAmenities, currentRegion, userLocation]);
 
     return (
         <div className="home-page">
             <Hero searchTerm={searchTerm} onSearchChange={setSearchTerm} />
 
-            <RegionSwitch currentRegion={currentRegion} onRegionChange={setCurrentRegion} />
+            <RegionSwitch currentRegion={currentRegion} onRegionChange={(region) => {
+                setCurrentRegion(region);
+                setUserLocation(null); // Reset location sort when switching regions
+                setLocationError(null);
+            }} />
+
+            <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                <button
+                    onClick={handleFindNearest}
+                    disabled={isLocating}
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        padding: '10px 20px',
+                        backgroundColor: userLocation ? '#0ea5e9' : 'white',
+                        color: userLocation ? 'white' : '#334155',
+                        border: userLocation ? 'none' : '1px solid #e2e8f0',
+                        borderRadius: '50px',
+                        cursor: isLocating ? 'wait' : 'pointer',
+                        fontSize: '1rem',
+                        fontWeight: '500',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+                        transition: 'all 0.2s ease'
+                    }}
+                >
+                    {isLocating ? '📍 定位中...' : userLocation ? '📍 已依距離排序' : '📍 尋找附近景點'}
+                </button>
+                {locationError && (
+                    <span style={{ color: '#ef4444', fontSize: '0.9rem' }}>{locationError}</span>
+                )}
+            </div>
 
             <FilterBar
                 selectedAmenities={selectedAmenities}
