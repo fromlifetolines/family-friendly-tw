@@ -10,6 +10,7 @@ export const HomePage: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedAmenities, setSelectedAmenities] = useState<Amenity[]>([]);
     const [currentRegion, setCurrentRegion] = useState<'TW' | 'JP'>('TW');
+    const [selectedCity, setSelectedCity] = useState<string>('');
     const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
     const [isLocating, setIsLocating] = useState(false);
     const [locationError, setLocationError] = useState<string | null>(null);
@@ -71,10 +72,24 @@ export const HomePage: React.FC = () => {
         return deg * (Math.PI / 180);
     };
 
+    // Get available cities based on current region
+    const availableCities = useMemo(() => {
+        const cities = new Set<string>();
+        LOCATIONS.forEach(location => {
+            if (location.country === currentRegion) {
+                cities.add(location.city);
+            }
+        });
+        return Array.from(cities).sort();
+    }, [currentRegion]);
+
     const filteredLocations = useMemo(() => {
         let locations = LOCATIONS.filter((location) => {
             // Filter by region
             if (location.country !== currentRegion) return false;
+
+            // Filter by city
+            if (selectedCity && location.city !== selectedCity) return false;
 
             // Filter by search term
             const matchesSearch =
@@ -105,7 +120,7 @@ export const HomePage: React.FC = () => {
         }
 
         return locations;
-    }, [searchTerm, selectedAmenities, currentRegion, userLocation]);
+    }, [searchTerm, selectedAmenities, currentRegion, selectedCity, userLocation]);
 
     return (
         <div className="home-page">
@@ -113,11 +128,35 @@ export const HomePage: React.FC = () => {
 
             <RegionSwitch currentRegion={currentRegion} onRegionChange={(region) => {
                 setCurrentRegion(region);
+                setSelectedCity(''); // Reset city when switching regions
                 setUserLocation(null); // Reset location sort when switching regions
                 setLocationError(null);
             }} />
 
-            <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+            <div style={{ maxWidth: '1200px', margin: '20px auto 0', padding: '0 20px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '15px', flexWrap: 'wrap' }}>
+                {/* City Filter Dropdown */}
+                <select
+                    value={selectedCity}
+                    onChange={(e) => setSelectedCity(e.target.value)}
+                    style={{
+                        padding: '10px 15px',
+                        borderRadius: '50px',
+                        border: '1px solid #e2e8f0',
+                        backgroundColor: 'white',
+                        fontSize: '1rem',
+                        color: '#334155',
+                        cursor: 'pointer',
+                        outline: 'none',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+                        minWidth: '150px'
+                    }}
+                >
+                    <option value="">全部縣市 / All Cities</option>
+                    {availableCities.map(city => (
+                        <option key={city} value={city}>{city}</option>
+                    ))}
+                </select>
+
                 <button
                     onClick={handleFindNearest}
                     disabled={isLocating}
