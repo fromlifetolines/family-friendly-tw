@@ -13,6 +13,7 @@ export const Header: React.FC = () => {
                     <Link to="/" className="nav-link">首頁</Link>
                     <Link to="/about" className="nav-link">關於我們</Link>
                     <Link to="/partner" className="nav-link">合作洽談</Link>
+                    <Link to="/feedback" className="nav-link">意見回饋</Link>
                 </nav>
             </div>
         </header>
