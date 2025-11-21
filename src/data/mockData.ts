@@ -22,7 +22,8 @@ export const LOCATIONS: Location[] = [
     amenities: ['nursing_room', 'stroller_rental', 'play_area', 'family_toilet', 'elevator', 'diaper_changing'],
     description: '與南港車站共構，以「親子樂園」為主題，擁有全台最大蔦屋書店親子區與多樣兒童設施。',
     openingHours: '11:00 - 21:30',
-    phone: '02-2652-9000'
+    phone: '02-2652-9000',
+    coordinates: { lat: 25.0521, lng: 121.6070 }
   },
   {
     id: 'tp-ng-global',
@@ -36,7 +37,8 @@ export const LOCATIONS: Location[] = [
     amenities: ['nursing_room', 'elevator', 'family_toilet'],
     description: '位於南港車站地下樓層，交通便利，適合轉乘旅客與周邊居民用餐購物。',
     openingHours: '11:00 - 22:00',
-    phone: '02-2789-3289'
+    phone: '02-2789-3289',
+    coordinates: { lat: 25.0524, lng: 121.6071 }
   },
   {
     id: 'tp-ng-ctbc',
@@ -50,7 +52,8 @@ export const LOCATIONS: Location[] = [
     amenities: ['nursing_room', 'elevator', 'family_toilet', 'play_area', 'hot_water'],
     description: '擁有戶外滑冰場（冬季）與大型噴水池，腹地廣大，非常適合親子週末放電。',
     openingHours: '11:00 - 21:30',
-    phone: '02-3327-7777'
+    phone: '02-3327-7777',
+    coordinates: { lat: 25.0577, lng: 121.6156 }
   },
 
   // ==========================================
@@ -68,7 +71,8 @@ export const LOCATIONS: Location[] = [
     amenities: ['nursing_room', 'stroller_rental', 'play_area', 'family_toilet', 'diaper_changing', 'hot_water', 'elevator', 'priority_queue'],
     description: '專為兒童設計的遊樂園，設施豐富且收費親民，是台北親子必遊景點。',
     openingHours: '09:00 - 17:00',
-    phone: '02-2833-3823'
+    phone: '02-2833-3823',
+    coordinates: { lat: 25.0969, lng: 121.5154 }
   },
   {
     id: 'tp-zoo',
@@ -82,7 +86,8 @@ export const LOCATIONS: Location[] = [
     amenities: ['nursing_room', 'stroller_rental', 'family_toilet', 'diaper_changing', 'hot_water', 'elevator'],
     description: '全台最大動物園，腹地廣大，建議攜帶或租借嬰兒車。園區內設有多處哺乳室與飲水機。',
     openingHours: '09:00 - 17:00',
-    phone: '02-2938-2300'
+    phone: '02-2938-2300',
+    coordinates: { lat: 24.9985, lng: 121.5811 }
   },
   {
     id: 'tc-nmns',
@@ -96,7 +101,8 @@ export const LOCATIONS: Location[] = [
     amenities: ['nursing_room', 'stroller_rental', 'elevator', 'family_toilet', 'diaper_changing'],
     description: '寓教於樂的最佳場所，擁有巨大的恐龍模型與科學互動設施，非常適合學齡兒童。',
     openingHours: '09:00 - 17:00',
-    phone: '04-2322-6940'
+    phone: '04-2322-6940',
+    coordinates: { lat: 24.1573, lng: 120.6660 }
   },
   {
     id: 'tn-chimei',
@@ -110,7 +116,8 @@ export const LOCATIONS: Location[] = [
     amenities: ['nursing_room', 'stroller_rental', 'elevator', 'family_toilet', 'diaper_changing'],
     description: '擁有廣大的戶外園區適合野餐奔跑，館內展覽豐富，無障礙設施完善。',
     openingHours: '09:30 - 17:30',
-    phone: '06-266-0808'
+    phone: '06-266-0808',
+    coordinates: { lat: 22.9346, lng: 120.2261 }
   },
   {
     id: 'kh-nstm',
@@ -124,7 +131,8 @@ export const LOCATIONS: Location[] = [
     amenities: ['nursing_room', 'stroller_rental', 'elevator', 'family_toilet', 'play_area'],
     description: '南台灣最大的科學博物館，設有兒童科學園，互動性極高。',
     openingHours: '09:00 - 17:00',
-    phone: '07-380-0089'
+    phone: '07-380-0089',
+    coordinates: { lat: 22.6408, lng: 120.3226 }
   },
 
   // ==========================================
@@ -150,7 +158,8 @@ export const LOCATIONS: Location[] = [
       diaper_changing: '各樓層',
       hot_water: '4F, 6F',
       elevator: '全館'
-    }
+    },
+    coordinates: { lat: 25.0384, lng: 121.5672 }
   },
   {
     id: 'jp-1',
@@ -514,7 +523,8 @@ export const LOCATIONS: Location[] = [
     amenities: ['nursing_room', 'stroller_rental', 'diaper_changing', 'elevator', 'hot_water'],
     description: '與A8相連，6樓常舉辦親子展覽活動。哺乳室設備完善，位於兒童樓層。',
     openingHours: '11:00 - 21:30',
-    phone: '02-8780-1000'
+    phone: '02-8780-1000',
+    coordinates: { lat: 25.0362, lng: 121.5676 }
   },
   {
     id: 'tp-xy-101',
@@ -528,7 +538,8 @@ export const LOCATIONS: Location[] = [
     amenities: ['nursing_room', 'stroller_rental', 'diaper_changing', 'elevator', 'priority_queue', 'family_toilet'],
     description: '4樓設有頂級哺乳室，空間寬敞且隱密性高。B1服務台可租借嬰兒車。',
     openingHours: '11:00 - 21:30',
-    phone: '02-8101-8800'
+    phone: '02-8101-8800',
+    coordinates: { lat: 25.0339, lng: 121.5645 }
   },
   {
     id: 'tp-zs-sogo',
@@ -542,7 +553,8 @@ export const LOCATIONS: Location[] = [
     amenities: ['nursing_room', 'stroller_rental', 'elevator', 'hot_water', 'family_toilet'],
     description: '位於捷運忠孝復興站上方，交通極為便利。9樓有日式庭園與寬敞的哺乳育嬰空間。',
     openingHours: '11:00 - 21:30',
-    phone: '02-2776-5555'
+    phone: '02-2776-5555',
+    coordinates: { lat: 25.0410, lng: 121.5433 }
   },
   {
     id: 'tp-miramar',
@@ -556,7 +568,8 @@ export const LOCATIONS: Location[] = [
     amenities: ['nursing_room', 'stroller_rental', 'play_area', 'family_toilet', 'elevator'],
     description: '擁有著名的摩天輪與旋轉木馬，非常適合親子同樂。哺乳室設施齊全。',
     openingHours: '11:00 - 22:00',
-    phone: '02-2175-3456'
+    phone: '02-2175-3456',
+    coordinates: { lat: 25.0835, lng: 121.5574 }
   },
 
   // ==========================================
@@ -574,7 +587,8 @@ export const LOCATIONS: Location[] = [
     amenities: ['nursing_room', 'stroller_rental', 'play_area', 'family_toilet', 'diaper_changing', 'hot_water'],
     description: '新莊最大購物中心，擁有VR主題樂園與室內攀岩場。親子設施新穎且完善。',
     openingHours: '11:00 - 21:30',
-    phone: '02-8522-8888'
+    phone: '02-8522-8888',
+    coordinates: { lat: 25.0599, lng: 121.4496 }
   },
   {
     id: 'ntp-bq-mega',
@@ -588,7 +602,8 @@ export const LOCATIONS: Location[] = [
     amenities: ['nursing_room', 'stroller_rental', 'diaper_changing', 'hot_water', 'elevator', 'play_area'],
     description: '5樓為兒童館，哺乳室空間大且舒適。9樓有威尼斯造景與貢多拉船，適合全家拍照。',
     openingHours: '11:00 - 22:00',
-    phone: '02-7705-4168'
+    phone: '02-7705-4168',
+    coordinates: { lat: 25.0134, lng: 121.4655 }
   },
   {
     id: 'ntp-bq-fe',
@@ -602,7 +617,8 @@ export const LOCATIONS: Location[] = [
     amenities: ['nursing_room', 'stroller_rental', 'elevator', 'family_toilet'],
     description: '位於板橋熱鬧商圈，雖較小巧但親子設施維護良好，適合鄰近居民。',
     openingHours: '11:00 - 22:00',
-    phone: '02-8952-5678'
+    phone: '02-8952-5678',
+    coordinates: { lat: 25.0118, lng: 121.4634 }
   },
   {
     id: 'ntp-lk-mitsui',
@@ -616,7 +632,8 @@ export const LOCATIONS: Location[] = [
     amenities: ['nursing_room', 'stroller_rental', 'diaper_changing', 'hot_water', 'play_area', 'family_toilet'],
     description: '北台灣大型Outlet，戶外空間寬敞，適合推嬰兒車。設有室內外兒童遊戲區。',
     openingHours: '11:00 - 21:30',
-    phone: '02-2606-8666'
+    phone: '02-2606-8666',
+    coordinates: { lat: 25.0714, lng: 121.3651 }
   },
   {
     id: 'ntp-global-mall',
@@ -630,7 +647,8 @@ export const LOCATIONS: Location[] = [
     amenities: ['nursing_room', 'stroller_rental', 'play_area', 'family_toilet', 'diaper_changing'],
     description: '主打親子家庭客群，3樓設有大型親子樂園與完善的哺乳育嬰設施。',
     openingHours: '11:00 - 22:00',
-    phone: '02-7731-7999'
+    phone: '02-7731-7999',
+    coordinates: { lat: 25.0063, lng: 121.4751 }
   },
 
   // ==========================================
@@ -648,7 +666,8 @@ export const LOCATIONS: Location[] = [
     amenities: ['nursing_room', 'stroller_rental', 'play_area', 'family_toilet', 'elevator'],
     description: '美式露天Outlet，緊鄰高鐵桃園站。戶外空間大，設有兒童遊戲區，非常適合親子同遊。',
     openingHours: '11:00 - 21:00',
-    phone: '03-273-8666'
+    phone: '03-273-8666',
+    coordinates: { lat: 25.0147, lng: 121.2147 }
   },
   {
     id: 'ty-taimall',
@@ -662,7 +681,8 @@ export const LOCATIONS: Location[] = [
     amenities: ['nursing_room', 'stroller_rental', 'play_area', 'diaper_changing', 'hot_water', 'family_toilet'],
     description: '擁有著名的「卡通尼樂園」與戶外大型城堡公園。是桃園地區溜小孩的首選之地。',
     openingHours: '11:00 - 22:00',
-    phone: '03-311-1234'
+    phone: '03-311-1234',
+    coordinates: { lat: 25.0541, lng: 121.2880 }
   },
   {
     id: 'ty-metrowalk',
@@ -676,7 +696,8 @@ export const LOCATIONS: Location[] = [
     amenities: ['nursing_room', 'stroller_rental', 'family_toilet', 'diaper_changing'],
     description: '全年免費停車，非常適合開車的家庭。館內裝置藝術豐富，哺乳室溫馨舒適。',
     openingHours: '11:00 - 22:00',
-    phone: '03-468-0999'
+    phone: '03-468-0999',
+    coordinates: { lat: 25.0020, lng: 121.2297 }
   },
 
   // ==========================================
@@ -694,7 +715,8 @@ export const LOCATIONS: Location[] = [
     amenities: ['nursing_room', 'stroller_rental', 'diaper_changing', 'hot_water', 'elevator', 'play_area', 'family_toilet'],
     description: '新竹最大的購物地標，擁有湯姆熊歡樂世界與大型室內遊戲區，哺乳室數量充足。',
     openingHours: '11:00 - 21:30',
-    phone: '03-623-8000'
+    phone: '03-623-8000',
+    coordinates: { lat: 24.8096, lng: 120.9747 }
   },
   {
     id: 'hc-sogo',
@@ -708,7 +730,8 @@ export const LOCATIONS: Location[] = [
     amenities: ['nursing_room', 'stroller_rental', 'elevator', 'family_toilet'],
     description: '與巨城連通，提供更多元的購物選擇。哺乳室環境優雅舒適。',
     openingHours: '11:00 - 21:30',
-    phone: '03-620-0000'
+    phone: '03-620-0000',
+    coordinates: { lat: 24.8096, lng: 120.9747 }
   },
 
   // ==========================================
@@ -726,7 +749,8 @@ export const LOCATIONS: Location[] = [
     amenities: ['nursing_room', 'stroller_rental', 'diaper_changing', 'hot_water', 'elevator', 'play_area'],
     description: '台中百貨龍頭，6樓兒童館設施豐富，哺乳室空間大且設備新穎。',
     openingHours: '11:00 - 22:00',
-    phone: '04-2255-3333'
+    phone: '04-2255-3333',
+    coordinates: { lat: 24.1645, lng: 120.6437 }
   },
   {
     id: 'tc-top-city',
@@ -740,7 +764,8 @@ export const LOCATIONS: Location[] = [
     amenities: ['nursing_room', 'stroller_rental', 'family_toilet', 'elevator'],
     description: '與新光三越相鄰，擁有復古美食街與寬敞的購物空間。',
     openingHours: '11:00 - 22:00',
-    phone: '04-3702-2168'
+    phone: '04-3702-2168',
+    coordinates: { lat: 24.1652, lng: 120.6430 }
   },
   {
     id: 'tc-lalaport',
@@ -754,7 +779,8 @@ export const LOCATIONS: Location[] = [
     amenities: ['nursing_room', 'stroller_rental', 'play_area', 'family_toilet', 'diaper_changing', 'hot_water'],
     description: '全台首座LaLaport，主打親子家庭，擁有超大親子遊樂區與完善的育兒設施。',
     openingHours: '11:00 - 22:00',
-    phone: '04-2215-6991'
+    phone: '04-2215-6991',
+    coordinates: { lat: 24.1382, lng: 120.6931 }
   },
   {
     id: 'tc-mitsui-outlet',
@@ -768,7 +794,8 @@ export const LOCATIONS: Location[] = [
     amenities: ['nursing_room', 'stroller_rental', 'play_area', 'family_toilet'],
     description: '全台首座海港型Outlet，擁有摩天輪與戲雪樂園，非常適合全家一日遊。',
     openingHours: '11:00 - 21:30',
-    phone: '04-2521-8999'
+    phone: '04-2521-8999',
+    coordinates: { lat: 24.2553, lng: 120.5229 }
   },
 
   // ==========================================
@@ -786,7 +813,8 @@ export const LOCATIONS: Location[] = [
     amenities: ['nursing_room', 'stroller_rental', 'elevator', 'diaper_changing'],
     description: '嘉義市區指標百貨，提供舒適的購物環境與基本的親子友善設施。',
     openingHours: '11:00 - 22:00',
-    phone: '05-222-4888'
+    phone: '05-222-4888',
+    coordinates: { lat: 23.4748, lng: 120.4428 }
   },
   {
     id: 'cy-fe',
@@ -818,7 +846,8 @@ export const LOCATIONS: Location[] = [
     amenities: ['nursing_room', 'stroller_rental', 'diaper_changing', 'hot_water', 'elevator', 'play_area'],
     description: '南部最大百貨公司，腹地廣大。兒童樓層設施極為完善，是台南親子首選。',
     openingHours: '11:00 - 22:00',
-    phone: '06-303-0999'
+    phone: '06-303-0999',
+    coordinates: { lat: 22.9873, lng: 120.1980 }
   },
   {
     id: 'tn-ts-mall',
@@ -832,7 +861,8 @@ export const LOCATIONS: Location[] = [
     amenities: ['nursing_room', 'stroller_rental', 'play_area', 'family_toilet', 'elevator'],
     description: '空間寬敞舒適，擁有大型影城與多樣化的親子餐廳與遊樂設施。',
     openingHours: '11:00 - 22:00',
-    phone: '06-236-6222'
+    phone: '06-236-6222',
+    coordinates: { lat: 22.9912, lng: 120.2336 }
   },
   {
     id: 'tn-mitsui',
@@ -846,7 +876,8 @@ export const LOCATIONS: Location[] = [
     amenities: ['nursing_room', 'stroller_rental', 'play_area', 'family_toilet', 'diaper_changing'],
     description: '緊鄰高鐵台南站，交通極為便利。建築設計融入古都特色，親子設施完善。',
     openingHours: '11:00 - 21:30',
-    phone: '06-303-3666'
+    phone: '06-303-3666',
+    coordinates: { lat: 22.9245, lng: 120.2857 }
   },
 
   // ==========================================
@@ -864,7 +895,8 @@ export const LOCATIONS: Location[] = [
     amenities: ['nursing_room', 'stroller_rental', 'diaper_changing', 'hot_water', 'elevator', 'play_area'],
     description: '北高雄最熱鬧的百貨，6樓設有史努比親子樂園與完善的育嬰中心。',
     openingHours: '11:00 - 22:00',
-    phone: '07-555-9688'
+    phone: '07-555-9688',
+    coordinates: { lat: 22.6696, lng: 120.3022 }
   },
   {
     id: 'kh-dream-mall',
@@ -878,7 +910,8 @@ export const LOCATIONS: Location[] = [
     amenities: ['nursing_room', 'stroller_rental', 'play_area', 'family_toilet', 'elevator', 'diaper_changing'],
     description: '擁有頂樓摩天輪與快樂100遊樂園，空間極大，非常適合推嬰兒車逛上一整天。',
     openingHours: '11:00 - 22:00',
-    phone: '07-813-5678'
+    phone: '07-813-5678',
+    coordinates: { lat: 22.5951, lng: 120.3069 }
   },
   {
     id: 'kh-skm-zuoying',
@@ -892,7 +925,8 @@ export const LOCATIONS: Location[] = [
     amenities: ['nursing_room', 'stroller_rental', 'elevator', 'family_toilet'],
     description: '與高鐵左營站共構，交通最為便利。設有兒童專區與舒適的休息空間。',
     openingHours: '11:00 - 22:00',
-    phone: '07-346-9999'
+    phone: '07-346-9999',
+    coordinates: { lat: 22.6880, lng: 120.3095 }
   },
   {
     id: 'kh-eda',
@@ -906,7 +940,8 @@ export const LOCATIONS: Location[] = [
     amenities: ['nursing_room', 'stroller_rental', 'play_area', 'family_toilet', 'elevator'],
     description: '結合遊樂園與飯店的大型度假區，擁有超大室內滑冰場與各式親子娛樂設施。',
     openingHours: '11:00 - 22:00',
-    phone: '07-656-8100'
+    phone: '07-656-8100',
+    coordinates: { lat: 22.7305, lng: 120.4012 }
   },
 
   // ==========================================
@@ -924,7 +959,8 @@ export const LOCATIONS: Location[] = [
     amenities: ['nursing_room', 'elevator', 'family_toilet', 'diaper_changing'],
     description: '與機捷A8站及長庚醫院共構，提供便利的餐飲與購物選擇，適合就醫或轉乘家庭。',
     openingHours: '11:00 - 22:00',
-    phone: '03-328-7599'
+    phone: '03-328-7599',
+    coordinates: { lat: 25.0602, lng: 121.3708 }
   },
   {
     id: 'gm-a9',
@@ -938,7 +974,8 @@ export const LOCATIONS: Location[] = [
     amenities: ['nursing_room', 'elevator', 'family_toilet', 'play_area'],
     description: '位於機捷A9站，擁有豐富的異國美食與親子手作教室，是林口居民的休閒好去處。',
     openingHours: '11:00 - 22:00',
-    phone: '02-2606-9668'
+    phone: '02-2606-9668',
+    coordinates: { lat: 25.0662, lng: 121.3618 }
   },
   {
     id: 'gm-a19',
@@ -952,7 +989,8 @@ export const LOCATIONS: Location[] = [
     amenities: ['nursing_room', 'elevator', 'family_toilet', 'play_area'],
     description: '主打「運動、親子、生活」，設有攀岩場與滑雪場，是桃園最新的親子娛樂地標。',
     openingHours: '11:00 - 22:00',
-    phone: '03-287-6999'
+    phone: '03-287-6999',
+    coordinates: { lat: 25.0032, lng: 121.2028 }
   },
 
   // ==========================================
@@ -969,7 +1007,8 @@ export const LOCATIONS: Location[] = [
     websiteUrl: 'https://www.metro.taipei/',
     amenities: ['nursing_room', 'elevator', 'family_toilet', 'diaper_changing'],
     description: '全台最大交通樞紐，B1層設有哺乳室，全站皆有完善的無障礙電梯與引導。',
-    openingHours: '06:00 - 24:00'
+    openingHours: '06:00 - 24:00',
+    coordinates: { lat: 25.0462, lng: 121.5175 }
   },
   {
     id: 'mrt-cityhall',
@@ -982,7 +1021,8 @@ export const LOCATIONS: Location[] = [
     websiteUrl: 'https://www.metro.taipei/',
     amenities: ['elevator', 'family_toilet', 'diaper_changing'],
     description: '信義商圈的重要入口，連通統一時代百貨與微風信義，設有親子友善廁所。',
-    openingHours: '06:00 - 24:00'
+    openingHours: '06:00 - 24:00',
+    coordinates: { lat: 25.0411, lng: 121.5652 }
   },
   {
     id: 'mrt-zs',
@@ -995,7 +1035,8 @@ export const LOCATIONS: Location[] = [
     websiteUrl: 'https://www.metro.taipei/',
     amenities: ['nursing_room', 'elevator', 'family_toilet'],
     description: '線形公園沿線，周邊百貨林立。站內設有哺乳室與尿布台。',
-    openingHours: '06:00 - 24:00'
+    openingHours: '06:00 - 24:00',
+    coordinates: { lat: 25.0527, lng: 121.5204 }
   },
   {
     id: 'mrt-bq',
@@ -1008,7 +1049,8 @@ export const LOCATIONS: Location[] = [
     websiteUrl: 'https://www.metro.taipei/',
     amenities: ['nursing_room', 'elevator', 'family_toilet', 'hot_water'],
     description: '三鐵共構車站，連通大遠百與市民廣場。哺乳室設施完善。',
-    openingHours: '06:00 - 24:00'
+    openingHours: '06:00 - 24:00',
+    coordinates: { lat: 25.0137, lng: 121.4649 }
   },
 
   // ==========================================
@@ -1025,7 +1067,8 @@ export const LOCATIONS: Location[] = [
     websiteUrl: 'https://www.railway.gov.tw/',
     amenities: ['nursing_room', 'elevator', 'family_toilet', 'hot_water', 'priority_queue'],
     description: '台鐵最大站，一樓大廳寬敞，設有完善的哺集乳室與親子廁所。',
-    openingHours: '06:00 - 24:00'
+    openingHours: '06:00 - 24:00',
+    coordinates: { lat: 25.0478, lng: 121.5171 }
   },
   {
     id: 'tra-banqiao',
@@ -1038,7 +1081,8 @@ export const LOCATIONS: Location[] = [
     websiteUrl: 'https://www.railway.gov.tw/',
     amenities: ['nursing_room', 'elevator', 'family_toilet'],
     description: '與高鐵、捷運共構，B1連通大遠百，交通轉乘極為便利。',
-    openingHours: '06:00 - 24:00'
+    openingHours: '06:00 - 24:00',
+    coordinates: { lat: 25.0141, lng: 121.4638 }
   },
   {
     id: 'tra-taoyuan',
@@ -1051,7 +1095,8 @@ export const LOCATIONS: Location[] = [
     websiteUrl: 'https://www.railway.gov.tw/',
     amenities: ['nursing_room', 'elevator', 'family_toilet'],
     description: '桃園地區重要樞紐，新站體設有寬敞的無障礙設施與育嬰空間。',
-    openingHours: '06:00 - 24:00'
+    openingHours: '06:00 - 24:00',
+    coordinates: { lat: 24.9892, lng: 121.3135 }
   },
   {
     id: 'tra-hsinchu',
@@ -1064,7 +1109,8 @@ export const LOCATIONS: Location[] = [
     websiteUrl: 'https://www.railway.gov.tw/',
     amenities: ['elevator', 'family_toilet', 'nursing_room'],
     description: '百年古蹟車站，雖歷史悠久但已增設無障礙電梯與親子廁所。',
-    openingHours: '06:00 - 24:00'
+    openingHours: '06:00 - 24:00',
+    coordinates: { lat: 24.8016, lng: 120.9716 }
   },
   {
     id: 'tra-taichung',
@@ -1077,7 +1123,8 @@ export const LOCATIONS: Location[] = [
     websiteUrl: 'https://www.railway.gov.tw/',
     amenities: ['nursing_room', 'elevator', 'family_toilet', 'play_area'],
     description: '新站體高架化設計，空間極為寬敞，站前廣場常有市集活動。',
-    openingHours: '06:00 - 24:00'
+    openingHours: '06:00 - 24:00',
+    coordinates: { lat: 24.1368, lng: 120.6850 }
   },
   {
     id: 'tra-tainan',
@@ -1090,7 +1137,8 @@ export const LOCATIONS: Location[] = [
     websiteUrl: 'https://www.railway.gov.tw/',
     amenities: ['nursing_room', 'elevator', 'family_toilet'],
     description: '古蹟車站，正在進行地下化工程，現有站體仍提供基本的無障礙服務。',
-    openingHours: '06:00 - 24:00'
+    openingHours: '06:00 - 24:00',
+    coordinates: { lat: 22.9971, lng: 120.2126 }
   },
   {
     id: 'tra-kaohsiung',
@@ -1103,7 +1151,8 @@ export const LOCATIONS: Location[] = [
     websiteUrl: 'https://www.railway.gov.tw/',
     amenities: ['nursing_room', 'elevator', 'family_toilet', 'play_area'],
     description: '全新地下化車站，擁有超大雲朵天棚設計，地面層為綠地公園。',
-    openingHours: '06:00 - 24:00'
+    openingHours: '06:00 - 24:00',
+    coordinates: { lat: 22.6396, lng: 120.3024 }
   },
 
   // ==========================================
@@ -1120,7 +1169,8 @@ export const LOCATIONS: Location[] = [
     websiteUrl: 'https://www.thsrc.com.tw/',
     amenities: ['nursing_room', 'elevator', 'family_toilet', 'hot_water'],
     description: '三鐵共構起點站，人潮較台北站少，環境相對清幽舒適。',
-    openingHours: '06:00 - 24:00'
+    openingHours: '06:00 - 24:00',
+    coordinates: { lat: 25.0530, lng: 121.6070 }
   },
   {
     id: 'hsr-taipei',
@@ -1133,7 +1183,8 @@ export const LOCATIONS: Location[] = [
     websiteUrl: 'https://www.thsrc.com.tw/',
     amenities: ['nursing_room', 'elevator', 'family_toilet', 'hot_water'],
     description: '與台鐵、捷運共構，位於B2層，設有獨立的哺乳室與親子廁所。',
-    openingHours: '06:00 - 24:00'
+    openingHours: '06:00 - 24:00',
+    coordinates: { lat: 25.0478, lng: 121.5171 }
   },
   {
     id: 'hsr-banqiao',
@@ -1146,7 +1197,8 @@ export const LOCATIONS: Location[] = [
     websiteUrl: 'https://www.thsrc.com.tw/',
     amenities: ['nursing_room', 'elevator', 'family_toilet', 'hot_water'],
     description: '新北地區重要樞紐，站內空間寬敞，轉乘標示清晰。',
-    openingHours: '06:00 - 24:00'
+    openingHours: '06:00 - 24:00',
+    coordinates: { lat: 25.0141, lng: 121.4638 }
   },
   {
     id: 'hsr-taoyuan',
@@ -1159,7 +1211,8 @@ export const LOCATIONS: Location[] = [
     websiteUrl: 'https://www.thsrc.com.tw/',
     amenities: ['nursing_room', 'elevator', 'family_toilet', 'hot_water', 'stroller_rental'],
     description: '鄰近機場與Outlet，大廳極為寬敞，是出國旅客的必經之地。',
-    openingHours: '06:00 - 24:00'
+    openingHours: '06:00 - 24:00',
+    coordinates: { lat: 25.0131, lng: 121.2149 }
   },
   {
     id: 'hsr-hsinchu',
@@ -1172,7 +1225,8 @@ export const LOCATIONS: Location[] = [
     websiteUrl: 'https://www.thsrc.com.tw/',
     amenities: ['nursing_room', 'elevator', 'family_toilet', 'hot_water'],
     description: '獲得建築大獎的車站，空間設計感強，站前有大片綠地。',
-    openingHours: '06:00 - 24:00'
+    openingHours: '06:00 - 24:00',
+    coordinates: { lat: 24.8081, lng: 121.0403 }
   },
   {
     id: 'hsr-taichung',
@@ -1185,7 +1239,8 @@ export const LOCATIONS: Location[] = [
     websiteUrl: 'https://www.thsrc.com.tw/',
     amenities: ['nursing_room', 'elevator', 'family_toilet', 'hot_water', 'play_area'],
     description: '全台運量第二大站，站內商店豐富，設有兒童閱讀區。',
-    openingHours: '06:00 - 24:00'
+    openingHours: '06:00 - 24:00',
+    coordinates: { lat: 24.1120, lng: 120.6159 }
   },
   {
     id: 'hsr-chiayi',
@@ -1198,7 +1253,8 @@ export const LOCATIONS: Location[] = [
     websiteUrl: 'https://www.thsrc.com.tw/',
     amenities: ['nursing_room', 'elevator', 'family_toilet', 'hot_water'],
     description: '通往阿里山與故宮南院的門戶，環境寧靜舒適。',
-    openingHours: '06:00 - 24:00'
+    openingHours: '06:00 - 24:00',
+    coordinates: { lat: 23.4591, lng: 120.3233 }
   },
   {
     id: 'hsr-tainan',
@@ -1211,7 +1267,8 @@ export const LOCATIONS: Location[] = [
     websiteUrl: 'https://www.thsrc.com.tw/',
     amenities: ['nursing_room', 'elevator', 'family_toilet', 'hot_water'],
     description: '緊鄰MITSUI OUTLET PARK，到站即可購物，非常方便。',
-    openingHours: '06:00 - 24:00'
+    openingHours: '06:00 - 24:00',
+    coordinates: { lat: 22.9248, lng: 120.2857 }
   },
   {
     id: 'hsr-zuoying',
@@ -1224,7 +1281,8 @@ export const LOCATIONS: Location[] = [
     websiteUrl: 'https://www.thsrc.com.tw/',
     amenities: ['nursing_room', 'elevator', 'family_toilet', 'hot_water', 'stroller_rental'],
     description: '南台灣門戶，與新光三越、捷運共構，生活機能極佳。',
-    openingHours: '06:00 - 24:00'
+    openingHours: '06:00 - 24:00',
+    coordinates: { lat: 22.6880, lng: 120.3095 }
   },
 
   // ==========================================
@@ -1241,7 +1299,8 @@ export const LOCATIONS: Location[] = [
     websiteUrl: 'https://www.tymetro.com.tw/',
     amenities: ['nursing_room', 'elevator', 'diaper_changing', 'hot_water'],
     description: '預辦登機大廳旁設有舒適的哺乳室，方便出國前的親子旅客使用。',
-    openingHours: '06:00 - 24:00'
+    openingHours: '06:00 - 24:00',
+    coordinates: { lat: 25.0488, lng: 121.5140 }
   },
   {
     id: 'air-mrt-a3',
@@ -1254,7 +1313,8 @@ export const LOCATIONS: Location[] = [
     websiteUrl: 'https://www.tymetro.com.tw/',
     amenities: ['elevator', 'family_toilet', 'nursing_room'],
     description: '鄰近宏匯廣場，是新莊地區重要的轉運站，設有直達車停靠。',
-    openingHours: '06:00 - 24:00'
+    openingHours: '06:00 - 24:00',
+    coordinates: { lat: 25.0616, lng: 121.4599 }
   },
   {
     id: 'air-mrt-a8',
@@ -1267,7 +1327,8 @@ export const LOCATIONS: Location[] = [
     websiteUrl: 'https://www.tymetro.com.tw/',
     amenities: ['nursing_room', 'elevator', 'family_toilet', 'hot_water'],
     description: '與Global Mall及長庚醫院共構，生活機能完善，哺乳室設施齊全。',
-    openingHours: '06:00 - 24:00'
+    openingHours: '06:00 - 24:00',
+    coordinates: { lat: 25.0602, lng: 121.3708 }
   },
   {
     id: 'air-mrt-a9',
@@ -1280,7 +1341,8 @@ export const LOCATIONS: Location[] = [
     websiteUrl: 'https://www.tymetro.com.tw/',
     amenities: ['nursing_room', 'elevator', 'family_toilet'],
     description: '鄰近三井Outlet與Global Mall，是林口親子遊玩的起點。',
-    openingHours: '06:00 - 24:00'
+    openingHours: '06:00 - 24:00',
+    coordinates: { lat: 25.0662, lng: 121.3618 }
   },
   {
     id: 'air-mrt-a12',
@@ -1293,7 +1355,8 @@ export const LOCATIONS: Location[] = [
     websiteUrl: 'https://www.tymetro.com.tw/',
     amenities: ['nursing_room', 'elevator', 'family_toilet', 'hot_water', 'stroller_rental'],
     description: '連通桃園機場第一航廈，提供出國旅客最便捷的交通服務。',
-    openingHours: '06:00 - 24:00'
+    openingHours: '06:00 - 24:00',
+    coordinates: { lat: 25.0815, lng: 121.2374 }
   },
   {
     id: 'air-mrt-a13',
@@ -1306,7 +1369,8 @@ export const LOCATIONS: Location[] = [
     websiteUrl: 'https://www.tymetro.com.tw/',
     amenities: ['nursing_room', 'elevator', 'family_toilet', 'hot_water', 'stroller_rental'],
     description: '連通桃園機場第二航廈，站體寬敞，設有完善的無障礙設施。',
-    openingHours: '06:00 - 24:00'
+    openingHours: '06:00 - 24:00',
+    coordinates: { lat: 25.0770, lng: 121.2322 }
   },
   {
     id: 'air-mrt-a18',
@@ -1319,7 +1383,8 @@ export const LOCATIONS: Location[] = [
     websiteUrl: 'https://www.tymetro.com.tw/',
     amenities: ['nursing_room', 'elevator', 'family_toilet'],
     description: '連通華泰名品城與Xpark水族館，是桃園親子旅遊的重要轉運點。',
-    openingHours: '06:00 - 24:00'
+    openingHours: '06:00 - 24:00',
+    coordinates: { lat: 25.0131, lng: 121.2149 }
   },
   {
     id: 'air-mrt-a19',

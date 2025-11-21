@@ -30,7 +30,7 @@ export const LocationCard: React.FC<LocationCardProps> = ({ location, distance }
             <div className="card-content">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                     <div className="card-category">{location.category}</div>
-                    {typeof distance === 'number' && (
+                    {typeof distance === 'number' && distance !== Infinity && (
                         <div style={{
                             fontSize: '0.85rem',
                             color: '#0ea5e9',
