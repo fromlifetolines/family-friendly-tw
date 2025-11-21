@@ -10,7 +10,7 @@ export const Hero: React.FC<HeroProps> = ({ searchTerm, onSearchChange }) => {
     return (
         <div className="hero">
             <div className="container">
-                <h1 className="hero-title">尋找台灣親子友善空間</h1>
+                <h1 className="hero-title">尋找親子友善空間</h1>
                 <p className="hero-subtitle">
                     輕鬆搜尋附近的百貨公司與公共設施，包含哺乳室、嬰兒車租借及各項親子友善服務。
                 </p>
