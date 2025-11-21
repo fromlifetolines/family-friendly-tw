@@ -46,7 +46,7 @@ export const PartnerPage: React.FC = () => {
                     <h2 style={{ color: '#0ea5e9', marginBottom: '20px' }}>聯絡我們</h2>
                     <p style={{ lineHeight: '1.8' }}>
                         有興趣合作嗎？歡迎來信洽談！<br />
-                        Email: <a href="mailto:business@family-friendly-tw.com" style={{ color: '#0ea5e9' }}>business@family-friendly-tw.com</a>
+                        Email: <a href="mailto:35daily@gmail.com" style={{ color: '#0ea5e9' }}>35daily@gmail.com</a>
                     </p>
                 </section>
             </div>
