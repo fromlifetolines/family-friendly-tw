@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import type { Location } from '../data/types';
 
 interface JsonLdProps {
-    data: Record<string, any>;
+    data: Record<string, unknown>;
 }
 
 export const JsonLd: React.FC<JsonLdProps> = ({ data }) => {
