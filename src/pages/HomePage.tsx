@@ -135,27 +135,43 @@ export const HomePage: React.FC = () => {
 
             <div style={{ maxWidth: '1200px', margin: '20px auto 0', padding: '0 20px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '15px', flexWrap: 'wrap' }}>
                 {/* City Filter Dropdown */}
-                <select
-                    value={selectedCity}
-                    onChange={(e) => setSelectedCity(e.target.value)}
-                    style={{
-                        padding: '10px 15px',
-                        borderRadius: '50px',
-                        border: '1px solid #e2e8f0',
-                        backgroundColor: 'white',
-                        fontSize: '1rem',
-                        color: '#334155',
-                        cursor: 'pointer',
-                        outline: 'none',
-                        boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
-                        minWidth: '150px'
-                    }}
-                >
-                    <option value="">全部縣市 / All Cities</option>
-                    {availableCities.map(city => (
-                        <option key={city} value={city}>{city}</option>
-                    ))}
-                </select>
+                <div style={{ position: 'relative' }}>
+                    <select
+                        value={selectedCity}
+                        onChange={(e) => setSelectedCity(e.target.value)}
+                        style={{
+                            appearance: 'none',
+                            WebkitAppearance: 'none',
+                            padding: '10px 40px 10px 20px', // Extra padding on right for arrow
+                            borderRadius: '50px',
+                            border: '1px solid #e2e8f0',
+                            backgroundColor: 'white',
+                            fontSize: '1rem',
+                            color: '#334155',
+                            cursor: 'pointer',
+                            outline: 'none',
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+                            minWidth: '150px',
+                            fontWeight: '500',
+                            textAlign: 'center'
+                        }}
+                    >
+                        <option value="">全部縣市</option>
+                        {availableCities.map(city => (
+                            <option key={city} value={city}>{city}</option>
+                        ))}
+                    </select>
+                    <div style={{
+                        position: 'absolute',
+                        right: '15px',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        pointerEvents: 'none',
+                        color: '#64748b'
+                    }}>
+                        ▼
+                    </div>
+                </div>
 
                 <button
                     onClick={handleFindNearest}
