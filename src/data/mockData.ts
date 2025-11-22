@@ -6,6 +6,11 @@ import parkImg from '../assets/images/park.jpg';
 import museumImg from '../assets/images/museum.jpg';
 import transitImg from '../assets/images/transit.jpg';
 
+// Import generated images
+import tpNgCitylinkImg from '../assets/images/generated/tp-ng-citylink.png';
+import tpNgGlobalImg from '../assets/images/generated/tp-ng-global.png';
+import tpNgCtbcImg from '../assets/images/generated/tp-ng-ctbc.png';
+
 export const LOCATIONS: Location[] = [
   // ==========================================
   // 台北市 - 南港區 (Taipei City - Nangang)
@@ -17,7 +22,7 @@ export const LOCATIONS: Location[] = [
     category: 'Department Store',
     address: '台北市南港區忠孝東路七段369號',
     city: '台北市',
-    imageUrl: mallImg,
+    imageUrl: tpNgCitylinkImg,
     websiteUrl: 'https://www.citylink.tw/nangang/',
     amenities: ['nursing_room', 'stroller_rental', 'play_area', 'family_toilet', 'elevator', 'diaper_changing'],
     description: '與南港車站共構，以「親子樂園」為主題，擁有全台最大蔦屋書店親子區與多樣兒童設施。',
@@ -32,7 +37,7 @@ export const LOCATIONS: Location[] = [
     category: 'Department Store',
     address: '台北市南港區忠孝東路七段371號B1',
     city: '台北市',
-    imageUrl: mallImg,
+    imageUrl: tpNgGlobalImg,
     websiteUrl: 'https://www.twglobalmall.com/web/global/index.html?shopid=TWA2',
     amenities: ['nursing_room', 'elevator', 'family_toilet'],
     description: '位於南港車站地下樓層，交通便利，適合轉乘旅客與周邊居民用餐購物。',
@@ -47,7 +52,7 @@ export const LOCATIONS: Location[] = [
     category: 'Department Store',
     address: '台北市南港區經貿二路168號',
     city: '台北市',
-    imageUrl: mallImg,
+    imageUrl: tpNgCtbcImg,
     websiteUrl: 'http://www.ctbcfinancialpark.com/',
     amenities: ['nursing_room', 'elevator', 'family_toilet', 'play_area', 'hot_water'],
     description: '擁有戶外滑冰場（冬季）與大型噴水池，腹地廣大，非常適合親子週末放電。',

@@ -46,24 +46,27 @@
 
 /* Hero */
 .hero {
-    background: linear-gradient(135deg, #FFF0F3 0%, #E0F7FA 100%);
-    padding: 4rem 0;
+    background: linear-gradient(135deg, #fff5f7 0%, #fff0f5 100%);
+    padding: 60px 20px;
     text-align: center;
-    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
-    margin-bottom: 2rem;
+    margin-bottom: 40px;
 }
 
 .hero-title {
     font-size: 2.5rem;
-    color: var(--color-text-main);
-    margin-bottom: 1rem;
+    color: #334155;
+    margin-bottom: 16px;
+    font-weight: 800;
 }
 
 .hero-subtitle {
-    color: var(--color-text-muted);
     font-size: 1.1rem;
+    color: #64748b;
+    margin-bottom: 32px;
     max-width: 600px;
-    margin: 0 auto 2rem;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
 }
 
 /* Search Bar */
@@ -154,70 +157,75 @@
 }
 
 .location-card {
-    background: var(--color-surface);
-    border-radius: var(--radius-md);
+    background: white;
+    border-radius: 12px;
     overflow: hidden;
-    box-shadow: var(--shadow-sm);
-    transition: var(--transition-normal);
-    border: 1px solid var(--color-border);
-    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .location-card:hover {
     transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
 .card-image {
-    height: 200px;
     width: 100%;
+    height: 200px;
     object-fit: cover;
 }
 
 .card-content {
-    padding: 1.5rem;
+    padding: 16px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .card-category {
-    font-size: 1rem;
-    color: var(--color-primary);
-    font-weight: 600;
+    font-size: 0.75rem;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 0.5rem;
+    letter-spacing: 0.05em;
+    color: #ff8fa3;
+    font-weight: 600;
 }
 
 .card-title {
-    font-size: 1.25rem;
-    margin-bottom: 0.5rem;
-    color: var(--color-text-main);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #334155;
+    margin: 0 0 8px 0;
+    line-height: 1.4;
 }
 
 .card-address {
-    color: var(--color-text-muted);
+    color: #64748b;
     font-size: 0.9rem;
-    margin-bottom: 1rem;
+    margin-bottom: 12px;
     display: flex;
     align-items: center;
-    gap: 0.25rem;
+    gap: 4px;
 }
 
 .amenity-tags {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 8px;
+    margin-top: auto;
 }
 
 .amenity-tag {
-    font-size: 0.9rem;
-    padding: 0.35rem 0.65rem;
-    background-color: #F0F2F5;
-    border-radius: 6px;
-    color: var(--color-text-muted);
     display: inline-flex;
     align-items: center;
-    gap: 0.3rem;
-    flex-wrap: wrap;
+    gap: 4px;
+    padding: 4px 8px;
+    background-color: #f8fafc;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    color: #475569;
 }
 
 .floor-badge {
