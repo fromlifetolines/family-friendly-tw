@@ -7,9 +7,27 @@ import museumImg from '../assets/images/museum.jpg';
 import transitImg from '../assets/images/transit.jpg';
 
 // Import generated images
+// Import generated images
 import tpNgCitylinkImg from '../assets/images/generated/tp-ng-citylink.png';
 import tpNgGlobalImg from '../assets/images/generated/tp-ng-global.png';
 import tpNgCtbcImg from '../assets/images/generated/tp-ng-ctbc.png';
+import tpXyA8Img from '../assets/images/generated/tp-xy-a8.png';
+import tpXyA11Img from '../assets/images/generated/tp-xy-a11.png';
+import tpXy101Img from '../assets/images/generated/tp-xy-101.png';
+import tpZsSogoImg from '../assets/images/generated/tp-zs-sogo.png';
+import tpMiramarImg from '../assets/images/generated/tp-miramar.png';
+import ntpHonhuiImg from '../assets/images/generated/ntp-honhui.png';
+import ntpBqMegaImg from '../assets/images/generated/ntp-bq-mega.png';
+import ntpBqFeImg from '../assets/images/generated/ntp-bq-fe.png';
+import ntpLkMitsuiImg from '../assets/images/generated/ntp-lk-mitsui.png';
+import ntpGlobalMallImg from '../assets/images/generated/ntp-global-mall.png';
+import tyGloriaImg from '../assets/images/generated/ty-gloria.png';
+import tyTaimallImg from '../assets/images/generated/ty-taimall.png';
+import tyMetrowalkImg from '../assets/images/generated/ty-metrowalk.png';
+import gmA8Img from '../assets/images/generated/gm-a8.png';
+import gmA19Img from '../assets/images/generated/gm-a19.png';
+import hcBigCityImg from '../assets/images/generated/hc-big-city.png';
+import hcSogoImg from '../assets/images/generated/hc-sogo.png';
 
 export const LOCATIONS: Location[] = [
   // ==========================================
@@ -150,7 +168,7 @@ export const LOCATIONS: Location[] = [
     category: 'Department Store',
     address: '台北市信義區松高路12號',
     city: '台北市',
-    imageUrl: mallImg,
+    imageUrl: tpXyA8Img,
     websiteUrl: 'https://www.skm.com.tw/store_branch/A8',
     amenities: ['nursing_room', 'stroller_rental', 'diaper_changing', 'hot_water', 'elevator', 'play_area'],
     description: '4樓與5樓為兒童專區，設有寬敞舒適的哺乳室與戶外遊戲區，是信義區最受親子歡迎的百貨。',
@@ -523,7 +541,7 @@ export const LOCATIONS: Location[] = [
     category: 'Department Store',
     address: '台北市信義區松壽路11號',
     city: '台北市',
-    imageUrl: mallImg,
+    imageUrl: tpXyA11Img,
     websiteUrl: 'https://www.skm.com.tw/store_branch/A11',
     amenities: ['nursing_room', 'stroller_rental', 'diaper_changing', 'elevator', 'hot_water'],
     description: '與A8相連，6樓常舉辦親子展覽活動。哺乳室設備完善，位於兒童樓層。',
@@ -538,7 +556,7 @@ export const LOCATIONS: Location[] = [
     category: 'Department Store',
     address: '台北市信義區市府路45號',
     city: '台北市',
-    imageUrl: mallImg,
+    imageUrl: tpXy101Img,
     websiteUrl: 'https://www.taipei101.com.tw/tw/shopping',
     amenities: ['nursing_room', 'stroller_rental', 'diaper_changing', 'elevator', 'priority_queue', 'family_toilet'],
     description: '4樓設有頂級哺乳室，空間寬敞且隱密性高。B1服務台可租借嬰兒車。',
@@ -553,7 +571,7 @@ export const LOCATIONS: Location[] = [
     category: 'Department Store',
     address: '台北市大安區忠孝東路三段300號',
     city: '台北市',
-    imageUrl: mallImg,
+    imageUrl: tpZsSogoImg,
     websiteUrl: 'https://www.sogo.com.tw/tp2',
     amenities: ['nursing_room', 'stroller_rental', 'elevator', 'hot_water', 'family_toilet'],
     description: '位於捷運忠孝復興站上方，交通極為便利。9樓有日式庭園與寬敞的哺乳育嬰空間。',
@@ -568,7 +586,7 @@ export const LOCATIONS: Location[] = [
     category: 'Department Store',
     address: '台北市中山區敬業三路20號',
     city: '台北市',
-    imageUrl: mallImg,
+    imageUrl: tpMiramarImg,
     websiteUrl: 'https://www.miramar.com.tw/',
     amenities: ['nursing_room', 'stroller_rental', 'play_area', 'family_toilet', 'elevator'],
     description: '擁有著名的摩天輪與旋轉木馬，非常適合親子同樂。哺乳室設施齊全。',
@@ -587,7 +605,7 @@ export const LOCATIONS: Location[] = [
     category: 'Department Store',
     address: '新北市新莊區新北大道四段3號',
     city: '新北市',
-    imageUrl: mallImg,
+    imageUrl: ntpHonhuiImg,
     websiteUrl: 'https://www.honhui.com.tw/',
     amenities: ['nursing_room', 'stroller_rental', 'play_area', 'family_toilet', 'diaper_changing', 'hot_water'],
     description: '新莊最大購物中心，擁有VR主題樂園與室內攀岩場。親子設施新穎且完善。',
@@ -602,7 +620,7 @@ export const LOCATIONS: Location[] = [
     category: 'Department Store',
     address: '新北市板橋區新站路28號',
     city: '新北市',
-    imageUrl: mallImg,
+    imageUrl: ntpBqMegaImg,
     websiteUrl: 'https://www.feds.com.tw/tw/54',
     amenities: ['nursing_room', 'stroller_rental', 'diaper_changing', 'hot_water', 'elevator', 'play_area'],
     description: '5樓為兒童館，哺乳室空間大且舒適。9樓有威尼斯造景與貢多拉船，適合全家拍照。',
@@ -617,7 +635,7 @@ export const LOCATIONS: Location[] = [
     category: 'Department Store',
     address: '新北市板橋區中山路一段152號',
     city: '新北市',
-    imageUrl: mallImg,
+    imageUrl: ntpBqFeImg,
     websiteUrl: 'https://www.feds.com.tw/tw/53',
     amenities: ['nursing_room', 'stroller_rental', 'elevator', 'family_toilet'],
     description: '位於板橋熱鬧商圈，雖較小巧但親子設施維護良好，適合鄰近居民。',
@@ -632,7 +650,7 @@ export const LOCATIONS: Location[] = [
     category: 'Department Store',
     address: '新北市林口區文化三路一段356號',
     city: '新北市',
-    imageUrl: mallImg,
+    imageUrl: ntpLkMitsuiImg,
     websiteUrl: 'https://www.mop.com.tw/linkou/tw/index.html',
     amenities: ['nursing_room', 'stroller_rental', 'diaper_changing', 'hot_water', 'play_area', 'family_toilet'],
     description: '北台灣大型Outlet，戶外空間寬敞，適合推嬰兒車。設有室內外兒童遊戲區。',
@@ -647,7 +665,7 @@ export const LOCATIONS: Location[] = [
     category: 'Department Store',
     address: '新北市中和區中山路三段122號',
     city: '新北市',
-    imageUrl: mallImg,
+    imageUrl: ntpGlobalMallImg,
     websiteUrl: 'https://www.twglobalmall.com/web/global/index.html?shopid=TWA1',
     amenities: ['nursing_room', 'stroller_rental', 'play_area', 'family_toilet', 'diaper_changing'],
     description: '主打親子家庭客群，3樓設有大型親子樂園與完善的哺乳育嬰設施。',
@@ -666,7 +684,7 @@ export const LOCATIONS: Location[] = [
     category: 'Department Store',
     address: '桃園市中壢區春德路189號',
     city: '桃園市',
-    imageUrl: mallImg,
+    imageUrl: tyGloriaImg,
     websiteUrl: 'https://www.gloriaoutlets.com/',
     amenities: ['nursing_room', 'stroller_rental', 'play_area', 'family_toilet', 'elevator'],
     description: '美式露天Outlet，緊鄰高鐵桃園站。戶外空間大，設有兒童遊戲區，非常適合親子同遊。',
@@ -681,7 +699,7 @@ export const LOCATIONS: Location[] = [
     category: 'Department Store',
     address: '桃園市蘆竹區南崁路一段112號',
     city: '桃園市',
-    imageUrl: mallImg,
+    imageUrl: tyTaimallImg,
     websiteUrl: 'https://www.taimall.com.tw/',
     amenities: ['nursing_room', 'stroller_rental', 'play_area', 'diaper_changing', 'hot_water', 'family_toilet'],
     description: '擁有著名的「卡通尼樂園」與戶外大型城堡公園。是桃園地區溜小孩的首選之地。',
@@ -696,7 +714,7 @@ export const LOCATIONS: Location[] = [
     category: 'Department Store',
     address: '桃園市中壢區中園路二段501號',
     city: '桃園市',
-    imageUrl: mallImg,
+    imageUrl: tyMetrowalkImg,
     websiteUrl: 'https://www.metrowalk.com.tw/',
     amenities: ['nursing_room', 'stroller_rental', 'family_toilet', 'diaper_changing'],
     description: '全年免費停車，非常適合開車的家庭。館內裝置藝術豐富，哺乳室溫馨舒適。',
@@ -715,7 +733,7 @@ export const LOCATIONS: Location[] = [
     category: 'Department Store',
     address: '新竹市東區中央路229號',
     city: '新竹市',
-    imageUrl: mallImg,
+    imageUrl: hcBigCityImg,
     websiteUrl: 'https://www.febigcity.com/',
     amenities: ['nursing_room', 'stroller_rental', 'diaper_changing', 'hot_water', 'elevator', 'play_area', 'family_toilet'],
     description: '新竹最大的購物地標，擁有湯姆熊歡樂世界與大型室內遊戲區，哺乳室數量充足。',
@@ -730,7 +748,7 @@ export const LOCATIONS: Location[] = [
     category: 'Department Store',
     address: '新竹市東區中央路239號',
     city: '新竹市',
-    imageUrl: mallImg,
+    imageUrl: hcSogoImg,
     websiteUrl: 'https://www.sogo.com.tw/hc',
     amenities: ['nursing_room', 'stroller_rental', 'elevator', 'family_toilet'],
     description: '與巨城連通，提供更多元的購物選擇。哺乳室環境優雅舒適。',
@@ -1416,7 +1434,7 @@ export const LOCATIONS: Location[] = [
     category: 'Department Store',
     address: '桃園市龜山區復興一路8號',
     city: '桃園市',
-    imageUrl: mallImg,
+    imageUrl: gmA8Img,
     websiteUrl: 'https://www.twglobalmall.com/web/global/index.html?shopid=TWA8',
     amenities: ['nursing_room', 'elevator', 'family_toilet', 'diaper_changing'],
     description: '與機捷A8站及長庚醫院共構，提供便利的餐飲與購物選擇，適合就醫或轉乘家庭。',
@@ -1446,7 +1464,7 @@ export const LOCATIONS: Location[] = [
     category: 'Department Store',
     address: '桃園市中壢區高鐵南路二段352號',
     city: '桃園市',
-    imageUrl: mallImg,
+    imageUrl: gmA19Img,
     websiteUrl: 'https://www.twglobalmall.com/web/global/index.html?shopid=TWA9',
     amenities: ['nursing_room', 'elevator', 'family_toilet', 'play_area'],
     description: '主打「運動、親子、生活」，設有攀岩場與滑雪場，是桃園最新的親子娛樂地標。',
