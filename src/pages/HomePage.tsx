@@ -1,212 +1,160 @@
-import React, { useState, useMemo } from 'react';
-import { Hero } from '../components/Hero';
-import { FilterBar } from '../components/FilterBar';
-import { LocationList } from '../components/LocationList';
-import { RegionSwitch } from '../components/RegionSwitch';
-import { LOCATIONS } from '../data/mockData';
-import type { Amenity } from '../data/types';
+import { useState } from 'react';
+import { MapContainer, TileLayer, Marker } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+import { LocateFixed } from 'lucide-react';
+import FacilityBottomSheet from '../components/FacilityBottomSheet';
+import type { Facility } from '../components/FacilityBottomSheet';
 
-export const HomePage: React.FC = () => {
-    const [searchTerm, setSearchTerm] = useState('');
-    const [selectedAmenities, setSelectedAmenities] = useState<Amenity[]>([]);
-    const [currentRegion, setCurrentRegion] = useState<'TW' | 'JP'>('TW');
-    const [selectedCity, setSelectedCity] = useState<string>('');
-    const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
-    const [isLocating, setIsLocating] = useState(false);
-    const [locationError, setLocationError] = useState<string | null>(null);
 
-    const handleToggleAmenity = (amenity: Amenity) => {
-        setSelectedAmenities((prev) =>
-            prev.includes(amenity)
-                ? prev.filter((a) => a !== amenity)
-                : [...prev, amenity]
-        );
-    };
 
-    const handleFindNearest = () => {
-        setIsLocating(true);
-        setLocationError(null);
-
-        if (!navigator.geolocation) {
-            setLocationError('您的瀏覽器不支援地理定位功能');
-            setIsLocating(false);
-            return;
-        }
-
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                setUserLocation({
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude
-                });
-                setIsLocating(false);
-            },
-            (error) => {
-                console.error('Geolocation error:', error);
-                let errorMessage = '無法取得您的位置';
-                if (error.code === 1) errorMessage = '請允許瀏覽器存取您的位置以使用此功能';
-                else if (error.code === 2) errorMessage = '無法偵測到您的位置';
-                else if (error.code === 3) errorMessage = '定位逾時，請稍後再試';
-
-                setLocationError(errorMessage);
-                setIsLocating(false);
-            },
-            { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-        );
-    };
-
-    // Haversine formula to calculate distance in km
-    const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
-        const R = 6371; // Radius of the earth in km
-        const dLat = deg2rad(lat2 - lat1);
-        const dLon = deg2rad(lon2 - lon1);
-        const a =
-            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-            Math.sin(dLon / 2) * Math.sin(dLon / 2);
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return R * c;
-    };
-
-    const deg2rad = (deg: number) => {
-        return deg * (Math.PI / 180);
-    };
-
-    // Get available cities based on current region
-    const availableCities = useMemo(() => {
-        const cities = new Set<string>();
-        LOCATIONS.forEach(location => {
-            if (location.country === currentRegion) {
-                cities.add(location.city);
-            }
-        });
-        return Array.from(cities).sort();
-    }, [currentRegion]);
-
-    const filteredLocations = useMemo(() => {
-        let locations = LOCATIONS.filter((location) => {
-            // Filter by region
-            if (location.country !== currentRegion) return false;
-
-            // Filter by city
-            if (selectedCity && location.city !== selectedCity) return false;
-
-            // Filter by search term
-            const matchesSearch =
-                location.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                location.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                location.description.toLowerCase().includes(searchTerm.toLowerCase());
-
-            // Filter by amenities
-            const matchesAmenities =
-                selectedAmenities.length === 0 ||
-                selectedAmenities.every((amenity) => location.amenities.includes(amenity));
-
-            return matchesSearch && matchesAmenities;
-        });
-
-        // Sort by distance if user location is available
-        if (userLocation) {
-            locations = locations.map(location => {
-                if (!location.coordinates) return { ...location, distance: Infinity };
-                const distance = calculateDistance(
-                    userLocation.lat,
-                    userLocation.lng,
-                    location.coordinates.lat,
-                    location.coordinates.lng
-                );
-                return { ...location, distance };
-            }).sort((a, b) => (a.distance || Infinity) - (b.distance || Infinity));
-        }
-
-        return locations;
-    }, [searchTerm, selectedAmenities, currentRegion, selectedCity, userLocation]);
-
-    return (
-        <div className="home-page">
-            <Hero searchTerm={searchTerm} onSearchChange={setSearchTerm} />
-
-            <RegionSwitch currentRegion={currentRegion} onRegionChange={(region) => {
-                setCurrentRegion(region);
-                setSelectedCity(''); // Reset city when switching regions
-                setUserLocation(null); // Reset location sort when switching regions
-                setLocationError(null);
-            }} />
-
-            <div style={{ maxWidth: '1200px', margin: '20px auto 0', padding: '0 20px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '15px', flexWrap: 'wrap' }}>
-                {/* City Filter Dropdown */}
-                <div style={{ position: 'relative' }}>
-                    <select
-                        value={selectedCity}
-                        onChange={(e) => setSelectedCity(e.target.value)}
-                        style={{
-                            appearance: 'none',
-                            WebkitAppearance: 'none',
-                            padding: '10px 40px 10px 20px', // Extra padding on right for arrow
-                            borderRadius: '50px',
-                            border: '1px solid #e2e8f0',
-                            backgroundColor: 'white',
-                            fontSize: '1rem',
-                            color: '#334155',
-                            cursor: 'pointer',
-                            outline: 'none',
-                            boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
-                            minWidth: '150px',
-                            fontWeight: '500',
-                            textAlign: 'center'
-                        }}
-                    >
-                        <option value="">地區選擇</option>
-                        {availableCities.map(city => (
-                            <option key={city} value={city}>{city}</option>
-                        ))}
-                    </select>
-                    <div style={{
-                        position: 'absolute',
-                        right: '15px',
-                        top: '50%',
-                        transform: 'translateY(-50%)',
-                        pointerEvents: 'none',
-                        color: '#64748b'
-                    }}>
-                        ▼
-                    </div>
-                </div>
-
-                <button
-                    onClick={handleFindNearest}
-                    disabled={isLocating}
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px',
-                        padding: '10px 20px',
-                        backgroundColor: userLocation ? '#0ea5e9' : 'white',
-                        color: userLocation ? 'white' : '#334155',
-                        border: userLocation ? 'none' : '1px solid #e2e8f0',
-                        borderRadius: '50px',
-                        cursor: isLocating ? 'wait' : 'pointer',
-                        fontSize: '1rem',
-                        fontWeight: '500',
-                        boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
-                        transition: 'all 0.2s ease'
-                    }}
-                >
-                    {isLocating ? '📍 定位中...' : userLocation ? '📍 已依距離排序' : '📍 尋找附近景點'}
-                </button>
-                {locationError && (
-                    <span style={{ color: '#ef4444', fontSize: '0.9rem' }}>{locationError}</span>
-                )}
-            </div>
-
-            <FilterBar
-                selectedAmenities={selectedAmenities}
-                onToggleAmenity={handleToggleAmenity}
-            />
-
-            <LocationList
-                locations={filteredLocations}
-            />
-        </div>
-    );
+const createCustomIcon = (color: string, sizeMultiplier: number = 1) => {
+  return L.divIcon({
+    className: 'custom-pin',
+    html: `<div style="
+      background-color: ${color};
+      width: ${20 * sizeMultiplier}px;
+      height: ${20 * sizeMultiplier}px;
+      border-radius: 50%;
+      border: 3px solid white;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    "></div>`,
+    iconSize: [20 * sizeMultiplier, 20 * sizeMultiplier],
+    iconAnchor: [10 * sizeMultiplier, 10 * sizeMultiplier],
+  });
 };
+
+const standardIcon = createCustomIcon('#FF6B4A', 1); // --brand-coral
+const premiumIcon = createCustomIcon('#1E2D5A', 1.2); // --brand-navy, 20% larger
+
+const mockFacilities: Facility[] = [
+  {
+    id: '1',
+    name: '信義A8 兒童館哺乳室',
+    status: 'open',
+    distance: '150m',
+    type: 'premium',
+    amenities: {
+      nursingRoom: true, diaperTable: true, hotWater: true,
+      elevator: true, playArea: false, familyToilet: true,
+    }
+  },
+  {
+    id: '2',
+    name: '全家便利商店 台北車站店',
+    status: 'open',
+    distance: '300m',
+    type: 'standard',
+    amenities: {
+      nursingRoom: false, diaperTable: false, hotWater: true,
+      elevator: false, playArea: false, familyToilet: false,
+    }
+  }
+];
+
+const mockPositions = [
+  [25.033964, 121.564468], // Near Taipei 101
+  [25.034500, 121.565000],
+];
+
+const QUICK_FILTERS = [
+  { id: 'nursingRoom', icon: '🍼', label: '哺乳室' },
+  { id: 'diaperTable', icon: '👶', label: '尿布台' },
+  { id: 'hotWater', icon: '💧', label: '熱水' },
+  { id: 'elevator', icon: '🛗', label: '電梯' },
+  { id: 'playArea', icon: '🎠', label: '遊戲區' },
+  { id: 'familyToilet', icon: '🚻', label: '親子廁' },
+];
+
+export default function HomePage() {
+  const [selectedFacility, setSelectedFacility] = useState<Facility | null>(null);
+  const [activeFilter, setActiveFilter] = useState<string | null>(null);
+
+  // CartoDB Voyager Style (Grey/Light style)
+  const mapStyleUrl = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
+
+  return (
+    <div className="relative w-full h-screen overflow-hidden">
+      {/* Top Search Bar */}
+      <div className="absolute top-[50px] left-0 right-0 px-4 z-[400]">
+        <div className="bg-white h-[46px] rounded-[999px] shadow-md flex items-center px-5 justify-between">
+          <span className="text-[15px] text-[#1E2D5A] font-bold truncate">
+            目前定位：台北市信義區...
+          </span>
+          <LocateFixed className="text-[#FF6B4A]" size={20} />
+        </div>
+      </div>
+
+      <MapContainer 
+        center={[25.033964, 121.564468]} 
+        zoom={15} 
+        zoomControl={false}
+        className="w-full h-full z-[100]"
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://carto.com/">CARTO</a>'
+          url={mapStyleUrl}
+        />
+        
+        {mockFacilities.map((facility, index) => (
+          <Marker 
+            key={facility.id}
+            position={mockPositions[index] as L.LatLngExpression}
+            icon={facility.type === 'premium' ? premiumIcon : standardIcon}
+            eventHandlers={{
+              click: () => setSelectedFacility(facility)
+            }}
+          />
+        ))}
+      </MapContainer>
+
+      {/* Quick Filters (Horizontal scroll) */}
+      <div className="absolute bottom-[24px] left-0 right-0 z-[400] overflow-x-auto no-scrollbar pb-2">
+        <div className="flex gap-2 px-4 w-max">
+          {QUICK_FILTERS.map((filter) => {
+            const isActive = activeFilter === filter.id;
+            return (
+              <button
+                key={filter.id}
+                onClick={() => setActiveFilter(isActive ? null : filter.id)}
+                className={`flex items-center gap-1.5 px-4 py-2 rounded-[999px] shadow-sm text-[14px] font-bold transition-colors border ${
+                  isActive 
+                    ? 'bg-[#FF6B4A] text-white border-[#FF6B4A]' 
+                    : 'bg-white text-[#1E2D5A] border-gray-200'
+                }`}
+              >
+                <span>{filter.icon}</span>
+                <span>{filter.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Overlay to catch clicks when BottomSheet is open */}
+      {selectedFacility && (
+        <div 
+          className="absolute inset-0 bg-black/20 z-[900]"
+          onClick={() => setSelectedFacility(null)}
+        />
+      )}
+
+      {/* Bottom Sheet */}
+      <FacilityBottomSheet 
+        facility={selectedFacility} 
+        onClose={() => setSelectedFacility(null)} 
+      />
+
+      {/* Hide scrollbar for the quick filter container */}
+      <style dangerouslySetInnerHTML={{__html: `
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .no-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}} />
+    </div>
+  );
+}
