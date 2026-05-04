@@ -2,46 +2,86 @@ import { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import L from 'leaflet';
 import './App.css';
-import { locations, FACILITY_LABELS } from './data/locations';
-import type { Location, FacilityType } from './data/locations';
+import { locations, FACILITY_LABELS, TYPE_CONFIG } from './data/locations';
+import type { Location, FacilityType, LocationType } from './data/locations';
 
 // --- Types ---
 type Screen = 'map' | 'detail' | 'contribute';
 
+const ALL_FACILITIES = Object.keys(FACILITY_LABELS) as FacilityType[];
+
 // --- Icons Definition ---
-const createCustomIcon = (color: string, sizeMultiplier: number = 1) => {
+const createCustomIcon = (type: LocationType, isSelected: boolean, distanceText?: string) => {
+  const config = TYPE_CONFIG[type];
+  const color = config.color;
+  const emoji = config.emoji;
+  
+  const borderStyle = isSelected ? '3px solid #1E2D5A' : '3px solid white';
+  const transformStyle = isSelected ? 'rotate(-45deg) scale(1.3)' : 'rotate(-45deg)';
+  const shadowStyle = isSelected ? '0 4px 16px rgba(0,0,0,0.4)' : '0 2px 8px rgba(0,0,0,0.25)';
+  
+  const distanceBadge = distanceText ? `
+    <div style="
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      color: var(--brand-navy);
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 10px;
+      white-space: nowrap;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      pointer-events: none;
+    ">${distanceText}</div>
+  ` : '';
+
+  const html = `
+    <div style="position: relative;">
+      <div style="
+        width: 40px; height: 40px;
+        background: ${color};
+        border-radius: 50% 50% 50% 4px;
+        transform: ${transformStyle};
+        border: ${borderStyle};
+        box-shadow: ${shadowStyle};
+        display: flex; align-items: center; justify-content: center;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      ">
+        <span style="transform: rotate(45deg); font-size: 18px">${emoji}</span>
+      </div>
+      ${distanceBadge}
+    </div>
+  `;
+
   return L.divIcon({
-    className: 'custom-pin',
-    html: `<div style="
-      background-color: ${color};
-      width: ${20 * sizeMultiplier}px;
-      height: ${20 * sizeMultiplier}px;
-      border-radius: 50%;
-      border: 3px solid white;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-    "></div>`,
-    iconSize: [20 * sizeMultiplier, 20 * sizeMultiplier],
-    iconAnchor: [10 * sizeMultiplier, 10 * sizeMultiplier],
+    className: 'custom-pin-wrapper',
+    html,
+    iconSize: [40, 40],
+    iconAnchor: [20, 40],
   });
 };
 
-const standardIcon = createCustomIcon('#FF6B4A', 1); // --brand-coral
-const premiumIcon = createCustomIcon('#1E2D5A', 1.4); // --brand-navy, larger
-
-// --- Static Data ---
-const ALL_FACILITIES = Object.keys(FACILITY_LABELS) as FacilityType[];
-
 // --- Helpers ---
-function getDistanceKM(lat1: number, lon1: number, lat2: number, lon2: number) {
-  const R = 6371;
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLon = (lon2 - lon1) * Math.PI / 180;
-  const a = 
-    Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
-    Math.sin(dLon/2) * Math.sin(dLon/2); 
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-  return R * c;
+function getDistance(lat1: number, lng1: number, lat2: number, lng2: number): number {
+  const R = 6371000
+  const dLat = (lat2-lat1) * Math.PI/180
+  const dLng = (lng2-lng1) * Math.PI/180
+  const a = Math.sin(dLat/2)**2 +
+    Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) * Math.sin(dLng/2)**2
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
+}
+
+function getDistanceText(lat1: number, lng1: number, lat2: number, lng2: number) {
+  const dist = getDistance(lat1, lng1, lat2, lng2);
+  if (dist < 500) {
+    const mins = Math.ceil(dist / 80);
+    return `步行 ${mins} 分鐘`;
+  } else {
+    return `${(dist / 1000).toFixed(1)} 公里`;
+  }
 }
 
 function isOpenNow(openHours: string) {
@@ -49,7 +89,7 @@ function isOpenNow(openHours: string) {
   try {
     const timeStr = openHours.replace('–', '-').replace(' ', '');
     const [start, end] = timeStr.split('-');
-    if (!start || !end) return true; // Fallback if format unknown
+    if (!start || !end) return true;
     
     const now = new Date();
     const currentMins = now.getHours() * 60 + now.getMinutes();
@@ -63,7 +103,7 @@ function isOpenNow(openHours: string) {
     
     let currentMinsCheck = currentMins;
     if (currentMins < startMins && endMins > 24 * 60) {
-        currentMinsCheck += 24 * 60; // Check late night hours properly
+        currentMinsCheck += 24 * 60;
     }
     
     return currentMinsCheck >= startMins && currentMinsCheck <= endMins;
@@ -79,20 +119,42 @@ export default function App() {
   
   const [userLat, setUserLat] = useState<number | null>(null);
   const [userLng, setUserLng] = useState<number | null>(null);
+  const [locationName, setLocationName] = useState('定位中...');
   
-  // For Contribute page
   const [contributeAmenities, setContributeAmenities] = useState<FacilityType[]>([]);
 
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
-          setUserLat(pos.coords.latitude);
-          setUserLng(pos.coords.longitude);
+          const lat = pos.coords.latitude;
+          const lng = pos.coords.longitude;
+          setUserLat(lat);
+          setUserLng(lng);
+          
+          fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&accept-language=zh-TW`)
+            .then(r => r.json())
+            .then(d => {
+              if (d && d.display_name) {
+                setLocationName(d.display_name.split(',')[0]);
+              } else {
+                setLocationName('無法取得地址');
+              }
+            })
+            .catch(() => setLocationName('無法取得地址'));
         },
-        (err) => console.log('Geolocation error:', err),
+        () => {
+          // 定位失敗時預設台北信義區
+          setUserLat(25.0408);
+          setUserLng(121.5674);
+          setLocationName('台北市信義區');
+        },
         { enableHighAccuracy: true, timeout: 5000 }
       );
+    } else {
+      setUserLat(25.0408);
+      setUserLng(121.5674);
+      setLocationName('台北市信義區');
     }
   }, []);
 
@@ -124,13 +186,13 @@ export default function App() {
   const renderMapScreen = () => (
     <div className="map-page" style={{ height: 'calc(100vh - 60px)' }}>
       <div className="search-pill">
-        <span>目前位置：{userLat && userLng ? '已取得您的位置' : '偵測中...'}</span>
+        <span>目前位置：{locationName}</span>
         <span>📍</span>
       </div>
 
       <MapContainer 
         center={[25.0408, 121.5674]} 
-        zoom={15} 
+        zoom={14} 
         zoomControl={false}
         className="w-full h-full z-[10]"
         style={{ width: '100%', height: '100%' }}
@@ -140,16 +202,26 @@ export default function App() {
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         />
         
-        {filteredLocations.map(loc => (
-          <Marker 
-            key={loc.id}
-            position={[loc.lat, loc.lng]}
-            icon={loc.isPremium ? premiumIcon : standardIcon}
-            eventHandlers={{
-              click: () => handleMarkerClick(loc)
-            }}
-          />
-        ))}
+        {filteredLocations.map(loc => {
+          const isSelected = selectedLocation?.id === loc.id;
+          let distanceText: string | undefined;
+          
+          if (userLat !== null && userLng !== null) {
+            distanceText = getDistanceText(userLat, userLng, loc.lat, loc.lng);
+          }
+          
+          return (
+            <Marker 
+              key={loc.id}
+              position={[loc.lat, loc.lng]}
+              icon={createCustomIcon(loc.type, isSelected, distanceText)}
+              eventHandlers={{
+                click: () => handleMarkerClick(loc)
+              }}
+              zIndexOffset={isSelected ? 1000 : 0}
+            />
+          );
+        })}
       </MapContainer>
 
       <div className="quick-filter-scroll no-scrollbar">
@@ -174,10 +246,7 @@ export default function App() {
     
     let distanceText = '';
     if (userLat && userLng) {
-      const distKm = getDistanceKM(userLat, userLng, loc.lat, loc.lng);
-      // Rough walking speed: 5 km/h -> 1 km = 12 mins
-      const walkMins = Math.round(distKm * 12);
-      distanceText = `🚶 步行 ${walkMins} 分鐘・`;
+      distanceText = getDistanceText(userLat, userLng, loc.lat, loc.lng) + '・';
     }
 
     const isOpen = isOpenNow(loc.openHours);
@@ -200,7 +269,7 @@ export default function App() {
             style={{ width: '100%', height: '100%' }}
           >
             <TileLayer url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" />
-            <Marker position={[loc.lat, loc.lng]} icon={loc.isPremium ? premiumIcon : standardIcon} />
+            <Marker position={[loc.lat, loc.lng]} icon={createCustomIcon(loc.type, true)} />
           </MapContainer>
         </div>
 
@@ -237,9 +306,21 @@ export default function App() {
             <span>需要嬰兒用品？點此查看附近優惠</span>
           </div>
 
+          {loc.website && (
+            <button 
+              className="cta-btn-outline"
+              onClick={() => window.open(loc.website, '_blank')}
+            >
+              <span>🌐</span> 官方網站
+            </button>
+          )}
+
           <button 
             className="cta-btn"
-            onClick={() => window.open(`https://maps.google.com/?q=${loc.lat},${loc.lng}`, '_blank')}
+            onClick={() => {
+              const url = `https://www.google.com/maps/dir/?api=1&destination=${loc.lat},${loc.lng}&travelmode=walking`;
+              window.open(url, '_blank');
+            }}
           >
             <span>📍</span> 開始導航
           </button>
