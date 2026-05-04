@@ -76,69 +76,71 @@ export default function App() {
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
   const [activeFilters, setActiveFilters] = useState<FacilityType[]>([]);
   
+  // GPS State: null = not yet fetched, explicit coords when ready
   const [userLat, setUserLat] = useState<number | null>(null);
   const [userLng, setUserLng] = useState<number | null>(null);
+  const [gpsLoading, setGpsLoading] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
   const [closestLoc, setClosestLoc] = useState<Location | null>(null);
   
   const [mapInstance, setMapInstance] = useState<L.Map | null>(null);
   const [contributeAmenities, setContributeAmenities] = useState<FacilityType[]>([]);
 
+  const showToast = (msg: string) => {
+    setToast(msg);
+    setTimeout(() => setToast(null), 4000);
+  };
+
+  const updateUserLocation = (lat: number, lng: number) => {
+    setUserLat(lat);
+    setUserLng(lng);
+    let minDist = Infinity;
+    let closest: Location | null = null;
+    locations.forEach(loc => {
+      const d = getDistance(lat, lng, loc.lat, loc.lng);
+      if (d < minDist) { minDist = d; closest = loc; }
+    });
+    setClosestLoc(closest);
+  };
+
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          const lat = pos.coords.latitude;
-          const lng = pos.coords.longitude;
-          setUserLat(lat);
-          setUserLng(lng);
-          
-          let minDist = Infinity;
-          let closest: Location | null = null;
-          locations.forEach(loc => {
-            const d = getDistance(lat, lng, loc.lat, loc.lng);
-            if (d < minDist) {
-              minDist = d;
-              closest = loc;
-            }
-          });
-          setClosestLoc(closest);
-        },
-        () => {
-          // 定位失敗
-        },
-        { enableHighAccuracy: true, timeout: 5000 }
+        (pos) => updateUserLocation(pos.coords.latitude, pos.coords.longitude),
+        () => {}, // Silent fail on initial load
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
       );
     }
   }, []);
 
   const handleGPSLocate = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          const lat = pos.coords.latitude;
-          const lng = pos.coords.longitude;
-          setUserLat(lat);
-          setUserLng(lng);
-          
-          if (mapInstance) {
-            mapInstance.flyTo([lat, lng], 15, { animate: true, duration: 1.5 });
-          }
-
-          let minDist = Infinity;
-          let closest: Location | null = null;
-          locations.forEach(loc => {
-            const d = getDistance(lat, lng, loc.lat, loc.lng);
-            if (d < minDist) {
-              minDist = d;
-              closest = loc;
-            }
-          });
-          setClosestLoc(closest);
-        },
-        () => alert('無法取得位置資訊'),
-        { enableHighAccuracy: true, timeout: 5000 }
-      );
+    if (!navigator.geolocation) {
+      showToast('⚠️ 您的裝置不支援 GPS 定位');
+      return;
     }
+    setGpsLoading(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setGpsLoading(false);
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+        updateUserLocation(lat, lng);
+        if (mapInstance) {
+          mapInstance.flyTo([lat, lng], 15, { animate: true, duration: 1.5 });
+        }
+      },
+      (err) => {
+        setGpsLoading(false);
+        if (err.code === err.PERMISSION_DENIED) {
+          showToast('📍 請允許定位權限，以協助您尋找最近的親子空間。');
+          // Graceful fallback to Taiwan overview
+          if (mapInstance) mapInstance.flyTo([25.0330, 121.5654], 12, { animate: true });
+        } else {
+          showToast('⚠️ 定位超時，請確認網路連線後再試一次。');
+        }
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+    );
   };
 
   const toggleFilter = (id: FacilityType) => {
@@ -232,9 +234,13 @@ export default function App() {
       <button
         className="gps-btn"
         onClick={handleGPSLocate}
-        style={{ transform: selectedLocation ? 'translateY(-60vh)' : 'translateY(0)' }} // Move up if sheet is open
+        disabled={gpsLoading}
+        style={{ 
+          transform: selectedLocation ? 'translateY(-60vh)' : 'translateY(0)',
+          opacity: gpsLoading ? 0.6 : 1,
+        }}
       >
-        📍
+        {gpsLoading ? '⌛' : '📍'}
       </button>
 
       {/* Quick Filter */}
@@ -320,10 +326,18 @@ export default function App() {
                 <div className="pill-actions">
                   <button 
                     className="action-pill primary"
+                    disabled={false}
                     onClick={() => {
-                      const lat = selectedLocation.navLat ?? selectedLocation.lat;
-                      const lng = selectedLocation.navLng ?? selectedLocation.lng;
-                      const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`;
+                      const destLat = selectedLocation.navLat ?? selectedLocation.lat;
+                      const destLng = selectedLocation.navLng ?? selectedLocation.lng;
+                      let url: string;
+                      if (userLat !== null && userLng !== null) {
+                        // Include origin for turn-by-turn accuracy
+                        url = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(userLat + ',' + userLng)}&destination=${encodeURIComponent(destLat + ',' + destLng)}&travelmode=walking`;
+                      } else {
+                        // No GPS yet — destination only
+                        url = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destLat + ',' + destLng)}&travelmode=walking`;
+                      }
                       window.open(url, '_blank');
                     }}
                   >
@@ -447,7 +461,29 @@ export default function App() {
   );
 
   return (
-    <div className="app-container">
+    <div className={`app-container ${selectedLocation ? 'sheet-open' : ''}`}>
+      {/* Toast Notification */}
+      {toast && (
+        <div style={{
+          position: 'fixed',
+          top: '80px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          background: 'var(--brand-navy)',
+          color: 'white',
+          padding: '14px 20px',
+          borderRadius: 'var(--r-pill)',
+          fontSize: '14px',
+          fontWeight: 700,
+          zIndex: 9999,
+          whiteSpace: 'nowrap',
+          boxShadow: 'var(--shadow-float)',
+          animation: 'fade-in 0.3s ease-out'
+        }}>
+          {toast}
+        </div>
+      )}
+
       {currentScreen === 'map' && renderMapScreen()}
       {currentScreen === 'contribute' && renderContributeScreen()}
 
