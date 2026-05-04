@@ -1,40 +1,34 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Nunito:wght@400;600;700;800&display=swap');
-
 :root {
   --brand-coral: #FF6B4A;
   --brand-coral-light: #FFF0EC;
   --brand-coral-dark: #E5522E;
   --brand-navy: #1E2D5A;
   --brand-cream: #FDF6EC;
-  --brand-warm-gray: #F5F0E8;
   --brand-green: #2DB87A;
   --brand-amber: #F5A623;
   --brand-muted: #8C7B6E;
-  --r-pill: 999px;
-  --r-card: 20px;
-  --r-btn: 14px;
 }
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
-  font-family: 'Nunito', 'Noto Sans TC', sans-serif;
-  background-color: #f0f0f0; /* Default background outside mobile frame */
+  font-family: 'Nunito', sans-serif;
+  background-color: #f0f0f0;
   color: var(--brand-navy);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Mobile-first base, centered layout */
 #root {
   max-width: 390px;
   margin: 0 auto;
   min-height: 100vh;
-  background-color: var(--brand-cream);
+  background-color: white;
   position: relative;
   overflow-x: hidden;
   box-shadow: 0 0 20px rgba(0,0,0,0.1);
@@ -45,8 +39,19 @@ button {
   cursor: pointer;
   border: none;
   background: none;
+  outline: none;
 }
 
 input, textarea {
   font-family: inherit;
+  outline: none;
+}
+
+/* Hide scrollbar for horizontal scroll elements */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
