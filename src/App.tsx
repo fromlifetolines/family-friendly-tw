@@ -11,26 +11,24 @@ type Screen = 'map' | 'contribute';
 
 const ALL_FACILITIES = Object.keys(FACILITY_LABELS) as FacilityType[];
 
-// --- Icons Definition ---
+// --- Icons Definition (From Life To Lines style: white ring + pastel dot + name chip) ---
 const createCustomIcon = (type: LocationType, locName: string, isSelected: boolean, distanceText?: string) => {
-  const config = TYPE_CONFIG[type];
-  const color = config.color;
-  const svg = config.svg;
-  
-  const tooltipText = distanceText ? `${locName} · ${distanceText}` : locName;
-  
+  const color = TYPE_CONFIG[type].color;
+  const chipLabel = locName.length > 10 ? locName.slice(0, 10) + '…' : locName;
+  const tooltip = distanceText ? `${chipLabel} · ${distanceText}` : chipLabel;
+
   const html = `
-    <div class="marker-badge ${isSelected ? 'selected' : ''}" style="--marker-color: ${color};">
-      <svg class="marker-icon" viewBox="0 0 24 24">${svg}</svg>
-      <div class="marker-tooltip">${tooltipText}</div>
+    <div class="marker-wrap ${isSelected ? 'selected' : ''}" style="--marker-color: ${color};">
+      <div class="marker-chip">${tooltip}</div>
+      <div class="marker-ring"><div class="marker-dot"></div></div>
     </div>
   `;
 
   return L.divIcon({
-    className: 'custom-pin-wrapper',
+    className: '', // empty — avoid leaflet default overflow clipping
     html,
-    iconSize: [40, 40],
-    iconAnchor: [20, 20],
+    iconSize: [110, 58],
+    iconAnchor: [55, 54], // bottom-center of ring maps to coordinate
   });
 };
 
@@ -99,6 +97,26 @@ export default function App() {
   const [closestLoc, setClosestLoc] = useState<Location | null>(null);
   
   const [mapInstance, setMapInstance] = useState<L.Map | null>(null);
+
+  // --- Check-in & Badge System ---
+  const [visitedLocations, setVisitedLocations] = useState<string[]>(() => {
+    try { return JSON.parse(localStorage.getItem('fft-visited') || '[]'); } catch { return []; }
+  });
+
+  // Auto check-in when within 150m of a location
+  useEffect(() => {
+    if (!userLat || !userLng) return;
+    locations.forEach(loc => {
+      if (!visitedLocations.includes(loc.id) && getDistance(userLat, userLng, loc.lat, loc.lng) < 150) {
+        setVisitedLocations(prev => {
+          const updated = [...prev, loc.id];
+          localStorage.setItem('fft-visited', JSON.stringify(updated));
+          return updated;
+        });
+        showToast(`🏅 成功抵達！解鎖「${loc.name}」探險家勳章`);
+      }
+    });
+  }, [userLat, userLng]);
 
   const showToast = (msg: string) => {
     setToast(msg);
@@ -180,25 +198,25 @@ export default function App() {
       )
     : locations;
 
-  // Header Context Logic
-  let headerTitle = "🗺️ 親子友善空間地圖";
-  let headerSub = "為您找到附近最適合寶寶的地點";
-  
-  if (userLat && userLng && closestLoc) {
-    const dist = getDistance(userLat, userLng, closestLoc.lat, closestLoc.lng);
-    if (dist < 2000) { // Only show if within 2km
-      const distStr = dist < 500 ? `${Math.round(dist)} 公尺` : `${(dist / 1000).toFixed(1)} 公里`;
-      headerTitle = `📍 距離 ${closestLoc.name}`;
-      headerSub = `最近的友善設施僅 ${distStr}！`;
-    }
-  }
+
 
   const renderMapScreen = () => (
     <div className="map-page">
-      {/* Contextual Header */}
-      <div className="context-header">
-        <div className="context-header-title">{headerTitle}</div>
-        <div className="context-header-sub">{headerSub}</div>
+      {/* Brand Header */}
+      <div className="brand-header">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: '10px', fontWeight: 800, color: '#FFA07A', letterSpacing: '0.1em', marginBottom: '3px' }}>FROM LIFE TO LINES</div>
+            <div style={{ fontSize: '18px', fontWeight: 900, color: '#262626', lineHeight: 1.2 }}>尋找親子友善空間</div>
+            <div style={{ fontSize: '11px', color: '#A3A3A3', fontWeight: 600, marginTop: '3px' }}>林口三井·願院·捷運站，哺乳室設施一鍵直達</div>
+          </div>
+          <div style={{ width: '38px', height: '38px', background: '#FFD8C4', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px', flexShrink: 0, marginLeft: '12px' }}>🗺️</div>
+        </div>
+        {closestLoc && userLat && (
+          <div style={{ marginTop: '8px', paddingTop: '8px', borderTop: '1px solid rgba(0,0,0,0.06)', fontSize: '12px', color: '#FFA07A', fontWeight: 700 }}>
+            📍 最近：{closestLoc.name}
+          </div>
+        )}
       </div>
 
       <MapContainer 
@@ -477,7 +495,58 @@ export default function App() {
         </button>
       </div>
 
-      {/* Rewards Carousel */}
+      {/* Medal Album */}
+      {(() => {
+        const MEDALS = [
+          { id: 'first-step', title: '第一步', desc: '首次踩點', icon: '👣', unlocked: visitedLocations.length >= 1 },
+          { id: 'nursing-3', title: '哺乳先锋', desc: '踩點 3 個場域', icon: '🍼', unlocked: visitedLocations.length >= 3 },
+          { id: 'linkou-hero', title: '林口冲驇家', desc: '解鎖林口三井', icon: '🏆', unlocked: visitedLocations.includes('linkou-mitsui') },
+          { id: 'hospital', title: '長庚守護者', desc: '解鎖林口長庚', icon: '⚕️', unlocked: visitedLocations.includes('linkou-cgmh') },
+          { id: 'nursing-10', title: '奶瓶大師', desc: '踩點 10 個場域', icon: '🏅', unlocked: visitedLocations.length >= 10 },
+          { id: 'navigator', title: '育兒領航員', desc: '踩點 20 個場域', icon: '🧭', unlocked: visitedLocations.length >= 20 },
+        ];
+        const unlockedCount = MEDALS.filter(m => m.unlocked).length;
+        return (
+          <div style={{ margin: '24px 16px 0' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+              <div style={{ fontSize: '18px', fontWeight: 900, color: '#262626' }}>🏅 勳章堈</div>
+              <div style={{ fontSize: '12px', fontWeight: 700, color: '#A3A3A3' }}>{unlockedCount}/{MEDALS.length} 解鎖</div>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
+              {MEDALS.map(medal => (
+                <div key={medal.id} style={{
+                  background: medal.unlocked ? 'white' : '#F5F5F5',
+                  borderRadius: '20px',
+                  padding: '16px 8px',
+                  textAlign: 'center',
+                  boxShadow: medal.unlocked ? 'var(--shadow-soft)' : 'none',
+                  opacity: medal.unlocked ? 1 : 0.45,
+                  border: medal.unlocked ? '2px solid var(--brand-coral)' : 'none',
+                  transition: 'all 0.3s'
+                }}>
+                  <div style={{ fontSize: '28px', marginBottom: '6px' }}>{medal.icon}</div>
+                  <div style={{ fontSize: '12px', fontWeight: 900, color: '#262626', lineHeight: 1.2 }}>{medal.title}</div>
+                  <div style={{ fontSize: '10px', color: '#A3A3A3', fontWeight: 600, marginTop: '4px' }}>{medal.desc}</div>
+                </div>
+              ))}
+            </div>
+            {visitedLocations.length >= 1 && (
+              <button
+                onClick={() => showToast('🎨 成就證書功能將於正式版啟動，敬請期待！')}
+                style={{
+                  width: '100%', marginTop: '16px',
+                  background: 'linear-gradient(135deg, #FFD8C4, #FFA07A)',
+                  color: '#262626', border: 'none',
+                  padding: '15px', borderRadius: '16px',
+                  fontSize: '15px', fontWeight: 800
+                }}
+              >
+                🔗 分享成就海報（IG 演串流量）
+              </button>
+            )}
+          </div>
+        );
+      })()}
       <div style={{ margin: '24px 0 0' }}>
         <div style={{ padding: '0 16px', fontSize: '18px', fontWeight: 900, color: '#262626', marginBottom: '14px' }}>
           🎁 可兑換好礼
