@@ -12,56 +12,25 @@ type Screen = 'map' | 'contribute';
 const ALL_FACILITIES = Object.keys(FACILITY_LABELS) as FacilityType[];
 
 // --- Icons Definition ---
-const createCustomIcon = (type: LocationType, isSelected: boolean, distanceText?: string) => {
+const createCustomIcon = (type: LocationType, locName: string, isSelected: boolean, distanceText?: string) => {
   const config = TYPE_CONFIG[type];
   const color = config.color;
-  const emoji = config.emoji;
+  const svg = config.svg;
   
-  const borderStyle = isSelected ? '3px solid var(--brand-navy)' : '3px solid white';
-  const transformStyle = isSelected ? 'rotate(-45deg) scale(1.3)' : 'rotate(-45deg)';
-  const shadowStyle = isSelected ? 'var(--shadow-float)' : 'var(--shadow-soft)';
+  const tooltipText = distanceText ? `${locName} · ${distanceText}` : locName;
   
-  const distanceBadge = distanceText ? `
-    <div style="
-      position: absolute;
-      top: -24px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: white;
-      color: var(--brand-navy);
-      font-size: 11px;
-      font-weight: 800;
-      padding: 4px 8px;
-      border-radius: var(--r-pill);
-      white-space: nowrap;
-      box-shadow: var(--shadow-soft);
-      pointer-events: none;
-    ">${distanceText}</div>
-  ` : '';
-
   const html = `
-    <div style="position: relative;">
-      <div style="
-        width: 44px; height: 44px;
-        background: ${color};
-        border-radius: 50% 50% 50% 8px;
-        transform: ${transformStyle};
-        border: ${borderStyle};
-        box-shadow: ${shadowStyle};
-        display: flex; align-items: center; justify-content: center;
-        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-      ">
-        <span style="transform: rotate(45deg); font-size: 20px">${emoji}</span>
-      </div>
-      ${distanceBadge}
+    <div class="marker-container ${isSelected ? 'selected' : ''}" style="--marker-color: ${color};">
+      <svg class="marker-icon" viewBox="0 0 24 24">${svg}</svg>
+      <div class="marker-tooltip">${tooltipText}</div>
     </div>
   `;
 
   return L.divIcon({
     className: 'custom-pin-wrapper',
     html,
-    iconSize: [44, 44],
-    iconAnchor: [22, 44],
+    iconSize: [40, 40],
+    iconAnchor: [20, 20],
   });
 };
 
@@ -241,7 +210,7 @@ export default function App() {
             <Marker 
               key={loc.id}
               position={[loc.lat, loc.lng]}
-              icon={createCustomIcon(loc.type, isSelected, distanceText)}
+              icon={createCustomIcon(loc.type, loc.name, isSelected, distanceText)}
               eventHandlers={{
                 click: () => handleMarkerClick(loc)
               }}
@@ -324,9 +293,13 @@ export default function App() {
                 {selectedLocation.photos && selectedLocation.photos.length > 0 ? (
                   <img src={selectedLocation.photos[0]} className="sheet-photo" alt={selectedLocation.name} />
                 ) : (
-                  <div className="sheet-photo" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '40px' }}>
-                    {TYPE_CONFIG[selectedLocation.type].emoji}
-                  </div>
+                  <div 
+                    className="sheet-photo" 
+                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    dangerouslySetInnerHTML={{ 
+                      __html: `<svg viewBox="0 0 24 24" style="width: 64px; height: 64px; stroke: var(--brand-navy); stroke-width: 2; fill: none;">${TYPE_CONFIG[selectedLocation.type].svg}</svg>` 
+                    }}
+                  />
                 )}
                 
                 <div className="sheet-header">
