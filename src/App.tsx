@@ -103,17 +103,17 @@ export default function App() {
     try { return JSON.parse(localStorage.getItem('fft-visited') || '[]'); } catch { return []; }
   });
 
-  // Auto check-in when within 150m of a location
+  // Auto check-in when within 50m of a location
   useEffect(() => {
     if (!userLat || !userLng) return;
     locations.forEach(loc => {
-      if (!visitedLocations.includes(loc.id) && getDistance(userLat, userLng, loc.lat, loc.lng) < 150) {
+      if (!visitedLocations.includes(loc.id) && getDistance(userLat, userLng, loc.lat, loc.lng) < 50) {
         setVisitedLocations(prev => {
           const updated = [...prev, loc.id];
           localStorage.setItem('fft-visited', JSON.stringify(updated));
           return updated;
         });
-        showToast(`🏅 成功抵達！解鎖「${loc.name}」探險家勳章`);
+        showToast(`📍抵達場域：點擊領取【${loc.name}】勳章`);
       }
     });
   }, [userLat, userLng]);
@@ -206,8 +206,8 @@ export default function App() {
       <div className="brand-header">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: '10px', fontWeight: 800, color: '#FFA07A', letterSpacing: '0.1em', marginBottom: '3px' }}>FROM LIFE TO LINES</div>
-            <div style={{ fontSize: '18px', fontWeight: 900, color: '#262626', lineHeight: 1.2 }}>尋找親子友善空間</div>
+            <div style={{ fontSize: '10px', fontWeight: 800, color: '#FFA07A', letterSpacing: '0.1em', marginBottom: '3px' }}>35DAILY 親子地圖</div>
+            <div style={{ fontSize: '18px', fontWeight: 900, color: '#262626', lineHeight: 1.2 }}>尋找被看見的親子空間</div>
             <div style={{ fontSize: '11px', color: '#A3A3A3', fontWeight: 600, marginTop: '3px' }}>林口三井·願院·捷運站，哺乳室設施一鍵直達</div>
           </div>
           <div style={{ width: '38px', height: '38px', background: '#FFD8C4', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px', flexShrink: 0, marginLeft: '12px' }}>🗺️</div>
@@ -431,11 +431,6 @@ export default function App() {
     </div>
   );
 
-  const REWARDS = [
-    { brand: '林口三井 Outlet', title: '童裝品牌限量 9 折券', coins: 500, color: '#FFD8C4' },
-    { brand: '林口長庚周邊', title: '母嬰用品店贈品兌換', coins: 300, color: '#C4E8D2' },
-    { brand: '大創百貨', title: '嬰兒用品 85 折券', coins: 200, color: '#D8C4FF' },
-  ];
 
   const renderTaskScreen = () => (
     <div className="task-page">
@@ -445,12 +440,12 @@ export default function App() {
         padding: '56px 24px 36px',
         textAlign: 'center'
       }}>
-        <div style={{ fontSize: '12px', fontWeight: 800, color: '#FFA07A', letterSpacing: '0.08em', marginBottom: '10px' }}>FAMILY FRIENDLY TAIWAN</div>
+        <div style={{ fontSize: '12px', fontWeight: 800, color: '#FFA07A', letterSpacing: '0.08em', marginBottom: '10px' }}>35DAILY 親子地圖</div>
         <div style={{ fontSize: '30px', fontWeight: 900, color: '#262626', lineHeight: 1.25 }}>
-          全台最質感的<br/>親子空間地圖
+          鍵入日常、<br/>尋找被看見的親子空間
         </div>
         <div style={{ fontSize: '14px', color: '#A3A3A3', marginTop: '10px', fontWeight: 600 }}>
-          集點回報 · 兑換好礼 · 守護親子幸福
+          探索回報 · 解鎖勳章 · 守護育兒時光
         </div>
       </div>
 
@@ -460,16 +455,17 @@ export default function App() {
           <div>
             <div style={{ fontSize: '12px', opacity: 0.55, fontWeight: 700 }}>我的育兒金</div>
             <div style={{ fontSize: '38px', fontWeight: 900, display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
-              🪙 <span>0</span> <span style={{ fontSize: '16px', opacity: 0.5, fontWeight: 700 }}>點</span>
+              🪙 <span>{visitedLocations.length * 50}</span> <span style={{ fontSize: '16px', opacity: 0.5, fontWeight: 700 }}>點</span>
             </div>
           </div>
           <div style={{ textAlign: 'right', fontSize: '12px', opacity: 0.55, fontWeight: 700 }}>
-            還需 <span style={{ color: '#FFD8C4', opacity: 1 }}>500 點</span><br/>兑換首張折僳券
+            還需 <span style={{ color: '#FFD8C4', opacity: 1 }}>{Math.max(0, 500 - (visitedLocations.length * 50))} 點</span><br/>兌換首張折價券
           </div>
         </div>
         <div style={{ marginTop: '16px', background: 'rgba(255,255,255,0.12)', borderRadius: '999px', height: '6px' }}>
-          <div style={{ width: '0%', background: 'linear-gradient(90deg, #FFD8C4, #FFA07A)', height: '100%', borderRadius: '999px' }} />
+          <div style={{ width: `${Math.min(visitedLocations.length * 10, 100)}%`, background: 'linear-gradient(90deg, #FFD8C4, #FFA07A)', height: '100%', borderRadius: '999px', transition: 'width 0.8s ease' }} />
         </div>
+        <div style={{ marginTop: '12px', fontSize: '11px', opacity: 0.6, fontWeight: 700 }}>踩點 {visitedLocations.length} 個場域，擁有 {visitedLocations.length * 50} 育兒金</div>
       </div>
 
       {/* Active Task */}
@@ -500,7 +496,7 @@ export default function App() {
         const MEDALS = [
           { id: 'first-step', title: '第一步', desc: '首次踩點', icon: '👣', unlocked: visitedLocations.length >= 1 },
           { id: 'nursing-3', title: '哺乳先锋', desc: '踩點 3 個場域', icon: '🍼', unlocked: visitedLocations.length >= 3 },
-          { id: 'linkou-hero', title: '林口冲驇家', desc: '解鎖林口三井', icon: '🏆', unlocked: visitedLocations.includes('linkou-mitsui') },
+          { id: 'linkou-hero', title: '三井活動家', desc: '解鎖林口三井', icon: '🏆', unlocked: visitedLocations.includes('linkou-mitsui') },
           { id: 'hospital', title: '長庚守護者', desc: '解鎖林口長庚', icon: '⚕️', unlocked: visitedLocations.includes('linkou-cgmh') },
           { id: 'nursing-10', title: '奶瓶大師', desc: '踩點 10 個場域', icon: '🏅', unlocked: visitedLocations.length >= 10 },
           { id: 'navigator', title: '育兒領航員', desc: '踩點 20 個場域', icon: '🧭', unlocked: visitedLocations.length >= 20 },
@@ -520,9 +516,9 @@ export default function App() {
                   padding: '16px 8px',
                   textAlign: 'center',
                   boxShadow: medal.unlocked ? 'var(--shadow-soft)' : 'none',
-                  opacity: medal.unlocked ? 1 : 0.45,
-                  border: medal.unlocked ? '2px solid var(--brand-coral)' : 'none',
-                  transition: 'all 0.3s'
+                  opacity: medal.unlocked ? 1 : 0.4,
+                  border: medal.unlocked ? '2px solid #FFD8C4' : '2px dashed #E0E0E0',
+                  transition: 'all 0.4s cubic-bezier(0.16,1,0.3,1)'
                 }}>
                   <div style={{ fontSize: '28px', marginBottom: '6px' }}>{medal.icon}</div>
                   <div style={{ fontSize: '12px', fontWeight: 900, color: '#262626', lineHeight: 1.2 }}>{medal.title}</div>
@@ -547,32 +543,6 @@ export default function App() {
           </div>
         );
       })()}
-      <div style={{ margin: '24px 0 0' }}>
-        <div style={{ padding: '0 16px', fontSize: '18px', fontWeight: 900, color: '#262626', marginBottom: '14px' }}>
-          🎁 可兑換好礼
-        </div>
-        <div className="no-scrollbar" style={{ display: 'flex', gap: '12px', padding: '0 16px 8px', overflowX: 'auto' }}>
-          {REWARDS.map((r, i) => (
-            <div key={i} style={{
-              flex: '0 0 190px',
-              background: r.color,
-              borderRadius: '20px',
-              padding: '20px 16px',
-            }}>
-              <div style={{ fontSize: '11px', fontWeight: 800, color: '#262626', opacity: 0.55, marginBottom: '6px' }}>{r.brand}</div>
-              <div style={{ fontSize: '15px', fontWeight: 900, color: '#262626', lineHeight: 1.3 }}>{r.title}</div>
-              <div style={{
-                marginTop: '14px',
-                background: 'rgba(38,38,38,0.1)',
-                borderRadius: '12px', padding: '10px 12px',
-                fontSize: '14px', fontWeight: 900, color: '#262626'
-              }}>
-                🪙 {r.coins} 點兑換
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
     </div>
   );
 
