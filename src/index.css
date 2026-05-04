@@ -1,12 +1,18 @@
 :root {
-  --brand-coral: #FF6B4A;
+  --brand-coral: #FFD8C4;
   --brand-coral-light: #FFF0EC;
-  --brand-coral-dark: #E5522E;
-  --brand-navy: #1E2D5A;
-  --brand-cream: #FDF6EC;
-  --brand-green: #2DB87A;
+  --brand-coral-dark: #FFA07A;
+  --brand-navy: #262626;
+  --brand-cream: #FFFFFF;
+  --brand-green: #C4E8D2;
   --brand-amber: #F5A623;
-  --brand-muted: #8C7B6E;
+  --brand-muted: #A3A3A3;
+  --brand-purple: #D8C4FF;
+  --shadow-soft: 0px 4px 18px rgba(0,0,0,0.08);
+  --shadow-float: 0px 8px 32px rgba(0,0,0,0.08);
+  --r-pill: 999px;
+  --r-card: 24px;
+  --r-btn: 24px;
 }
 
 * {

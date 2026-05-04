@@ -27,6 +27,7 @@ export interface Location {
   floorInfo?: string
   facilities: Facility[]
   lastUpdated: string
+  photos?: string[]
 }
 
 export const FACILITY_LABELS: Record<FacilityType, string> = {
@@ -74,6 +75,7 @@ export const locations: Location[] = [
       { id: 'family_restroom', available: true },
     ],
     lastUpdated: '2025-01-15',
+    photos: ['https://images.unsplash.com/photo-1540544660406-6aee9dac65e7?auto=format&fit=crop&q=80&w=1200&h=675'],
   },
   {
     id: 'taipei-101',
@@ -99,6 +101,7 @@ export const locations: Location[] = [
       { id: 'family_restroom', available: true },
     ],
     lastUpdated: '2025-01-20',
+    photos: ['https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&q=80&w=1200&h=675'],
   },
   {
     id: 'sogo-zhongxiao',
@@ -124,6 +127,7 @@ export const locations: Location[] = [
       { id: 'family_restroom', available: true },
     ],
     lastUpdated: '2025-01-18',
+    photos: ['https://images.unsplash.com/photo-1555529733-0e67056058e1?auto=format&fit=crop&q=80&w=1200&h=675'],
   },
   {
     id: 'sogo-fuxing',
@@ -149,6 +153,7 @@ export const locations: Location[] = [
       { id: 'family_restroom', available: true },
     ],
     lastUpdated: '2025-01-05',
+    photos: ['https://images.unsplash.com/photo-1542491500-2f6381483863?auto=format&fit=crop&q=80&w=1200&h=675'],
   },
   {
     id: 'breeze-center',
@@ -174,6 +179,7 @@ export const locations: Location[] = [
       { id: 'family_restroom', available: true },
     ],
     lastUpdated: '2025-01-12',
+    photos: ['https://images.unsplash.com/photo-1560961814-1f5be54ccb50?auto=format&fit=crop&q=80&w=1200&h=675'],
   },
   {
     id: 'tianmu-sogo',
@@ -199,6 +205,7 @@ export const locations: Location[] = [
       { id: 'family_restroom', available: true },
     ],
     lastUpdated: '2025-01-08',
+    photos: ['https://images.unsplash.com/photo-1588693959306-03b0d2dce4de?auto=format&fit=crop&q=80&w=1200&h=675'],
   },
   {
     id: 'miramar',
@@ -224,6 +231,7 @@ export const locations: Location[] = [
       { id: 'family_restroom', available: true },
     ],
     lastUpdated: '2024-12-15',
+    photos: ['https://images.unsplash.com/photo-1511211140026-61ee0e4453b3?auto=format&fit=crop&q=80&w=1200&h=675'],
   },
   {
     id: 'mega-city',
@@ -249,6 +257,7 @@ export const locations: Location[] = [
       { id: 'family_restroom', available: true },
     ],
     lastUpdated: '2025-01-25',
+    photos: ['https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?auto=format&fit=crop&q=80&w=1200&h=675'],
   },
   {
     id: 'linkou-mitsui',
@@ -274,6 +283,7 @@ export const locations: Location[] = [
       { id: 'family_restroom', available: true },
     ],
     lastUpdated: '2025-01-28',
+    photos: ['https://images.unsplash.com/photo-1540544660406-6aee9dac65e7?auto=format&fit=crop&q=80&w=1200&h=675'],
   },
 
   // ── 交通樞紐 ──
@@ -301,6 +311,7 @@ export const locations: Location[] = [
       { id: 'family_restroom', available: true },
     ],
     lastUpdated: '2024-12-01',
+    photos: ['https://images.unsplash.com/photo-1494515843206-f3117d3f51b7?auto=format&fit=crop&q=80&w=1200&h=675'],
   },
   {
     id: 'taoyuan-airport-t1',
@@ -326,6 +337,7 @@ export const locations: Location[] = [
       { id: 'family_restroom', available: true },
     ],
     lastUpdated: '2025-01-20',
+    photos: ['https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&q=80&w=1200&h=675'],
   },
   {
     id: 'taoyuan-airport-t2',
@@ -351,6 +363,7 @@ export const locations: Location[] = [
       { id: 'family_restroom', available: true },
     ],
     lastUpdated: '2025-01-20',
+    photos: ['https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&q=80&w=1200&h=675'],
   },
 
   // ── 醫療院所 ──
@@ -378,6 +391,7 @@ export const locations: Location[] = [
       { id: 'family_restroom', available: true },
     ],
     lastUpdated: '2025-01-10',
+    photos: ['https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=1200&h=675'],
   },
   {
     id: 'ntuh',
@@ -430,6 +444,7 @@ export const locations: Location[] = [
       { id: 'family_restroom', available: true },
     ],
     lastUpdated: '2024-11-15',
+    photos: ['https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?auto=format&fit=crop&q=80&w=1200&h=675'],
   },
   {
     id: 'taipei-zoo',
@@ -455,5 +470,6 @@ export const locations: Location[] = [
       { id: 'family_restroom', available: true },
     ],
     lastUpdated: '2025-01-22',
+    photos: ['https://images.unsplash.com/photo-1500215668615-58fb3b19b0de?auto=format&fit=crop&q=80&w=1200&h=675'],
   },
 ];

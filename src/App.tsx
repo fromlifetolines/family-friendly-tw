@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
+import { motion, AnimatePresence } from 'framer-motion';
 import L from 'leaflet';
 import './App.css';
 import { locations, FACILITY_LABELS, TYPE_CONFIG } from './data/locations';
 import type { Location, FacilityType, LocationType } from './data/locations';
 
 // --- Types ---
-type Screen = 'map' | 'detail' | 'contribute';
+type Screen = 'map' | 'contribute';
 
 const ALL_FACILITIES = Object.keys(FACILITY_LABELS) as FacilityType[];
 
@@ -16,24 +17,24 @@ const createCustomIcon = (type: LocationType, isSelected: boolean, distanceText?
   const color = config.color;
   const emoji = config.emoji;
   
-  const borderStyle = isSelected ? '3px solid #1E2D5A' : '3px solid white';
+  const borderStyle = isSelected ? '3px solid var(--brand-navy)' : '3px solid white';
   const transformStyle = isSelected ? 'rotate(-45deg) scale(1.3)' : 'rotate(-45deg)';
-  const shadowStyle = isSelected ? '0 4px 16px rgba(0,0,0,0.4)' : '0 2px 8px rgba(0,0,0,0.25)';
+  const shadowStyle = isSelected ? 'var(--shadow-float)' : 'var(--shadow-soft)';
   
   const distanceBadge = distanceText ? `
     <div style="
       position: absolute;
-      top: -20px;
+      top: -24px;
       left: 50%;
       transform: translateX(-50%);
       background: white;
       color: var(--brand-navy);
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 800;
-      padding: 2px 6px;
-      border-radius: 10px;
+      padding: 4px 8px;
+      border-radius: var(--r-pill);
       white-space: nowrap;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      box-shadow: var(--shadow-soft);
       pointer-events: none;
     ">${distanceText}</div>
   ` : '';
@@ -41,16 +42,16 @@ const createCustomIcon = (type: LocationType, isSelected: boolean, distanceText?
   const html = `
     <div style="position: relative;">
       <div style="
-        width: 40px; height: 40px;
+        width: 44px; height: 44px;
         background: ${color};
-        border-radius: 50% 50% 50% 4px;
+        border-radius: 50% 50% 50% 8px;
         transform: ${transformStyle};
         border: ${borderStyle};
         box-shadow: ${shadowStyle};
         display: flex; align-items: center; justify-content: center;
-        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
       ">
-        <span style="transform: rotate(45deg); font-size: 18px">${emoji}</span>
+        <span style="transform: rotate(45deg); font-size: 20px">${emoji}</span>
       </div>
       ${distanceBadge}
     </div>
@@ -59,8 +60,8 @@ const createCustomIcon = (type: LocationType, isSelected: boolean, distanceText?
   return L.divIcon({
     className: 'custom-pin-wrapper',
     html,
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
+    iconSize: [44, 44],
+    iconAnchor: [22, 44],
   });
 };
 
@@ -69,15 +70,15 @@ const createUserIcon = () => {
     className: 'user-pin-wrapper',
     html: `
       <div style="
-        width: 16px; height: 16px;
-        background: #378ADD;
+        width: 20px; height: 20px;
+        background: var(--brand-green);
         border-radius: 50%;
-        border: 3px solid white;
-        box-shadow: 0 0 8px rgba(0,0,0,0.5);
+        border: 4px solid white;
+        box-shadow: 0 0 12px rgba(0,0,0,0.15);
       "></div>
     `,
-    iconSize: [22, 22],
-    iconAnchor: [11, 11]
+    iconSize: [28, 28],
+    iconAnchor: [14, 14]
   });
 };
 
@@ -101,34 +102,6 @@ function getDistanceText(lat1: number, lng1: number, lat2: number, lng2: number)
   }
 }
 
-function isOpenNow(openHours: string) {
-  if (openHours.includes('24小時') || openHours.includes('全天開放')) return true;
-  try {
-    const timeStr = openHours.replace('–', '-').replace(' ', '');
-    const [start, end] = timeStr.split('-');
-    if (!start || !end) return true;
-    
-    const now = new Date();
-    const currentMins = now.getHours() * 60 + now.getMinutes();
-    
-    const [sH, sM] = start.split(':').map(Number);
-    const startMins = sH * 60 + (sM || 0);
-    
-    const [eH, eM] = end.split(':').map(Number);
-    let endMins = eH * 60 + (eM || 0);
-    if (endMins < startMins) endMins += 24 * 60; // passes midnight
-    
-    let currentMinsCheck = currentMins;
-    if (currentMins < startMins && endMins > 24 * 60) {
-        currentMinsCheck += 24 * 60;
-    }
-    
-    return currentMinsCheck >= startMins && currentMinsCheck <= endMins;
-  } catch (e) {
-    return true; // Fallback
-  }
-}
-
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('map');
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
@@ -136,10 +109,9 @@ export default function App() {
   
   const [userLat, setUserLat] = useState<number | null>(null);
   const [userLng, setUserLng] = useState<number | null>(null);
-  const [locationName, setLocationName] = useState('定位中...');
+  const [closestLoc, setClosestLoc] = useState<Location | null>(null);
   
   const [mapInstance, setMapInstance] = useState<L.Map | null>(null);
-  const [closestLocationToast, setClosestLocationToast] = useState<{text: string} | null>(null);
   const [contributeAmenities, setContributeAmenities] = useState<FacilityType[]>([]);
 
   useEffect(() => {
@@ -151,56 +123,24 @@ export default function App() {
           setUserLat(lat);
           setUserLng(lng);
           
-          fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&accept-language=zh-TW`)
-            .then(r => r.json())
-            .then(d => {
-              if (d && d.display_name) {
-                setLocationName(d.display_name.split(',')[0]);
-              } else {
-                setLocationName('無法取得地址');
-              }
-            })
-            .catch(() => setLocationName('無法取得地址'));
+          let minDist = Infinity;
+          let closest: Location | null = null;
+          locations.forEach(loc => {
+            const d = getDistance(lat, lng, loc.lat, loc.lng);
+            if (d < minDist) {
+              minDist = d;
+              closest = loc;
+            }
+          });
+          setClosestLoc(closest);
         },
         () => {
-          // 定位失敗時預設台北信義區
-          setUserLat(25.0408);
-          setUserLng(121.5674);
-          setLocationName('台北市信義區');
+          // 定位失敗
         },
         { enableHighAccuracy: true, timeout: 5000 }
       );
-    } else {
-      setUserLat(25.0408);
-      setUserLng(121.5674);
-      setLocationName('台北市信義區');
     }
   }, []);
-
-  const toggleFilter = (id: FacilityType) => {
-    setActiveFilters(prev => 
-      prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]
-    );
-  };
-
-  const toggleContributeAmenity = (id: FacilityType) => {
-    setContributeAmenities(prev => 
-      prev.includes(id) ? prev.filter(a => a !== id) : [...prev, id]
-    );
-  };
-
-  const handleMarkerClick = (loc: Location) => {
-    setSelectedLocation(loc);
-    setCurrentScreen('detail');
-  };
-
-  const filteredLocations = activeFilters.length > 0
-    ? locations.filter(loc => 
-        activeFilters.every(filter => 
-          loc.facilities.some(f => f.id === filter && f.available)
-        )
-      )
-    : locations;
 
   const handleGPSLocate = () => {
     if (navigator.geolocation) {
@@ -212,33 +152,19 @@ export default function App() {
           setUserLng(lng);
           
           if (mapInstance) {
-            mapInstance.flyTo([lat, lng], 14, { animate: true });
+            mapInstance.flyTo([lat, lng], 15, { animate: true, duration: 1.5 });
           }
 
           let minDist = Infinity;
-          let closestLoc: any = null;
+          let closest: Location | null = null;
           locations.forEach(loc => {
             const d = getDistance(lat, lng, loc.lat, loc.lng);
             if (d < minDist) {
               minDist = d;
-              closestLoc = loc;
+              closest = loc;
             }
           });
-
-          if (closestLoc) {
-            const distKm = (minDist / 1000).toFixed(1);
-            setClosestLocationToast({ text: `📍 距你最近：${closestLoc.name}，${distKm} 公里` });
-            setTimeout(() => setClosestLocationToast(null), 3000);
-          }
-          
-          fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&accept-language=zh-TW`)
-            .then(r => r.json())
-            .then(d => {
-              if (d && d.display_name) {
-                setLocationName(d.display_name.split(',')[0]);
-              }
-            })
-            .catch(() => {});
+          setClosestLoc(closest);
         },
         () => alert('無法取得位置資訊'),
         { enableHighAccuracy: true, timeout: 5000 }
@@ -246,31 +172,48 @@ export default function App() {
     }
   };
 
-  const renderMapScreen = () => (
-    <div className="map-page" style={{ height: 'calc(100vh - 60px)', position: 'relative' }}>
-      <div style={{
-        position: 'absolute', top: 0, left: 0, width: '100%', zIndex: 1000,
-        backgroundColor: '#1E2D5A',
-        padding: '12px 18px',
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center'
-      }}>
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <span style={{ color: 'white', fontSize: '16px', fontWeight: 800 }}>🗺️ 親子友善地圖</span>
-          <span style={{ color: 'white', fontSize: '11px', opacity: 0.7 }}>台灣最完整的親子設施指南</span>
-        </div>
-        <div style={{
-          backgroundColor: '#FF6B4A',
-          borderRadius: '999px',
-          padding: '3px 10px',
-          color: 'white',
-          fontSize: '11px',
-          fontWeight: 700
-        }}>Beta</div>
-      </div>
+  const toggleFilter = (id: FacilityType) => {
+    setActiveFilters(prev => 
+      prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]
+    );
+    setSelectedLocation(null); // Close bottom sheet on filter change
+  };
 
-      <div className="search-pill" style={{ top: '64px' }}>
-        <span>目前位置：{locationName}</span>
-        <span>📍</span>
+  const handleMarkerClick = (loc: Location) => {
+    setSelectedLocation(loc);
+    if (mapInstance) {
+      // Pan slightly down so the marker isn't covered by the bottom sheet
+      mapInstance.flyTo([loc.lat - 0.003, loc.lng], 15, { animate: true, duration: 0.8 });
+    }
+  };
+
+  const filteredLocations = activeFilters.length > 0
+    ? locations.filter(loc => 
+        activeFilters.every(filter => 
+          loc.facilities.some(f => f.id === filter && f.available)
+        )
+      )
+    : locations;
+
+  // Header Context Logic
+  let headerTitle = "🗺️ 親子友善空間地圖";
+  let headerSub = "為您找到附近最適合寶寶的地點";
+  
+  if (userLat && userLng && closestLoc) {
+    const dist = getDistance(userLat, userLng, closestLoc.lat, closestLoc.lng);
+    if (dist < 2000) { // Only show if within 2km
+      const distStr = dist < 500 ? `${Math.round(dist)} 公尺` : `${(dist / 1000).toFixed(1)} 公里`;
+      headerTitle = `📍 距離 ${closestLoc.name}`;
+      headerSub = `最近的友善設施僅 ${distStr}！`;
+    }
+  }
+
+  const renderMapScreen = () => (
+    <div className="map-page">
+      {/* Contextual Header */}
+      <div className="context-header">
+        <div className="context-header-title">{headerTitle}</div>
+        <div className="context-header-sub">{headerSub}</div>
       </div>
 
       <MapContainer 
@@ -316,52 +259,24 @@ export default function App() {
         )}
       </MapContainer>
 
-      {closestLocationToast && (
-        <div style={{
-          position: 'absolute',
-          right: '14px',
-          bottom: '200px',
-          zIndex: 1000,
-          backgroundColor: 'white',
-          borderRadius: '12px',
-          padding: '0 16px',
-          height: '48px',
-          display: 'flex',
-          alignItems: 'center',
-          boxShadow: '0 2px 12px rgba(0,0,0,0.15)',
-          color: '#1E2D5A',
-          fontSize: '13px',
-          fontWeight: 600,
-          animation: 'fade-in 0.3s ease-out'
-        }}>
-          {closestLocationToast.text}
-        </div>
-      )}
-
+      {/* GPS Button */}
       <button
+        className="gps-btn"
         onClick={handleGPSLocate}
-        style={{
-          position: 'absolute',
-          right: '14px',
-          bottom: '140px',
-          zIndex: 1000,
-          width: '52px',
-          height: '52px',
-          backgroundColor: 'white',
-          border: '0.5px solid rgba(0,0,0,0.12)',
-          borderRadius: '50%',
-          boxShadow: '0 2px 12px rgba(0,0,0,0.15)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: '20px',
-          cursor: 'pointer'
-        }}
+        style={{ transform: selectedLocation ? 'translateY(-60vh)' : 'translateY(0)' }} // Move up if sheet is open
       >
         📍
       </button>
 
-      <div className="quick-filter-scroll no-scrollbar">
+      {/* Quick Filter */}
+      <div 
+        className="quick-filter-scroll no-scrollbar"
+        style={{ 
+          opacity: selectedLocation ? 0 : 1,
+          pointerEvents: selectedLocation ? 'none' : 'auto',
+          transform: selectedLocation ? 'translateY(20px)' : 'translateY(0)'
+        }}
+      >
         {ALL_FACILITIES.map(key => {
           const isActive = activeFilters.includes(key);
           return (
@@ -370,188 +285,188 @@ export default function App() {
               className={`quick-filter-btn ${isActive ? 'active' : ''}`}
               onClick={() => toggleFilter(key)}
             >
-              {FACILITY_LABELS[key]}
+              <span style={{ fontSize: '18px' }}>{FACILITY_LABELS[key].split(' ')[0]}</span>
+              <span>{FACILITY_LABELS[key].split(' ')[1]}</span>
             </button>
           );
         })}
       </div>
+
+      {/* Bottom Sheet Detail View */}
+      <AnimatePresence>
+        {selectedLocation && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.3 }}
+              exit={{ opacity: 0 }}
+              style={{
+                position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+                background: 'black', zIndex: 1500
+              }}
+              onClick={() => setSelectedLocation(null)}
+            />
+            <motion.div
+              className="bottom-sheet"
+              initial={{ y: '100%' }}
+              animate={{ y: 0 }}
+              exit={{ y: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              drag="y"
+              dragConstraints={{ top: 0, bottom: 0 }}
+              onDragEnd={(_, info) => {
+                if (info.offset.y > 100) setSelectedLocation(null);
+              }}
+            >
+              <div className="sheet-drag-handle" />
+              
+              <div className="sheet-content">
+                {selectedLocation.photos && selectedLocation.photos.length > 0 ? (
+                  <img src={selectedLocation.photos[0]} className="sheet-photo" alt={selectedLocation.name} />
+                ) : (
+                  <div className="sheet-photo" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '40px' }}>
+                    {TYPE_CONFIG[selectedLocation.type].emoji}
+                  </div>
+                )}
+                
+                <div className="sheet-header">
+                  <div className="sheet-title">{selectedLocation.name}</div>
+                  <div className="sheet-subtitle">{selectedLocation.branch} • {selectedLocation.openHours}</div>
+                </div>
+
+                <div className="pill-actions">
+                  <button 
+                    className="action-pill primary"
+                    onClick={() => {
+                      const url = `https://www.google.com/maps/dir/?api=1&destination=${selectedLocation.lat},${selectedLocation.lng}&travelmode=walking`;
+                      window.open(url, '_blank');
+                    }}
+                  >
+                    <span>📍</span> 一鍵導航
+                  </button>
+                  <button className="action-pill">
+                    <span>🗺️</span> 樓層平面圖
+                  </button>
+                  <button 
+                    className="action-pill"
+                    onClick={() => {
+                      document.getElementById('facility-section')?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                  >
+                    <span>✨</span> 設備清單
+                  </button>
+                </div>
+
+                <div id="facility-section" className="section-title">提供設施</div>
+                <div className="amenity-grid-3">
+                  {ALL_FACILITIES.map(key => {
+                    const fac = selectedLocation.facilities.find(f => f.id === key);
+                    const isAvailable = fac?.available ?? false;
+                    
+                    return (
+                      <div key={key} className={`amenity-card ${isAvailable ? 'active' : 'inactive'}`}>
+                        <div className="amenity-card-icon">{FACILITY_LABELS[key].split(' ')[0]}</div>
+                        <div className="amenity-card-label">{FACILITY_LABELS[key].split(' ')[1]}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 
-  const renderDetailScreen = () => {
-    const loc = selectedLocation || locations[0];
-    
-    let distanceText = '';
-    if (userLat && userLng) {
-      distanceText = getDistanceText(userLat, userLng, loc.lat, loc.lng) + '・';
-    }
-
-    const isOpen = isOpenNow(loc.openHours);
-
-    return (
-      <div className="info-page" style={{ paddingBottom: '80px' }}>
-        <div className="mini-map" style={{ height: '160px' }}>
-          <button className="back-btn" onClick={() => setCurrentScreen('map')}>
-            ←
-          </button>
-          <MapContainer 
-            center={[loc.lat, loc.lng]} 
-            zoom={16} 
-            zoomControl={false}
-            attributionControl={false}
-            dragging={false}
-            scrollWheelZoom={false}
-            doubleClickZoom={false}
-            touchZoom={false}
-            className="w-full h-full"
-            style={{ width: '100%', height: '100%' }}
-          >
-            <TileLayer url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" />
-            <Marker position={[loc.lat, loc.lng]} icon={createCustomIcon(loc.type, true)} />
-          </MapContainer>
-        </div>
-
-        <div className="info-card">
-          <h1 className="info-title">{loc.name} {loc.branch}</h1>
-          
-          <div className="info-status" style={{ color: isOpen ? 'var(--brand-green)' : 'var(--brand-coral)' }}>
-            {distanceText}{isOpen ? '營業中' : '已打烊'} ({loc.openHours})
-          </div>
-
-          <div style={{ marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '14px', fontWeight: 'bold' }}>
-            <span style={{ color: 'var(--brand-amber)' }}>{'★'.repeat(Math.round(loc.rating))}</span>
-            <span>{loc.rating.toFixed(1)}</span>
-            <span style={{ color: 'var(--brand-muted)', marginLeft: '4px' }}>({loc.reviewCount} 則評價)</span>
-          </div>
-
-          <div className="amenity-grid-4">
-            {ALL_FACILITIES.map(key => {
-              const fac = loc.facilities.find(f => f.id === key);
-              const isAvailable = fac?.available ?? false;
-              
-              return (
-                <div key={key} className={`amenity-item ${isAvailable ? 'has' : 'none'}`}>
-                  <span style={{ fontSize: '24px' }}>{FACILITY_LABELS[key].split(' ')[0]}</span>
-                  <span>{FACILITY_LABELS[key].split(' ')[1]}</span>
-                  {fac?.note && <span style={{ fontSize: '10px', marginTop: '4px', color: 'var(--brand-coral)' }}>{fac.note}</span>}
-                </div>
-              );
-            })}
-          </div>
-
-          <div className="ad-banner">
-            <span style={{ fontSize: '24px' }}>💡</span>
-            <span>需要嬰兒用品？點此查看附近優惠</span>
-          </div>
-
-          {loc.website && (
-            <button 
-              className="cta-btn-outline"
-              onClick={() => window.open(loc.website, '_blank')}
-            >
-              <span>🌐</span> 官方網站
-            </button>
-          )}
-
-          <button 
-            className="cta-btn"
-            onClick={() => {
-              const url = `https://www.google.com/maps/dir/?api=1&destination=${loc.lat},${loc.lng}&travelmode=walking`;
-              window.open(url, '_blank');
-            }}
-          >
-            <span>📍</span> 開始導航
-          </button>
-        </div>
-      </div>
-    );
-  };
-
   const renderContributeScreen = () => (
     <div className="contribute-page">
-      <div className="contribute-header">
-        <h1 className="contribute-title">回報設施情報</h1>
-        <div className="auto-location-pill">
-          📍 已自動定位：{selectedLocation?.name || '請先在地圖上選擇地點'}
-        </div>
+      <h1 className="contribute-title">回報情報</h1>
+      <p style={{ color: 'var(--brand-muted)', marginBottom: '24px', fontWeight: 600 }}>
+        選擇您目前所在的設施，並更新情報。
+      </p>
+
+      <div style={{ marginBottom: '32px' }}>
+        {ALL_FACILITIES.map(key => {
+          const isSelected = contributeAmenities.includes(key);
+          return (
+            <button 
+              key={key}
+              onClick={() => {
+                setContributeAmenities(prev => 
+                  prev.includes(key) ? prev.filter(a => a !== key) : [...prev, key]
+                );
+              }}
+              style={{
+                width: '100%',
+                padding: '16px',
+                borderRadius: '20px',
+                marginBottom: '12px',
+                background: isSelected ? 'var(--brand-navy)' : 'white',
+                color: isSelected ? 'white' : 'var(--brand-navy)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                fontWeight: 800,
+                boxShadow: 'var(--shadow-soft)',
+                border: isSelected ? 'none' : '1px solid rgba(0,0,0,0.05)',
+                transition: 'all 0.2s'
+              }}
+            >
+              <span style={{ fontSize: '24px' }}>{FACILITY_LABELS[key].split(' ')[0]}</span>
+              {FACILITY_LABELS[key].split(' ')[1]}
+            </button>
+          );
+        })}
       </div>
 
-      <div className="contribute-content">
-        <div className="section-title">這間設施有哪些服務？</div>
-        <div className="amenity-grid-4">
-          {ALL_FACILITIES.map(key => {
-            const isSelected = contributeAmenities.includes(key);
-            return (
-              <button 
-                key={key}
-                className={`toggle-btn ${isSelected ? 'selected' : ''}`}
-                onClick={() => toggleContributeAmenity(key)}
-              >
-                <span style={{ fontSize: '28px' }}>{FACILITY_LABELS[key].split(' ')[0]}</span>
-                <span>{FACILITY_LABELS[key].split(' ')[1]}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        <div className="section-title">上傳現場照片（選填）</div>
-        <label className="photo-area">
-          <input type="file" accept="image/*" capture="environment" style={{ display: 'none' }} onChange={(e) => console.log(e.target.files)} />
-          📷 拍張現場照
-        </label>
-
-        <div className="points-card">
-          <span className="points-text">貢獻者積分</span>
-          <span className="points-badge">+50 徽章</span>
-        </div>
-
-        <button 
-          className="submit-btn" 
-          onClick={() => {
-            console.log('Submitted payload:', {
-              locationId: selectedLocation?.id,
-              facilities: contributeAmenities
-            });
-            alert('情報送出成功！');
-          }}
-        >
-          <span>🚀</span> 送出情報，獲得 50 點
-        </button>
-      </div>
+      <button 
+        style={{
+          width: '100%',
+          padding: '18px',
+          background: 'var(--brand-coral)',
+          color: 'var(--brand-navy)',
+          borderRadius: 'var(--r-pill)',
+          fontWeight: 800,
+          fontSize: '16px',
+          boxShadow: 'var(--shadow-float)'
+        }}
+        onClick={() => {
+          alert('情報送出成功！獲得貢獻積分。');
+          setCurrentScreen('map');
+        }}
+      >
+        🚀 送出情報
+      </button>
     </div>
   );
 
   return (
     <div className="app-container">
       {currentScreen === 'map' && renderMapScreen()}
-      {currentScreen === 'detail' && renderDetailScreen()}
       {currentScreen === 'contribute' && renderContributeScreen()}
 
       {/* Bottom Nav */}
       <div className="bottom-nav">
         <button 
           className={`nav-item ${currentScreen === 'map' ? 'active' : ''}`}
-          onClick={() => setCurrentScreen('map')}
-        >
-          <span className="nav-icon">🗺️</span>
-          地圖
-        </button>
-        <button 
-          className={`nav-item ${currentScreen === 'detail' ? 'active' : ''}`}
           onClick={() => {
-            if (selectedLocation) setCurrentScreen('detail');
-            else alert('請先在地圖上選擇一個地點');
+            setCurrentScreen('map');
+            setSelectedLocation(null);
           }}
         >
-          <span className="nav-icon">📋</span>
-          資訊
+          <span className="nav-icon">🗺️</span>
+          地圖探索
         </button>
         <button 
           className={`nav-item ${currentScreen === 'contribute' ? 'active' : ''}`}
-          onClick={() => setCurrentScreen('contribute')}
+          onClick={() => {
+            setCurrentScreen('contribute');
+            setSelectedLocation(null);
+          }}
         >
           <span className="nav-icon">➕</span>
-          回報
+          共同編輯
         </button>
       </div>
     </div>
