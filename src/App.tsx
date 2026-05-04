@@ -20,7 +20,7 @@ const createCustomIcon = (type: LocationType, locName: string, isSelected: boole
   const tooltipText = distanceText ? `${locName} · ${distanceText}` : locName;
   
   const html = `
-    <div class="marker-container ${isSelected ? 'selected' : ''}" style="--marker-color: ${color};">
+    <div class="marker-badge ${isSelected ? 'selected' : ''}" style="--marker-color: ${color};">
       <svg class="marker-icon" viewBox="0 0 24 24">${svg}</svg>
       <div class="marker-tooltip">${tooltipText}</div>
     </div>
@@ -99,7 +99,6 @@ export default function App() {
   const [closestLoc, setClosestLoc] = useState<Location | null>(null);
   
   const [mapInstance, setMapInstance] = useState<L.Map | null>(null);
-  const [contributeAmenities, setContributeAmenities] = useState<FacilityType[]>([]);
 
   const showToast = (msg: string) => {
     setToast(msg);
@@ -414,65 +413,97 @@ export default function App() {
     </div>
   );
 
-  const renderContributeScreen = () => (
-    <div className="contribute-page">
-      <h1 className="contribute-title">回報情報</h1>
-      <p style={{ color: 'var(--brand-muted)', marginBottom: '24px', fontWeight: 600 }}>
-        選擇您目前所在的設施，並更新情報。
-      </p>
+  const REWARDS = [
+    { brand: '林口三井 Outlet', title: '童裝品牌限量 9 折券', coins: 500, color: '#FFD8C4' },
+    { brand: '林口長庚周邊', title: '母嬰用品店贈品兌換', coins: 300, color: '#C4E8D2' },
+    { brand: '大創百貨', title: '嬰兒用品 85 折券', coins: 200, color: '#D8C4FF' },
+  ];
 
-      <div style={{ marginBottom: '32px' }}>
-        {ALL_FACILITIES.map(key => {
-          const isSelected = contributeAmenities.includes(key);
-          return (
-            <button 
-              key={key}
-              onClick={() => {
-                setContributeAmenities(prev => 
-                  prev.includes(key) ? prev.filter(a => a !== key) : [...prev, key]
-                );
-              }}
-              style={{
-                width: '100%',
-                padding: '16px',
-                borderRadius: '20px',
-                marginBottom: '12px',
-                background: isSelected ? 'var(--brand-navy)' : 'white',
-                color: isSelected ? 'white' : 'var(--brand-navy)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                fontWeight: 800,
-                boxShadow: 'var(--shadow-soft)',
-                border: isSelected ? 'none' : '1px solid rgba(0,0,0,0.05)',
-                transition: 'all 0.2s'
-              }}
-            >
-              <span style={{ fontSize: '24px' }}>{FACILITY_LABELS[key].split(' ')[0]}</span>
-              {FACILITY_LABELS[key].split(' ')[1]}
-            </button>
-          );
-        })}
+  const renderTaskScreen = () => (
+    <div className="task-page">
+      {/* Hero Banner */}
+      <div style={{
+        background: 'linear-gradient(160deg, #FFD8C4 0%, #FFF5F0 55%, #FFFFFF 100%)',
+        padding: '56px 24px 36px',
+        textAlign: 'center'
+      }}>
+        <div style={{ fontSize: '12px', fontWeight: 800, color: '#FFA07A', letterSpacing: '0.08em', marginBottom: '10px' }}>FAMILY FRIENDLY TAIWAN</div>
+        <div style={{ fontSize: '30px', fontWeight: 900, color: '#262626', lineHeight: 1.25 }}>
+          全台最質感的<br/>親子空間地圖
+        </div>
+        <div style={{ fontSize: '14px', color: '#A3A3A3', marginTop: '10px', fontWeight: 600 }}>
+          集點回報 · 兑換好礼 · 守護親子幸福
+        </div>
       </div>
 
-      <button 
-        style={{
-          width: '100%',
-          padding: '18px',
-          background: 'var(--brand-coral)',
-          color: 'var(--brand-navy)',
-          borderRadius: 'var(--r-pill)',
-          fontWeight: 800,
-          fontSize: '16px',
-          boxShadow: 'var(--shadow-float)'
-        }}
-        onClick={() => {
-          alert('情報送出成功！獲得貢獻積分。');
-          setCurrentScreen('map');
-        }}
-      >
-        🚀 送出情報
-      </button>
+      {/* Coin Wallet */}
+      <div style={{ margin: '0 16px', marginTop: '-20px', background: '#262626', borderRadius: '24px', padding: '24px', color: 'white' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <div style={{ fontSize: '12px', opacity: 0.55, fontWeight: 700 }}>我的育兒金</div>
+            <div style={{ fontSize: '38px', fontWeight: 900, display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
+              🪙 <span>0</span> <span style={{ fontSize: '16px', opacity: 0.5, fontWeight: 700 }}>點</span>
+            </div>
+          </div>
+          <div style={{ textAlign: 'right', fontSize: '12px', opacity: 0.55, fontWeight: 700 }}>
+            還需 <span style={{ color: '#FFD8C4', opacity: 1 }}>500 點</span><br/>兑換首張折僳券
+          </div>
+        </div>
+        <div style={{ marginTop: '16px', background: 'rgba(255,255,255,0.12)', borderRadius: '999px', height: '6px' }}>
+          <div style={{ width: '0%', background: 'linear-gradient(90deg, #FFD8C4, #FFA07A)', height: '100%', borderRadius: '999px' }} />
+        </div>
+      </div>
+
+      {/* Active Task */}
+      <div style={{ margin: '16px 16px 0', background: '#FFF5F0', borderRadius: '24px', padding: '22px' }}>
+        <div style={{ fontSize: '11px', color: '#FFA07A', fontWeight: 800, letterSpacing: '0.06em' }}>限時任務</div>
+        <div style={{ fontSize: '20px', fontWeight: 900, color: '#262626', marginTop: '6px' }}>
+          📍 踩點回報最新設施狀態
+        </div>
+        <div style={{ fontSize: '13px', color: '#A3A3A3', marginTop: '4px', fontWeight: 600 }}>
+          上傳哺乳室或設備現況照片
+        </div>
+        <div style={{ fontSize: '36px', fontWeight: 900, color: '#FFA07A', marginTop: '6px' }}>+50 育兒金</div>
+        <button
+          style={{
+            width: '100%', marginTop: '16px',
+            background: '#262626', color: 'white',
+            padding: '17px', borderRadius: '16px',
+            fontSize: '16px', fontWeight: 800, border: 'none',
+          }}
+          onClick={() => showToast('🔥 任務帹片開啟！請到地圖上選擇一個場域進行回報。')}
+        >
+          領取回報任務 (+50點)
+        </button>
+      </div>
+
+      {/* Rewards Carousel */}
+      <div style={{ margin: '24px 0 0' }}>
+        <div style={{ padding: '0 16px', fontSize: '18px', fontWeight: 900, color: '#262626', marginBottom: '14px' }}>
+          🎁 可兑換好礼
+        </div>
+        <div className="no-scrollbar" style={{ display: 'flex', gap: '12px', padding: '0 16px 8px', overflowX: 'auto' }}>
+          {REWARDS.map((r, i) => (
+            <div key={i} style={{
+              flex: '0 0 190px',
+              background: r.color,
+              borderRadius: '20px',
+              padding: '20px 16px',
+            }}>
+              <div style={{ fontSize: '11px', fontWeight: 800, color: '#262626', opacity: 0.55, marginBottom: '6px' }}>{r.brand}</div>
+              <div style={{ fontSize: '15px', fontWeight: 900, color: '#262626', lineHeight: 1.3 }}>{r.title}</div>
+              <div style={{
+                marginTop: '14px',
+                background: 'rgba(38,38,38,0.1)',
+                borderRadius: '12px', padding: '10px 12px',
+                fontSize: '14px', fontWeight: 900, color: '#262626'
+              }}>
+                🪙 {r.coins} 點兑換
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 
@@ -501,29 +532,23 @@ export default function App() {
       )}
 
       {currentScreen === 'map' && renderMapScreen()}
-      {currentScreen === 'contribute' && renderContributeScreen()}
+      {currentScreen === 'contribute' && renderTaskScreen()}
 
       {/* Bottom Nav */}
       <div className="bottom-nav">
         <button 
           className={`nav-item ${currentScreen === 'map' ? 'active' : ''}`}
-          onClick={() => {
-            setCurrentScreen('map');
-            setSelectedLocation(null);
-          }}
+          onClick={() => { setCurrentScreen('map'); setSelectedLocation(null); }}
         >
           <span className="nav-icon">🗺️</span>
           地圖探索
         </button>
         <button 
           className={`nav-item ${currentScreen === 'contribute' ? 'active' : ''}`}
-          onClick={() => {
-            setCurrentScreen('contribute');
-            setSelectedLocation(null);
-          }}
+          onClick={() => { setCurrentScreen('contribute'); setSelectedLocation(null); }}
         >
-          <span className="nav-icon">➕</span>
-          共同編輯
+          <span className="nav-icon">🪙</span>
+          領取任務
         </button>
       </div>
     </div>
