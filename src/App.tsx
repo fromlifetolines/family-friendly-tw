@@ -295,11 +295,21 @@ export default function App() {
                 ) : (
                   <div 
                     className="sheet-photo" 
-                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                    dangerouslySetInnerHTML={{ 
-                      __html: `<svg viewBox="0 0 24 24" style="width: 64px; height: 64px; stroke: var(--brand-navy); stroke-width: 2; fill: none;">${TYPE_CONFIG[selectedLocation.type].svg}</svg>` 
+                    style={{ 
+                      display: 'flex', 
+                      flexDirection: 'column',
+                      alignItems: 'center', 
+                      justifyContent: 'center',
+                      background: 'linear-gradient(135deg, var(--brand-coral-light) 0%, var(--brand-cream) 100%)',
+                      gap: '12px'
                     }}
-                  />
+                  >
+                    <div dangerouslySetInnerHTML={{ 
+                        __html: `<svg viewBox="0 0 24 24" style="width: 48px; height: 48px; stroke: var(--brand-coral-dark); stroke-width: 1.5; fill: none; opacity: 0.8;">${TYPE_CONFIG[selectedLocation.type].svg}</svg>` 
+                      }} 
+                    />
+                    <span style={{ fontSize: '13px', fontWeight: 800, color: 'var(--brand-coral-dark)', opacity: 0.8 }}>場域實景處理中</span>
+                  </div>
                 )}
                 
                 <div className="sheet-header">
@@ -311,15 +321,37 @@ export default function App() {
                   <button 
                     className="action-pill primary"
                     onClick={() => {
-                      const url = `https://www.google.com/maps/dir/?api=1&destination=${selectedLocation.lat},${selectedLocation.lng}&travelmode=walking`;
+                      const lat = selectedLocation.navLat ?? selectedLocation.lat;
+                      const lng = selectedLocation.navLng ?? selectedLocation.lng;
+                      const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`;
                       window.open(url, '_blank');
                     }}
                   >
                     <span>📍</span> 一鍵導航
                   </button>
-                  <button className="action-pill">
+                  
+                  <button 
+                    className="action-pill"
+                    onClick={() => {
+                      if (selectedLocation.mapUrl) {
+                        window.open(selectedLocation.mapUrl, '_blank');
+                      } else {
+                        alert('建置中：該場域尚未提供平面圖');
+                      }
+                    }}
+                  >
                     <span>🗺️</span> 樓層平面圖
                   </button>
+                  
+                  {selectedLocation.websiteUrl && (
+                    <button 
+                      className="action-pill"
+                      onClick={() => window.open(selectedLocation.websiteUrl, '_blank')}
+                    >
+                      <span>🌐</span> 官方網站
+                    </button>
+                  )}
+
                   <button 
                     className="action-pill"
                     onClick={() => {

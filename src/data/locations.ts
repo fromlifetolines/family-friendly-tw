@@ -28,6 +28,10 @@ export interface Location {
   facilities: Facility[]
   lastUpdated: string
   photos?: string[]
+  websiteUrl?: string
+  mapUrl?: string
+  navLat?: number
+  navLng?: number
 }
 
 export const FACILITY_LABELS: Record<FacilityType, string> = {
@@ -262,28 +266,30 @@ export const locations: Location[] = [
   {
     id: 'linkou-mitsui',
     name: '林口三井 Outlet',
-    branch: '2F 哺乳室',
+    branch: '二館 3F 兒童區',
     type: 'mall',
-    lat: 25.07917, lng: 121.38928,
-    address: '新北市林口區文化三路一段356號',
-    phone: '02-2601-0000',
-    website: 'https://www.mitsui-shopping-park.com/lalaport/linkou',
+    lat: 25.0711, lng: 121.3653,
+    navLat: 25.0722, navLng: 121.3644,
+    address: '新北市林口區文化二路一段241號',
+    phone: '02-2606-8666',
     openHours: '11:00–21:30',
     isPremium: true,
-    rating: 4.7, reviewCount: 203,
-    floorInfo: '2F',
+    rating: 4.8, reviewCount: 420,
+    floorInfo: '二館 3F',
     facilities: [
-      { id: 'nursing_room', available: true, note: '全新設備，空間寬敞' },
-      { id: 'stroller_rental', available: true, note: '免費借用' },
+      { id: 'nursing_room', available: true, note: '全新五星級哺乳室' },
+      { id: 'stroller_rental', available: true, note: '投幣式' },
       { id: 'diaper_table', available: true },
       { id: 'hot_water', available: true },
       { id: 'elevator', available: true },
-      { id: 'play_area', available: true, note: '大型戶外遊樂區' },
+      { id: 'play_area', available: true },
       { id: 'priority_lane', available: true },
       { id: 'family_restroom', available: true },
     ],
     lastUpdated: '2025-01-28',
     photos: ['https://images.unsplash.com/photo-1540544660406-6aee9dac65e7?auto=format&fit=crop&q=80&w=1200&h=675'],
+    websiteUrl: 'https://www.mitsui-shopping-park.com.tw/mop/linkou/tw/index.html',
+    mapUrl: 'https://www.mitsui-shopping-park.com.tw/mop/linkou/tw/search.html',
   },
 
   // ── 交通樞紐 ──
@@ -370,19 +376,19 @@ export const locations: Location[] = [
   {
     id: 'linkou-cgmh',
     name: '林口長庚紀念醫院',
-    branch: '兒科門診旁哺乳室',
+    branch: '兒童大樓 1F',
     type: 'hospital',
-    lat: 25.06820, lng: 121.39570,
+    lat: 25.0601, lng: 121.3663,
+    navLat: 25.0610, navLng: 121.3670,
     address: '桃園市龜山區復興街5號',
     phone: '03-328-1200',
-    website: 'https://www.cgmh.org.tw',
-    openHours: '24小時',
+    openHours: '24 小時',
     isPremium: false,
-    rating: 4.2, reviewCount: 41,
-    floorInfo: '兒科門診旁',
+    rating: 4.1, reviewCount: 156,
+    floorInfo: '兒童大樓 1F',
     facilities: [
       { id: 'nursing_room', available: true },
-      { id: 'stroller_rental', available: false },
+      { id: 'stroller_rental', available: true },
       { id: 'diaper_table', available: true },
       { id: 'hot_water', available: true },
       { id: 'elevator', available: true },
@@ -392,6 +398,8 @@ export const locations: Location[] = [
     ],
     lastUpdated: '2025-01-10',
     photos: ['https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=1200&h=675'],
+    websiteUrl: 'https://www.cgmh.org.tw/tw/Systems/BranchInfo/2',
+    mapUrl: 'https://www.cgmh.org.tw/tw/Services/TrafficInfo/2',
   },
   {
     id: 'ntuh',
