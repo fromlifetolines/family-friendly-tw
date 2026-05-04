@@ -137,6 +137,7 @@
 
 .action-pill {
   flex: 0 0 auto; /* flex-shrink-0 equivalent — critical to prevent squishing */
+  min-width: 80px; /* Absolute minimum — prevents squishing on small screens */
   background: var(--brand-coral-light);
   color: var(--brand-coral-dark);
   padding: 14px 24px;
@@ -145,6 +146,7 @@
   font-size: 15px;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   transition: transform 0.2s, box-shadow 0.2s;
   white-space: nowrap;

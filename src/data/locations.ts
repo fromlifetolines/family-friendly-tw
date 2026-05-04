@@ -28,7 +28,7 @@ export interface Location {
   facilities: Facility[]
   lastUpdated: string
   photos?: string[]
-  websiteUrl?: string
+  officialWebsiteUrl?: string
   mapUrl?: string
   navLat?: number
   navLng?: number
@@ -288,7 +288,7 @@ export const locations: Location[] = [
     ],
     lastUpdated: '2025-01-28',
     photos: ['https://images.unsplash.com/photo-1540544660406-6aee9dac65e7?auto=format&fit=crop&q=80&w=1200&h=675'],
-    websiteUrl: 'https://www.mitsui-shopping-park.com.tw/mop/linkou/tw/index.html',
+    officialWebsiteUrl: 'https://www.mitsui-shopping-park.com.tw/mop/linkou/tw/index.html',
     mapUrl: 'https://www.mitsui-shopping-park.com.tw/mop/linkou/tw/search.html',
   },
 
@@ -398,7 +398,7 @@ export const locations: Location[] = [
     ],
     lastUpdated: '2025-01-10',
     photos: ['https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=1200&h=675'],
-    websiteUrl: 'https://www.cgmh.org.tw/tw/Systems/BranchInfo/2',
+    officialWebsiteUrl: 'https://www.cgmh.org.tw/tw/Systems/BranchInfo/2',
     mapUrl: 'https://www.cgmh.org.tw/tw/Services/TrafficInfo/2',
   },
   {

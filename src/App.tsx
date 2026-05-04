@@ -71,6 +71,21 @@ function getDistanceText(lat1: number, lng1: number, lat2: number, lng2: number)
   }
 }
 
+/**
+ * Safely opens an external URL in a new tab.
+ * Uses noopener + noreferrer to prevent the new tab from accessing
+ * window.opener, protecting PWA session from being overridden.
+ */
+function openExternal(url: string) {
+  const a = document.createElement('a');
+  a.href = url;
+  a.target = '_blank';
+  a.rel = 'noopener noreferrer';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('map');
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
@@ -324,48 +339,49 @@ export default function App() {
                 </div>
 
                 <div className="pill-actions">
+                  {/* 一鍵導航 */}
                   <button 
                     className="action-pill primary"
-                    disabled={false}
                     onClick={() => {
                       const destLat = selectedLocation.navLat ?? selectedLocation.lat;
                       const destLng = selectedLocation.navLng ?? selectedLocation.lng;
                       let url: string;
                       if (userLat !== null && userLng !== null) {
-                        // Include origin for turn-by-turn accuracy
                         url = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(userLat + ',' + userLng)}&destination=${encodeURIComponent(destLat + ',' + destLng)}&travelmode=walking`;
                       } else {
-                        // No GPS yet — destination only
                         url = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destLat + ',' + destLng)}&travelmode=walking`;
                       }
-                      window.open(url, '_blank');
+                      openExternal(url);
                     }}
                   >
                     <span>📍</span> 一鍵導航
                   </button>
                   
+                  {/* 樓層平面圖 */}
                   <button 
                     className="action-pill"
                     onClick={() => {
                       if (selectedLocation.mapUrl) {
-                        window.open(selectedLocation.mapUrl, '_blank');
+                        openExternal(selectedLocation.mapUrl);
                       } else {
-                        alert('建置中：該場域尚未提供平面圖');
+                        showToast('🗺️ 該場域尚未提供樓層平面圖');
                       }
                     }}
                   >
                     <span>🗺️</span> 樓層平面圖
                   </button>
-                  
-                  {selectedLocation.websiteUrl && (
+
+                  {/* 官方網站 — 僅在有 officialWebsiteUrl 時顯示 */}
+                  {selectedLocation.officialWebsiteUrl && (
                     <button 
                       className="action-pill"
-                      onClick={() => window.open(selectedLocation.websiteUrl, '_blank')}
+                      onClick={() => openExternal(selectedLocation.officialWebsiteUrl!)}
                     >
                       <span>🌐</span> 官方網站
                     </button>
                   )}
 
+                  {/* 設備清單 */}
                   <button 
                     className="action-pill"
                     onClick={() => {
