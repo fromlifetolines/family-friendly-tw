@@ -135,10 +135,10 @@
   margin-bottom: 24px;
 }
 
-.amenity-grid-3 {
+.amenity-grid-4 {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
   margin-bottom: 24px;
 }
 

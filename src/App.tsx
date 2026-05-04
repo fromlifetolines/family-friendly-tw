@@ -1,25 +1,50 @@
 import { useState } from 'react';
+import { MapContainer, TileLayer, Marker } from 'react-leaflet';
+import L from 'leaflet';
 import './App.css';
 
 type Page = 'map' | 'info' | 'contribute';
 
+// Custom icons based on requirements
+const createCustomIcon = (color: string) => {
+  return L.divIcon({
+    className: 'custom-pin',
+    html: `<div style="
+      background-color: ${color};
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 3px solid white;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    "></div>`,
+    iconSize: [20, 20],
+    iconAnchor: [10, 10],
+  });
+};
+
+const standardIcon = createCustomIcon('#FF6B4A'); // --brand-coral
+
 // Data
 const QUICK_FILTERS = [
   { id: 'nursing', icon: '🍼', label: '哺乳室' },
+  { id: 'stroller', icon: '🛒', label: '嬰兒車借' },
   { id: 'diaper', icon: '👶', label: '尿布台' },
-  { id: 'water', icon: '💧', label: '熱水' },
-  { id: 'elevator', icon: '🛗', label: '電梯' },
-  { id: 'play', icon: '🎠', label: '遊戲區' },
-  { id: 'toilet', icon: '🚻', label: '親子廁' },
+  { id: 'water', icon: '💧', label: '熱水飲水' },
+  { id: 'elevator', icon: '🛗', label: '電梯坡道' },
+  { id: 'play', icon: '🎠', label: '兒童遊戲' },
+  { id: 'lane', icon: '🎫', label: '親子通道' },
+  { id: 'toilet', icon: '🚻', label: '親子廁所' },
 ];
 
 const INFO_AMENITIES = [
   { id: 'nursing', icon: '🍼', label: '哺乳室', has: true },
-  { id: 'water', icon: '🚿', label: '冷熱水', has: true },
-  { id: 'socket', icon: '🔌', label: '插座', has: true },
-  { id: 'elevator', icon: '🛗', label: '電梯可達', has: true },
   { id: 'stroller', icon: '🛒', label: '嬰兒車借', has: false },
-  { id: 'toilet', icon: '🚻', label: '親子廁', has: false },
+  { id: 'diaper', icon: '👶', label: '尿布台', has: false },
+  { id: 'water', icon: '💧', label: '熱水飲水', has: true },
+  { id: 'elevator', icon: '🛗', label: '電梯坡道', has: true },
+  { id: 'play', icon: '🎠', label: '兒童遊戲', has: false },
+  { id: 'lane', icon: '🎫', label: '親子通道', has: false },
+  { id: 'toilet', icon: '🚻', label: '親子廁所', has: true },
 ];
 
 const CONTRIBUTE_AMENITIES = [
@@ -31,10 +56,17 @@ const CONTRIBUTE_AMENITIES = [
   { id: 'elevator', icon: '🛗', label: '電梯' },
 ];
 
+const MOCK_MARKERS = [
+  { position: [25.0408, 121.5674] as [number, number], name: '信義新光三越 A8 哺乳室' },
+  { position: [25.0412, 121.5690] as [number, number], name: '統一時代 3F 親子廁' },
+  { position: [25.0398, 121.5660] as [number, number], name: '台北 101 B1 哺乳室' }
+];
+
 export default function App() {
   const [currentPage, setCurrentPage] = useState<Page>('map');
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
+  const [currentInfoTitle, setCurrentInfoTitle] = useState('SOGO 忠孝館 5F 哺乳室');
 
   const toggleFilter = (id: string) => {
     setActiveFilter(prev => prev === id ? null : id);
@@ -46,6 +78,11 @@ export default function App() {
     );
   };
 
+  const handleMarkerClick = (name: string) => {
+    setCurrentInfoTitle(name);
+    setCurrentPage('info');
+  };
+
   const renderMapPage = () => (
     <div className="map-page">
       <div className="search-pill">
@@ -53,22 +90,29 @@ export default function App() {
         <span>📍</span>
       </div>
 
-      {/* Mock Pins */}
-      <div 
-        className="map-pin" 
-        style={{ top: '30%', left: '40%' }} 
-        onClick={() => setCurrentPage('info')}
-      ></div>
-      <div 
-        className="map-pin" 
-        style={{ top: '50%', left: '70%' }} 
-        onClick={() => setCurrentPage('info')}
-      ></div>
-      <div 
-        className="map-pin" 
-        style={{ top: '70%', left: '30%' }} 
-        onClick={() => setCurrentPage('info')}
-      ></div>
+      <MapContainer 
+        center={[25.0408, 121.5674]} 
+        zoom={15} 
+        zoomControl={false}
+        className="w-full h-full z-[10]"
+        style={{ width: '100%', height: '100%' }}
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://carto.com/">CARTO</a>'
+          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+        />
+        
+        {MOCK_MARKERS.map((marker, index) => (
+          <Marker 
+            key={index}
+            position={marker.position}
+            icon={standardIcon}
+            eventHandlers={{
+              click: () => handleMarkerClick(marker.name)
+            }}
+          />
+        ))}
+      </MapContainer>
 
       <div className="quick-filter-scroll no-scrollbar">
         {QUICK_FILTERS.map(filter => (
@@ -93,10 +137,10 @@ export default function App() {
       </div>
 
       <div className="info-card">
-        <h1 className="info-title">SOGO 忠孝館 5F 哺乳室</h1>
+        <h1 className="info-title">{currentInfoTitle}</h1>
         <div className="info-status">🚶 步行 3 分鐘・營業中</div>
 
-        <div className="amenity-grid-3">
+        <div className="amenity-grid-4">
           {INFO_AMENITIES.map(amenity => (
             <div key={amenity.id} className={`amenity-item ${amenity.has ? 'has' : 'none'}`}>
               <span style={{ fontSize: '24px' }}>{amenity.icon}</span>
