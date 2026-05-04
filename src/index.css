@@ -17,8 +17,8 @@
 }
 
 body {
-  font-family: 'Nunito', sans-serif;
-  background-color: #f0f0f0;
+  font-family: 'Nunito', 'Noto Sans TC', sans-serif;
+  background-color: var(--brand-cream);
   color: var(--brand-navy);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
