@@ -64,6 +64,23 @@ const createCustomIcon = (type: LocationType, isSelected: boolean, distanceText?
   });
 };
 
+const createUserIcon = () => {
+  return L.divIcon({
+    className: 'user-pin-wrapper',
+    html: `
+      <div style="
+        width: 16px; height: 16px;
+        background: #378ADD;
+        border-radius: 50%;
+        border: 3px solid white;
+        box-shadow: 0 0 8px rgba(0,0,0,0.5);
+      "></div>
+    `,
+    iconSize: [22, 22],
+    iconAnchor: [11, 11]
+  });
+};
+
 // --- Helpers ---
 function getDistance(lat1: number, lng1: number, lat2: number, lng2: number): number {
   const R = 6371000
@@ -121,6 +138,8 @@ export default function App() {
   const [userLng, setUserLng] = useState<number | null>(null);
   const [locationName, setLocationName] = useState('定位中...');
   
+  const [mapInstance, setMapInstance] = useState<L.Map | null>(null);
+  const [closestLocationToast, setClosestLocationToast] = useState<{text: string} | null>(null);
   const [contributeAmenities, setContributeAmenities] = useState<FacilityType[]>([]);
 
   useEffect(() => {
@@ -183,14 +202,79 @@ export default function App() {
       )
     : locations;
 
+  const handleGPSLocate = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const lat = pos.coords.latitude;
+          const lng = pos.coords.longitude;
+          setUserLat(lat);
+          setUserLng(lng);
+          
+          if (mapInstance) {
+            mapInstance.flyTo([lat, lng], 14, { animate: true });
+          }
+
+          let minDist = Infinity;
+          let closestLoc: any = null;
+          locations.forEach(loc => {
+            const d = getDistance(lat, lng, loc.lat, loc.lng);
+            if (d < minDist) {
+              minDist = d;
+              closestLoc = loc;
+            }
+          });
+
+          if (closestLoc) {
+            const distKm = (minDist / 1000).toFixed(1);
+            setClosestLocationToast({ text: `📍 距你最近：${closestLoc.name}，${distKm} 公里` });
+            setTimeout(() => setClosestLocationToast(null), 3000);
+          }
+          
+          fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&accept-language=zh-TW`)
+            .then(r => r.json())
+            .then(d => {
+              if (d && d.display_name) {
+                setLocationName(d.display_name.split(',')[0]);
+              }
+            })
+            .catch(() => {});
+        },
+        () => alert('無法取得位置資訊'),
+        { enableHighAccuracy: true, timeout: 5000 }
+      );
+    }
+  };
+
   const renderMapScreen = () => (
-    <div className="map-page" style={{ height: 'calc(100vh - 60px)' }}>
-      <div className="search-pill">
+    <div className="map-page" style={{ height: 'calc(100vh - 60px)', position: 'relative' }}>
+      <div style={{
+        position: 'absolute', top: 0, left: 0, width: '100%', zIndex: 1000,
+        backgroundColor: '#1E2D5A',
+        padding: '12px 18px',
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+      }}>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <span style={{ color: 'white', fontSize: '16px', fontWeight: 800 }}>🗺️ 親子友善地圖</span>
+          <span style={{ color: 'white', fontSize: '11px', opacity: 0.7 }}>台灣最完整的親子設施指南</span>
+        </div>
+        <div style={{
+          backgroundColor: '#FF6B4A',
+          borderRadius: '999px',
+          padding: '3px 10px',
+          color: 'white',
+          fontSize: '11px',
+          fontWeight: 700
+        }}>Beta</div>
+      </div>
+
+      <div className="search-pill" style={{ top: '64px' }}>
         <span>目前位置：{locationName}</span>
         <span>📍</span>
       </div>
 
       <MapContainer 
+        ref={setMapInstance}
         center={[25.0408, 121.5674]} 
         zoom={14} 
         zoomControl={false}
@@ -222,7 +306,60 @@ export default function App() {
             />
           );
         })}
+
+        {userLat !== null && userLng !== null && (
+          <Marker 
+            position={[userLat, userLng]} 
+            icon={createUserIcon()} 
+            zIndexOffset={2000} 
+          />
+        )}
       </MapContainer>
+
+      {closestLocationToast && (
+        <div style={{
+          position: 'absolute',
+          right: '14px',
+          bottom: '200px',
+          zIndex: 1000,
+          backgroundColor: 'white',
+          borderRadius: '12px',
+          padding: '0 16px',
+          height: '48px',
+          display: 'flex',
+          alignItems: 'center',
+          boxShadow: '0 2px 12px rgba(0,0,0,0.15)',
+          color: '#1E2D5A',
+          fontSize: '13px',
+          fontWeight: 600,
+          animation: 'fade-in 0.3s ease-out'
+        }}>
+          {closestLocationToast.text}
+        </div>
+      )}
+
+      <button
+        onClick={handleGPSLocate}
+        style={{
+          position: 'absolute',
+          right: '14px',
+          bottom: '140px',
+          zIndex: 1000,
+          width: '52px',
+          height: '52px',
+          backgroundColor: 'white',
+          border: '0.5px solid rgba(0,0,0,0.12)',
+          borderRadius: '50%',
+          boxShadow: '0 2px 12px rgba(0,0,0,0.15)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '20px',
+          cursor: 'pointer'
+        }}
+      >
+        📍
+      </button>
 
       <div className="quick-filter-scroll no-scrollbar">
         {ALL_FACILITIES.map(key => {
