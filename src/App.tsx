@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import L from 'leaflet';
 import './App.css';
-import { locations } from './data/locations';
+import { locations, FACILITY_LABELS } from './data/locations';
 import type { Location, FacilityType } from './data/locations';
 
 // --- Types ---
@@ -29,18 +29,7 @@ const standardIcon = createCustomIcon('#FF6B4A', 1); // --brand-coral
 const premiumIcon = createCustomIcon('#1E2D5A', 1.4); // --brand-navy, larger
 
 // --- Static Data ---
-const FACILITY_META: Record<FacilityType, { icon: string, label: string }> = {
-  nursing_room: { icon: '🍼', label: '哺乳室' },
-  stroller_rental: { icon: '🛒', label: '嬰兒車借' },
-  diaper_table: { icon: '👶', label: '尿布台' },
-  hot_water: { icon: '💧', label: '熱水飲水' },
-  elevator: { icon: '🛗', label: '電梯坡道' },
-  play_area: { icon: '🎠', label: '兒童遊戲' },
-  priority_lane: { icon: '🎫', label: '親子通道' },
-  family_restroom: { icon: '🚻', label: '親子廁所' }
-};
-
-const ALL_FACILITIES = Object.keys(FACILITY_META) as FacilityType[];
+const ALL_FACILITIES = Object.keys(FACILITY_LABELS) as FacilityType[];
 
 // --- Helpers ---
 function getDistanceKM(lat1: number, lon1: number, lat2: number, lon2: number) {
@@ -172,7 +161,7 @@ export default function App() {
               className={`quick-filter-btn ${isActive ? 'active' : ''}`}
               onClick={() => toggleFilter(key)}
             >
-              {FACILITY_META[key].icon} {FACILITY_META[key].label}
+              {FACILITY_LABELS[key]}
             </button>
           );
         })}
@@ -235,8 +224,8 @@ export default function App() {
               
               return (
                 <div key={key} className={`amenity-item ${isAvailable ? 'has' : 'none'}`}>
-                  <span style={{ fontSize: '24px' }}>{FACILITY_META[key].icon}</span>
-                  <span>{FACILITY_META[key].label}</span>
+                  <span style={{ fontSize: '24px' }}>{FACILITY_LABELS[key].split(' ')[0]}</span>
+                  <span>{FACILITY_LABELS[key].split(' ')[1]}</span>
                   {fac?.note && <span style={{ fontSize: '10px', marginTop: '4px', color: 'var(--brand-coral)' }}>{fac.note}</span>}
                 </div>
               );
@@ -279,8 +268,8 @@ export default function App() {
                 className={`toggle-btn ${isSelected ? 'selected' : ''}`}
                 onClick={() => toggleContributeAmenity(key)}
               >
-                <span style={{ fontSize: '28px' }}>{FACILITY_META[key].icon}</span>
-                <span>{FACILITY_META[key].label}</span>
+                <span style={{ fontSize: '28px' }}>{FACILITY_LABELS[key].split(' ')[0]}</span>
+                <span>{FACILITY_LABELS[key].split(' ')[1]}</span>
               </button>
             );
           })}

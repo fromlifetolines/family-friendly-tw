@@ -1,50 +1,66 @@
 export type FacilityType =
-  | 'nursing_room'      // 🍼 哺乳室
-  | 'stroller_rental'   // 🛒 嬰兒車租借
-  | 'diaper_table'      // 👶 尿布台
-  | 'hot_water'         // 💧 熱水/飲水機
-  | 'elevator'          // 🛗 電梯/無障礙坡道
-  | 'play_area'         // 🎠 兒童遊戲區
-  | 'priority_lane'     // 🎫 親子優先通道
-  | 'family_restroom'   // 🚻 親子廁所
+  | 'nursing_room' | 'stroller_rental' | 'diaper_table' | 'hot_water'
+  | 'elevator' | 'play_area' | 'priority_lane' | 'family_restroom'
+
+export type LocationType = 'mall' | 'transport' | 'hospital' | 'park' | 'restaurant'
 
 export interface Facility {
-  id: FacilityType;
-  available: boolean;
-  note?: string;         // 「需出示發票」「僅限會員」
+  id: FacilityType
+  available: boolean
+  note?: string
 }
 
 export interface Location {
-  id: string;
-  name: string;          // 「新光三越信義 A8」
-  branch: string;        // 「5F 哺乳室區」
-  type: 'mall' | 'hospital' | 'park' | 'transport' | 'restaurant';
-  lat: number;
-  lng: number;
-  address: string;
-  phone?: string;
-  openHours: string;     // 「10:00–22:00」
-  isPremium: boolean;    // 贊助地標
-  rating: number;        // 4.2
-  reviewCount: number;
-  facilities: Facility[];
-  photos: string[];
-  lastUpdated: string;
-  floorInfo?: string;    // 「5F」
+  id: string
+  name: string
+  branch: string
+  type: LocationType
+  lat: number
+  lng: number
+  address: string
+  phone?: string
+  website?: string
+  openHours: string
+  isPremium: boolean
+  rating: number
+  reviewCount: number
+  floorInfo?: string
+  facilities: Facility[]
+  lastUpdated: string
+}
+
+export const FACILITY_LABELS: Record<FacilityType, string> = {
+  nursing_room: '🍼 哺乳室',
+  stroller_rental: '🛒 嬰兒車借',
+  diaper_table: '👶 尿布台',
+  hot_water: '💧 熱水飲水',
+  elevator: '🛗 電梯坡道',
+  play_area: '🎠 兒童遊戲',
+  priority_lane: '🎫 親子通道',
+  family_restroom: '🚻 親子廁所',
+}
+
+export const TYPE_CONFIG: Record<LocationType, { label: string; color: string; emoji: string }> = {
+  mall:       { label: '百貨商場', color: '#FF6B4A', emoji: '🏬' },
+  transport:  { label: '交通樞紐', color: '#378ADD', emoji: '🚉' },
+  hospital:   { label: '醫療院所', color: '#2DB87A', emoji: '🏥' },
+  park:       { label: '公園景點', color: '#639922', emoji: '🌳' },
+  restaurant: { label: '親子餐廳', color: '#F5A623', emoji: '🍽️' },
 }
 
 export const locations: Location[] = [
-  // ── 信義區 ──
+  // ── 百貨商場 ──
   {
     id: 'shin-kong-a8',
     name: '新光三越信義 A8',
     branch: '5F 親子哺乳室',
     type: 'mall',
-    lat: 25.0408, lng: 121.5674,
+    lat: 25.03586, lng: 121.56696,
     address: '台北市信義區松高路19號',
     phone: '02-2723-8900',
+    website: 'https://www.skm.com.tw/store/xinyi-a8',
     openHours: '11:00–21:30',
-    isPremium: false,
+    isPremium: true,
     rating: 4.5, reviewCount: 89,
     floorInfo: '5F',
     facilities: [
@@ -57,40 +73,17 @@ export const locations: Location[] = [
       { id: 'priority_lane', available: true },
       { id: 'family_restroom', available: true },
     ],
-    photos: [], lastUpdated: '2025-01-15',
-  },
-  {
-    id: 'shin-kong-a9',
-    name: '新光三越信義 A9',
-    branch: '6F 育嬰室',
-    type: 'mall',
-    lat: 25.0412, lng: 121.5680,
-    address: '台北市信義區松壽路9號',
-    phone: '02-2723-8900',
-    openHours: '11:00–21:30',
-    isPremium: false,
-    rating: 4.3, reviewCount: 67,
-    floorInfo: '6F',
-    facilities: [
-      { id: 'nursing_room', available: true },
-      { id: 'stroller_rental', available: false },
-      { id: 'diaper_table', available: true },
-      { id: 'hot_water', available: true },
-      { id: 'elevator', available: true },
-      { id: 'play_area', available: false },
-      { id: 'priority_lane', available: true },
-      { id: 'family_restroom', available: true },
-    ],
-    photos: [], lastUpdated: '2025-01-10',
+    lastUpdated: '2025-01-15',
   },
   {
     id: 'taipei-101',
     name: '台北 101 購物中心',
     branch: 'B1 及 4F 哺乳室',
     type: 'mall',
-    lat: 25.0340, lng: 121.5645,
+    lat: 25.03375, lng: 121.56470,
     address: '台北市信義區市府路45號',
     phone: '02-8101-7777',
+    website: 'https://www.taipei-101.com.tw',
     openHours: '11:00–21:30',
     isPremium: true,
     rating: 4.6, reviewCount: 134,
@@ -105,42 +98,17 @@ export const locations: Location[] = [
       { id: 'priority_lane', available: true },
       { id: 'family_restroom', available: true },
     ],
-    photos: [], lastUpdated: '2025-01-20',
+    lastUpdated: '2025-01-20',
   },
-  {
-    id: 'uni-time',
-    name: '統一時代百貨',
-    branch: '3F 哺乳室',
-    type: 'mall',
-    lat: 25.0418, lng: 121.5671,
-    address: '台北市信義區忠孝東路五段8號',
-    phone: '02-2720-1888',
-    openHours: '11:00–21:30',
-    isPremium: false,
-    rating: 4.1, reviewCount: 45,
-    floorInfo: '3F',
-    facilities: [
-      { id: 'nursing_room', available: true },
-      { id: 'stroller_rental', available: false },
-      { id: 'diaper_table', available: true },
-      { id: 'hot_water', available: true },
-      { id: 'elevator', available: true },
-      { id: 'play_area', available: false },
-      { id: 'priority_lane', available: false },
-      { id: 'family_restroom', available: true },
-    ],
-    photos: [], lastUpdated: '2024-12-20',
-  },
-
-  // ── 大安/忠孝區 ──
   {
     id: 'sogo-zhongxiao',
     name: 'SOGO 忠孝館',
     branch: '5F 哺乳室',
     type: 'mall',
-    lat: 25.0415, lng: 121.5468,
+    lat: 25.04173, lng: 121.54691,
     address: '台北市大安區忠孝東路四段45號',
     phone: '02-2776-5555',
+    website: 'https://www.sogo.com.tw/zhongxiao',
     openHours: '11:00–21:30',
     isPremium: true,
     rating: 4.4, reviewCount: 112,
@@ -155,16 +123,17 @@ export const locations: Location[] = [
       { id: 'priority_lane', available: true },
       { id: 'family_restroom', available: true },
     ],
-    photos: [], lastUpdated: '2025-01-18',
+    lastUpdated: '2025-01-18',
   },
   {
     id: 'sogo-fuxing',
     name: 'SOGO 復興館',
     branch: '12F 親子室',
     type: 'mall',
-    lat: 25.0428, lng: 121.5440,
+    lat: 25.04165, lng: 121.54372,
     address: '台北市大安區復興南路一段45號',
     phone: '02-2776-5555',
+    website: 'https://www.sogo.com.tw/fuxing',
     openHours: '11:00–21:30',
     isPremium: false,
     rating: 4.2, reviewCount: 78,
@@ -179,20 +148,19 @@ export const locations: Location[] = [
       { id: 'priority_lane', available: false },
       { id: 'family_restroom', available: true },
     ],
-    photos: [], lastUpdated: '2025-01-05',
+    lastUpdated: '2025-01-05',
   },
-
-  // ── 中山區 ──
   {
     id: 'breeze-center',
     name: '微風廣場',
     branch: '5F 育嬰室',
     type: 'mall',
-    lat: 25.0521, lng: 121.5436,
+    lat: 25.04763, lng: 121.54612,
     address: '台北市中山區復興南路一段39號',
     phone: '02-6600-8888',
+    website: 'https://www.breeze.com.tw',
     openHours: '11:00–21:30',
-    isPremium: true,
+    isPremium: false,
     rating: 4.3, reviewCount: 91,
     floorInfo: '5F',
     facilities: [
@@ -205,42 +173,17 @@ export const locations: Location[] = [
       { id: 'priority_lane', available: true },
       { id: 'family_restroom', available: true },
     ],
-    photos: [], lastUpdated: '2025-01-12',
+    lastUpdated: '2025-01-12',
   },
-  {
-    id: 'shin-kong-nanjing',
-    name: '新光三越南京店',
-    branch: '7F 哺乳室',
-    type: 'mall',
-    lat: 25.0523, lng: 121.5312,
-    address: '台北市中山區南京西路15號',
-    phone: '02-2567-1234',
-    openHours: '11:00–21:30',
-    isPremium: false,
-    rating: 4.0, reviewCount: 52,
-    floorInfo: '7F',
-    facilities: [
-      { id: 'nursing_room', available: true },
-      { id: 'stroller_rental', available: false },
-      { id: 'diaper_table', available: true },
-      { id: 'hot_water', available: false },
-      { id: 'elevator', available: true },
-      { id: 'play_area', available: false },
-      { id: 'priority_lane', available: false },
-      { id: 'family_restroom', available: true },
-    ],
-    photos: [], lastUpdated: '2024-11-30',
-  },
-
-  // ── 士林/天母區 ──
   {
     id: 'tianmu-sogo',
     name: 'SOGO 天母店',
     branch: '6F 親子室',
     type: 'mall',
-    lat: 25.0923, lng: 121.5245,
+    lat: 25.10002, lng: 121.52677,
     address: '台北市士林區中山北路六段77號',
     phone: '02-2836-5555',
+    website: 'https://www.sogo.com.tw/tianmu',
     openHours: '11:00–21:30',
     isPremium: false,
     rating: 4.4, reviewCount: 63,
@@ -255,18 +198,17 @@ export const locations: Location[] = [
       { id: 'priority_lane', available: true },
       { id: 'family_restroom', available: true },
     ],
-    photos: [], lastUpdated: '2025-01-08',
+    lastUpdated: '2025-01-08',
   },
-
-  // ── 內湖/南港區 ──
   {
     id: 'miramar',
     name: '美麗華百樂園',
     branch: '4F 哺乳室',
     type: 'mall',
-    lat: 25.0830, lng: 121.5571,
+    lat: 25.08301, lng: 121.55698,
     address: '台北市中山區敬業三路20號',
     phone: '02-2175-3456',
+    website: 'https://www.miramar.com.tw',
     openHours: '11:00–22:00',
     isPremium: false,
     rating: 4.1, reviewCount: 47,
@@ -281,42 +223,17 @@ export const locations: Location[] = [
       { id: 'priority_lane', available: false },
       { id: 'family_restroom', available: true },
     ],
-    photos: [], lastUpdated: '2024-12-15',
+    lastUpdated: '2024-12-15',
   },
-  {
-    id: 'nangang-eslite',
-    name: '南港誠品生活',
-    branch: '3F 育嬰室',
-    type: 'mall',
-    lat: 25.0545, lng: 121.6068,
-    address: '台北市南港區忠孝東路七段8號',
-    phone: '02-6638-5888',
-    openHours: '10:00–22:00',
-    isPremium: false,
-    rating: 4.5, reviewCount: 88,
-    floorInfo: '3F',
-    facilities: [
-      { id: 'nursing_room', available: true, note: '空間寬敞舒適' },
-      { id: 'stroller_rental', available: false },
-      { id: 'diaper_table', available: true },
-      { id: 'hot_water', available: true },
-      { id: 'elevator', available: true },
-      { id: 'play_area', available: true },
-      { id: 'priority_lane', available: false },
-      { id: 'family_restroom', available: true },
-    ],
-    photos: [], lastUpdated: '2025-01-22',
-  },
-
-  // ── 板橋/新北 ──
   {
     id: 'mega-city',
     name: '板橋大遠百',
     branch: '9F 親子哺乳室',
     type: 'mall',
-    lat: 25.0142, lng: 121.4627,
+    lat: 25.01439, lng: 121.46355,
     address: '新北市板橋區新站路28號',
     phone: '02-8953-1111',
+    website: 'https://www.feds.com.tw/banqiao',
     openHours: '11:00–21:30',
     isPremium: true,
     rating: 4.6, reviewCount: 156,
@@ -331,42 +248,17 @@ export const locations: Location[] = [
       { id: 'priority_lane', available: true },
       { id: 'family_restroom', available: true },
     ],
-    photos: [], lastUpdated: '2025-01-25',
+    lastUpdated: '2025-01-25',
   },
-  {
-    id: 'new-taipei-mall',
-    name: '新北市立圖書館總館',
-    branch: '1F 哺乳室',
-    type: 'hospital',
-    lat: 25.0130, lng: 121.4650,
-    address: '新北市板橋區縣民大道二段6號',
-    phone: '02-2953-5110',
-    openHours: '09:00–21:00',
-    isPremium: false,
-    rating: 4.3, reviewCount: 34,
-    floorInfo: '1F',
-    facilities: [
-      { id: 'nursing_room', available: true },
-      { id: 'stroller_rental', available: false },
-      { id: 'diaper_table', available: true },
-      { id: 'hot_water', available: true },
-      { id: 'elevator', available: true },
-      { id: 'play_area', available: true, note: '兒童閱覽區' },
-      { id: 'priority_lane', available: false },
-      { id: 'family_restroom', available: true },
-    ],
-    photos: [], lastUpdated: '2025-01-03',
-  },
-
-  // ── 林口（Howard 所在地）──
   {
     id: 'linkou-mitsui',
     name: '林口三井 Outlet',
     branch: '2F 哺乳室',
     type: 'mall',
-    lat: 25.0786, lng: 121.3892,
+    lat: 25.07917, lng: 121.38928,
     address: '新北市林口區文化三路一段356號',
     phone: '02-2601-0000',
+    website: 'https://www.mitsui-shopping-park.com/lalaport/linkou',
     openHours: '11:00–21:30',
     isPremium: true,
     rating: 4.7, reviewCount: 203,
@@ -381,31 +273,7 @@ export const locations: Location[] = [
       { id: 'priority_lane', available: true },
       { id: 'family_restroom', available: true },
     ],
-    photos: [], lastUpdated: '2025-01-28',
-  },
-  {
-    id: 'linkou-big-city',
-    name: '林口長庚紀念醫院',
-    branch: '1F 哺乳室',
-    type: 'hospital',
-    lat: 25.0682, lng: 121.3957,
-    address: '桃園市龜山區復興街5號',
-    phone: '03-328-1200',
-    openHours: '24小時',
-    isPremium: false,
-    rating: 4.2, reviewCount: 41,
-    floorInfo: '1F',
-    facilities: [
-      { id: 'nursing_room', available: true },
-      { id: 'stroller_rental', available: false },
-      { id: 'diaper_table', available: true },
-      { id: 'hot_water', available: true },
-      { id: 'elevator', available: true },
-      { id: 'play_area', available: false },
-      { id: 'priority_lane', available: true },
-      { id: 'family_restroom', available: true },
-    ],
-    photos: [], lastUpdated: '2025-01-10',
+    lastUpdated: '2025-01-28',
   },
 
   // ── 交通樞紐 ──
@@ -414,9 +282,10 @@ export const locations: Location[] = [
     name: '台北車站',
     branch: 'B1 哺乳室',
     type: 'transport',
-    lat: 25.0478, lng: 121.5170,
+    lat: 25.04776, lng: 121.51684,
     address: '台北市中正區北平西路3號',
     phone: '02-2311-9999',
+    website: 'https://www.railway.gov.tw',
     openHours: '06:00–24:00',
     isPremium: false,
     rating: 3.8, reviewCount: 72,
@@ -431,16 +300,17 @@ export const locations: Location[] = [
       { id: 'priority_lane', available: true },
       { id: 'family_restroom', available: true },
     ],
-    photos: [], lastUpdated: '2024-12-01',
+    lastUpdated: '2024-12-01',
   },
   {
     id: 'taoyuan-airport-t1',
     name: '桃園機場第一航廈',
     branch: '3F 哺乳室',
     type: 'transport',
-    lat: 25.0797, lng: 121.2326,
+    lat: 25.07723, lng: 121.23243,
     address: '桃園市大園區航站南路9號',
     phone: '03-273-5081',
+    website: 'https://www.taoyuan-airport.com',
     openHours: '24小時',
     isPremium: false,
     rating: 4.4, reviewCount: 118,
@@ -455,16 +325,17 @@ export const locations: Location[] = [
       { id: 'priority_lane', available: true },
       { id: 'family_restroom', available: true },
     ],
-    photos: [], lastUpdated: '2025-01-20',
+    lastUpdated: '2025-01-20',
   },
   {
     id: 'taoyuan-airport-t2',
     name: '桃園機場第二航廈',
     branch: '4F 哺乳室',
     type: 'transport',
-    lat: 25.0768, lng: 121.2424,
+    lat: 25.07680, lng: 121.24243,
     address: '桃園市大園區航站南路9號',
     phone: '03-273-5081',
+    website: 'https://www.taoyuan-airport.com',
     openHours: '24小時',
     isPremium: false,
     rating: 4.5, reviewCount: 95,
@@ -479,19 +350,72 @@ export const locations: Location[] = [
       { id: 'priority_lane', available: true },
       { id: 'family_restroom', available: true },
     ],
-    photos: [], lastUpdated: '2025-01-20',
+    lastUpdated: '2025-01-20',
   },
 
-  // ── 公園/戶外 ──
+  // ── 醫療院所 ──
+  {
+    id: 'linkou-cgmh',
+    name: '林口長庚紀念醫院',
+    branch: '兒科門診旁哺乳室',
+    type: 'hospital',
+    lat: 25.06820, lng: 121.39570,
+    address: '桃園市龜山區復興街5號',
+    phone: '03-328-1200',
+    website: 'https://www.cgmh.org.tw',
+    openHours: '24小時',
+    isPremium: false,
+    rating: 4.2, reviewCount: 41,
+    floorInfo: '兒科門診旁',
+    facilities: [
+      { id: 'nursing_room', available: true },
+      { id: 'stroller_rental', available: false },
+      { id: 'diaper_table', available: true },
+      { id: 'hot_water', available: true },
+      { id: 'elevator', available: true },
+      { id: 'play_area', available: false },
+      { id: 'priority_lane', available: true },
+      { id: 'family_restroom', available: true },
+    ],
+    lastUpdated: '2025-01-10',
+  },
+  {
+    id: 'ntuh',
+    name: '台大醫院',
+    branch: '兒童醫院 1F 哺乳室',
+    type: 'hospital',
+    lat: 25.04247, lng: 121.51667,
+    address: '台北市中正區中山南路7號',
+    phone: '02-2312-3456',
+    website: 'https://www.ntuh.gov.tw',
+    openHours: '24小時',
+    isPremium: false,
+    rating: 4.3, reviewCount: 56,
+    floorInfo: '兒童醫院 1F',
+    facilities: [
+      { id: 'nursing_room', available: true },
+      { id: 'stroller_rental', available: false },
+      { id: 'diaper_table', available: true },
+      { id: 'hot_water', available: true },
+      { id: 'elevator', available: true },
+      { id: 'play_area', available: true, note: '兒童遊戲室' },
+      { id: 'priority_lane', available: true },
+      { id: 'family_restroom', available: true },
+    ],
+    lastUpdated: '2025-01-15',
+  },
+
+  // ── 公園景點 ──
   {
     id: 'daan-park',
     name: '大安森林公園',
     branch: '東側服務站',
     type: 'park',
-    lat: 25.0297, lng: 121.5351,
+    lat: 25.02972, lng: 121.53490,
     address: '台北市大安區新生南路二段1號',
     phone: '02-2700-3830',
-    openHours: '00:00-24:00', // Adjusted to parse easily or I'll implement a robust parse
+    website: 'https://www.daan-park.taipei.gov.tw',
+    openHours: '全天開放',
     isPremium: false,
     rating: 3.9, reviewCount: 28,
     floorInfo: '東側',
@@ -505,29 +429,31 @@ export const locations: Location[] = [
       { id: 'priority_lane', available: false },
       { id: 'family_restroom', available: true },
     ],
-    photos: [], lastUpdated: '2024-11-15',
+    lastUpdated: '2024-11-15',
   },
   {
-    id: 'shilin-nightmarket',
-    name: '士林夜市（陽明戲院旁）',
-    branch: '公共廁所哺乳區',
+    id: 'taipei-zoo',
+    name: '台北市立動物園',
+    branch: '非洲區服務站',
     type: 'park',
-    lat: 25.0880, lng: 121.5243,
-    address: '台北市士林區大東路',
-    openHours: '17:00–01:00',
+    lat: 24.99927, lng: 121.58060,
+    address: '台北市文山區新光路二段30號',
+    phone: '02-2938-2300',
+    website: 'https://www.zoo.taipei.gov.tw',
+    openHours: '09:00–17:00',
     isPremium: false,
-    rating: 3.5, reviewCount: 19,
-    floorInfo: '地面層',
+    rating: 4.5, reviewCount: 187,
+    floorInfo: '各服務站',
     facilities: [
-      { id: 'nursing_room', available: true, note: '空間較小' },
-      { id: 'stroller_rental', available: false },
-      { id: 'diaper_table', available: false },
-      { id: 'hot_water', available: false },
+      { id: 'nursing_room', available: true, note: '多處設置' },
+      { id: 'stroller_rental', available: true, note: 'NT$100/次' },
+      { id: 'diaper_table', available: true },
+      { id: 'hot_water', available: true },
       { id: 'elevator', available: false },
-      { id: 'play_area', available: false },
+      { id: 'play_area', available: true, note: '兒童動物區' },
       { id: 'priority_lane', available: false },
       { id: 'family_restroom', available: true },
     ],
-    photos: [], lastUpdated: '2024-10-20',
+    lastUpdated: '2025-01-22',
   },
 ];
