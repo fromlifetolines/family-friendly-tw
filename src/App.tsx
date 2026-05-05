@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import { motion, AnimatePresence } from 'framer-motion';
 import L from 'leaflet';
@@ -96,11 +96,11 @@ export default function App() {
     // Fetch dynamic government data from Taipei Open Data (synced via script)
     fetch('/data/map-locations.json')
       .then(res => res.json())
-      .then(data => {
+      .then((data: unknown) => {
         if (Array.isArray(data)) {
           setLocationsList(prev => {
             const existingIds = new Set(prev.map(l => l.id));
-            const uniqueNewData = data.filter((l: any) => !existingIds.has(l.id));
+            const uniqueNewData = (data as Location[]).filter((l: Location) => !existingIds.has(l.id));
             return [...prev, ...uniqueNewData];
           });
         }
@@ -153,7 +153,7 @@ export default function App() {
     setTimeout(() => setToast(null), 4000);
   };
 
-  const updateUserLocation = (lat: number, lng: number) => {
+  const updateUserLocation = useCallback((lat: number, lng: number) => {
     setUserLat(lat);
     setUserLng(lng);
     let minDist = Infinity;
@@ -163,7 +163,7 @@ export default function App() {
       if (d < minDist) { minDist = d; closest = loc; }
     });
     setClosestLoc(closest);
-  };
+  }, [locationsList]);
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -180,7 +180,7 @@ export default function App() {
         { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
       );
     }
-  }, [mapInstance]);
+  }, [mapInstance, updateUserLocation]);
 
   const handleGPSLocate = () => {
     if (!navigator.geolocation) {
@@ -427,7 +427,7 @@ export default function App() {
                     onClick={() => {
                       const destLat = selectedLocation.lat;
                       const destLng = selectedLocation.lng;
-                      let url = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destLat + ',' + destLng)}&travelmode=walking`;
+                      const url = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destLat + ',' + destLng)}&travelmode=walking`;
                       openExternal(url);
                     }}
                   >

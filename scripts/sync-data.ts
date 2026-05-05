@@ -46,12 +46,12 @@ async function syncMapData() {
             fetch(API_ENDPOINTS.PARK).then(res => res.json()).catch(() => null)
         ]);
 
-        const dynamicLocations: any[] = [];
+        const dynamicLocations: unknown[] = [];
 
         // 1. 處理親子館資料
         if (centerRes?.result?.results) {
             console.log(`👶 取得 ${centerRes.result.results.length} 筆親子館資料`);
-            centerRes.result.results.forEach((item: any) => {
+            centerRes.result.results.forEach((item: { _id: number, 機構名稱?: string, 地址?: string, 電話?: string, 緯度?: string, 經度?: string }) => {
                 const district = Object.keys(DISTRICT_COORDS).find(d => item.地址?.includes(d)) || '中正區';
                 const coords = DISTRICT_COORDS[district];
                 
@@ -91,7 +91,7 @@ async function syncMapData() {
         // 2. 處理公園資料
         if (parkRes?.result?.results) {
             console.log(`🌳 取得 ${parkRes.result.results.length} 筆公園資料`);
-            parkRes.result.results.forEach((item: any) => {
+            parkRes.result.results.forEach((item: { _id: number, Latitude?: string, Longitude?: string, ParkName?: string, Location?: string, Introduction?: string }) => {
                 if (!item.Latitude || !item.Longitude) return;
                 dynamicLocations.push({
                     id: `park-${item._id}`,
