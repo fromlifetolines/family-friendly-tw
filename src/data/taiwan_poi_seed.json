@@ -56,7 +56,19 @@
       "https://images.unsplash.com/photo-1540544660406-6aee9dac65e7?auto=format&fit=crop&q=80&w=1200&h=675"
     ],
     "officialWebsiteUrl": "https://www.skm.com.tw/store/xinyi-a8",
-    "assignedBadgeId": "mall-hero"
+    "assignedBadgeId": "mall-hero",
+    "badge": {
+      "id": "badge_xinyi_a8",
+      "icon": "💎",
+      "name": "信義小達人",
+      "requirement": "抵達新光三越 A8 半徑 100 公尺內"
+    },
+    "desc": "台北最老牌的親子友善百貨，5F 整層為兒童用品及大型哺乳室，設施非常齊全。",
+    "tags": [
+      "哺乳室",
+      "兒童遊戲區",
+      "育嬰室"
+    ]
   },
   {
     "id": "taipei-101",
@@ -113,7 +125,18 @@
     "realSceneImages": [
       "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&q=80&w=1200&h=675"
     ],
-    "assignedBadgeId": "mall-hero"
+    "assignedBadgeId": "mall-hero",
+    "badge": {
+      "id": "badge_101_01",
+      "icon": "🗼",
+      "name": "雲端小訪客",
+      "requirement": "抵達台北 101 半徑 100 公尺內"
+    },
+    "desc": "信義區地標，具備高水準的哺集乳室設施，分佈於 B1 與 4F。",
+    "tags": [
+      "精品母嬰",
+      "景觀商場"
+    ]
   },
   {
     "id": "sogo-zhongxiao",
@@ -275,12 +298,12 @@
     "assignedBadgeId": "mall-hero"
   },
   {
-    "id": "linkou-mitsui",
-    "name": "林口三井 Outlet (一二館合併)",
+    "id": "A9-001",
+    "name": "林口三井 Outlet (A9站)",
     "branch": "一館2F / 二館3F",
     "type": "mall",
-    "lat": 25.0711,
-    "lng": 121.3653,
+    "lat": 25.070685,
+    "lng": 121.365312,
     "address": "新北市林口區文化三路一段356號",
     "openHours": "11:00–21:30",
     "isPremium": true,
@@ -328,7 +351,19 @@
       "https://images.unsplash.com/photo-1540544660406-6aee9dac65e7?auto=format&fit=crop&q=80&w=1200&h=675"
     ],
     "officialWebsiteUrl": "https://www.mitsui-shopping-park.com.tw/mop/linkou/tw/index.html",
-    "assignedBadgeId": "mitsui-shopper"
+    "assignedBadgeId": "mitsui-shopper",
+    "desc": "具備完善的親子廁所、哺乳室及推車租借服務，室內空間寬敞，適合雨天或高溫備案。",
+    "tags": [
+      "哺乳室",
+      "推車租借",
+      "室內冷氣"
+    ],
+    "badge": {
+      "id": "badge_mitsu_01",
+      "icon": "🛍️",
+      "name": "林口探索者",
+      "requirement": "抵達林口三井Outlet半徑 100 公尺內"
+    }
   },
   {
     "id": "taichung-mitsui",
@@ -1235,7 +1270,7 @@
     "branch": "站內哺乳室",
     "type": "transport",
     "lat": 25.061642,
-    "lng": 121.368310,
+    "lng": 121.36831,
     "address": "新北市林口區長庚路一段",
     "phone": "03-286-8789",
     "website": "https://www.tymetro.com.tw",

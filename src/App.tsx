@@ -12,7 +12,7 @@ type Screen = 'map' | 'contribute';
 const ALL_FACILITIES = Object.keys(FACILITY_LABELS) as FacilityType[];
 
 // --- Icons Definition (From Life To Lines style: white ring + pastel dot + name chip) ---
-const createCustomIcon = (type: LocationType, locName: string, isSelected: boolean, isUnlocked: boolean, distanceText?: string) => {
+const createCustomIcon = (type: LocationType, locName: string, isSelected: boolean, isBadgeUnlocked: boolean, distanceText?: string) => {
   const color = TYPE_CONFIG[type].color;
   const chipLabel = locName.length > 10 ? locName.slice(0, 10) + '…' : locName;
   const tooltip = distanceText ? `${chipLabel} · ${distanceText}` : chipLabel;
@@ -22,16 +22,16 @@ const createCustomIcon = (type: LocationType, locName: string, isSelected: boole
       <div class="marker-chip">${tooltip}</div>
       <div class="marker-ring">
         <div class="marker-dot"></div>
-        ${isUnlocked ? `<div style="position:absolute; top:-10px; right:-10px; font-size: 12px; z-index: 10; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.15));">✅</div>` : ''}
+        ${isBadgeUnlocked ? `<div style="position:absolute; top:-12px; right:-12px; font-size: 16px; z-index: 10; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));">✨</div>` : ''}
       </div>
     </div>
   `;
 
   return L.divIcon({
-    className: '', // empty — avoid leaflet default overflow clipping
+    className: '', 
     html,
     iconSize: [44, 44],
-    iconAnchor: [22, 44],   // pin tip aligns to coordinate point
+    iconAnchor: [22, 44],
     popupAnchor: [0, -44],
   });
 };
@@ -73,11 +73,6 @@ function getDistanceText(lat1: number, lng1: number, lat2: number, lng2: number)
   }
 }
 
-/**
- * Safely opens an external URL in a new tab.
- * Uses noopener + noreferrer to prevent the new tab from accessing
- * window.opener, protecting PWA session from being overridden.
- */
 function openExternal(url: string) {
   const a = document.createElement('a');
   a.href = url;
@@ -94,7 +89,6 @@ export default function App() {
   const [activeFilters, setActiveFilters] = useState<FacilityType[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   
-  // GPS State: null = not yet fetched, explicit coords when ready
   const [userLat, setUserLat] = useState<number | null>(null);
   const [userLng, setUserLng] = useState<number | null>(null);
   const [gpsLoading, setGpsLoading] = useState(false);
@@ -103,53 +97,35 @@ export default function App() {
   
   const [mapInstance, setMapInstance] = useState<L.Map | null>(null);
 
-  // --- UGC Check-in & Badge System ---
-  const [visitedLocations, setVisitedLocations] = useState<Record<string, string>>(() => {
-    try { 
-      const old = JSON.parse(localStorage.getItem('fft-visited') || '[]');
-      if (Array.isArray(old) && old.length > 0) {
-        const migrated: Record<string, string> = {};
-        const today = new Date().toLocaleDateString('zh-TW');
-        old.forEach((id: string) => migrated[id] = today);
-        localStorage.setItem('fft-visited-badges', JSON.stringify(migrated));
-        localStorage.removeItem('fft-visited');
-        return migrated;
-      }
-      const stored = JSON.parse(localStorage.getItem('fft-visited-badges') || '{}');
-      if (typeof stored === 'object' && !Array.isArray(stored)) return stored;
-      return {};
-    } catch { return {}; }
+  // --- Badge System State ---
+  const [unlockedBadges, setUnlockedBadges] = useState<string[]>(() => {
+    try {
+      return JSON.parse(localStorage.getItem('userBadges') || '[]');
+    } catch { return []; }
   });
 
-  const [checkInLocation, setCheckInLocation] = useState<Location | null>(null);
+  const checkIn = (placeId: string) => {
+    const loc = locations.find(l => l.id === placeId);
+    if (!loc || !loc.badge || !userLat || !userLng) return;
 
-  // Proximity check for unlocking photo upload mode
-  useEffect(() => {
-    if (!userLat || !userLng) return;
-    let foundLoc: any = null;
-    locations.forEach(loc => {
-      if (!visitedLocations[loc.id] && getDistance(userLat, userLng, loc.lat, loc.lng) < 50) {
-        foundLoc = loc;
+    const distance = getDistance(userLat, userLng, loc.lat, loc.lng);
+    if (distance <= 100) {
+      if (!unlockedBadges.includes(loc.badge.id)) {
+        const newBadges = [...unlockedBadges, loc.badge.id];
+        setUnlockedBadges(newBadges);
+        localStorage.setItem('userBadges', JSON.stringify(newBadges));
+        showToast(`✨ 恭喜！成功解鎖『${loc.badge.name}』徽章！`);
+      } else {
+        showToast(`你已經擁有『${loc.badge.name}』徽章了！`);
       }
-    });
-    if (foundLoc && foundLoc.id !== checkInLocation?.id) {
-      setCheckInLocation(foundLoc);
-      showToast(`📍抵達【${foundLoc.name}】，請回報實景解鎖勳章！`);
-    } else if (!foundLoc && checkInLocation) {
-      setCheckInLocation(null);
+    } else {
+      showToast(`📍 距離太遠了（${(distance).toFixed(0)}m），需在 100m 內才能解鎖徽章。`);
     }
-  }, [userLat, userLng, visitedLocations, checkInLocation]);
+  };
 
-  const handleSimulateUpload = () => {
-    if (!checkInLocation) return;
-    const today = new Date().toLocaleDateString('zh-TW');
-    setVisitedLocations(prev => {
-      const updated = { ...prev, [checkInLocation.id]: today };
-      localStorage.setItem('fft-visited-badges', JSON.stringify(updated));
-      return updated;
-    });
-    showToast(`📸 感謝回報！成功解鎖【${checkInLocation.name}】勳章！`);
-    setCheckInLocation(null);
+  const isBadgeUnlocked = (badgeId?: string) => {
+    if (!badgeId) return false;
+    return unlockedBadges.includes(badgeId);
   };
 
   const showToast = (msg: string) => {
@@ -176,29 +152,15 @@ export default function App() {
           const lat = pos.coords.latitude;
           const lng = pos.coords.longitude;
           updateUserLocation(lat, lng);
-          // Fly to user location after GPS resolves
           if (mapInstance) {
             mapInstance.flyTo([lat, lng], 14, { animate: true, duration: 1.5 });
           }
         },
-        () => {}, // Silent fail — map stays at default Taiwan overview
+        () => {},
         { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
       );
     }
-  }, [mapInstance]); // Re-run if mapInstance becomes available after GPS resolves
-
-  // Data Validation Hook
-  useEffect(() => {
-    if (import.meta.env.DEV) {
-      const missingUrls = locations.filter(loc => 
-        ['hospital', 'transport'].includes(loc.type) && !loc.officialWebsiteUrl
-      );
-      if (missingUrls.length > 0) {
-        console.error('🚨 [Data Error] Missing officialWebsiteUrl:', missingUrls.map(l => l.name));
-        showToast(`開發警告：有 ${missingUrls.length} 個場域缺少官網連結！請查看 Console。`);
-      }
-    }
-  }, []);
+  }, [mapInstance]);
 
   const handleGPSLocate = () => {
     if (!navigator.geolocation) {
@@ -220,7 +182,6 @@ export default function App() {
         setGpsLoading(false);
         if (err.code === err.PERMISSION_DENIED) {
           showToast('📍 請允許定位權限，以協助您尋找最近的親子空間。');
-          // Graceful fallback to Taiwan overview
           if (mapInstance) mapInstance.flyTo([25.0330, 121.5654], 12, { animate: true });
         } else {
           showToast('⚠️ 定位超時，請確認網路連線後再試一次。');
@@ -234,33 +195,28 @@ export default function App() {
     setActiveFilters(prev => 
       prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]
     );
-    setSelectedLocation(null); // Close bottom sheet on filter change
+    setSelectedLocation(null);
   };
 
   const handleMarkerClick = (loc: Location) => {
     setSelectedLocation(loc);
     if (mapInstance) {
-      // Pan slightly down so the marker isn't covered by the bottom sheet
       mapInstance.flyTo([loc.lat - 0.003, loc.lng], 15, { animate: true, duration: 1.2 });
     }
   };
 
   const filteredLocations = locations.filter(loc => {
-    // Search query matching
     const matchesSearch = searchQuery === '' || 
       loc.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
       loc.address.toLowerCase().includes(searchQuery.toLowerCase());
     
     if (!matchesSearch) return false;
     
-    // Facility filters matching
     if (activeFilters.length === 0) return true;
     return activeFilters.every(filter => 
       loc.facilities.some(f => f.id === filter && f.available)
     );
   });
-
-
 
   const renderMapScreen = () => (
     <div className="map-page">
@@ -340,28 +296,22 @@ export default function App() {
           attribution='&copy; <a href="https://carto.com/">CARTO</a>'
         />
         
-        {filteredLocations.map(loc => {
-          const isSelected = selectedLocation?.id === loc.id;
-          let distanceText: string | undefined;
-          
-          if (userLat !== null && userLng !== null) {
-            distanceText = getDistanceText(userLat, userLng, loc.lat, loc.lng);
-          }
-          
-          const isUnlocked = !!visitedLocations[loc.id];
-          
-          return (
-            <Marker 
-              key={loc.id}
-              position={[loc.lat, loc.lng]}
-              icon={createCustomIcon(loc.type, loc.name, isSelected, isUnlocked, distanceText)}
-              eventHandlers={{
-                click: () => handleMarkerClick(loc)
-              }}
-              zIndexOffset={isSelected ? 1000 : 0}
-            />
-          );
-        })}
+        {filteredLocations.map(loc => (
+          <Marker 
+            key={loc.id} 
+            position={[loc.lat, loc.lng]} 
+            icon={createCustomIcon(
+              loc.type, 
+              loc.name, 
+              selectedLocation?.id === loc.id,
+              isBadgeUnlocked(loc.badge?.id),
+              userLat && userLng ? getDistanceText(userLat, userLng, loc.lat, loc.lng) : undefined
+            )}
+            eventHandlers={{
+              click: () => handleMarkerClick(loc)
+            }}
+          />
+        ))}
 
         {userLat !== null && userLng !== null && (
           <Marker 
@@ -439,9 +389,7 @@ export default function App() {
               <div className="sheet-drag-handle" />
               
               <div className="sheet-content">
-                {(selectedLocation as any).realSceneImages && (selectedLocation as any).realSceneImages.length > 0 ? (
-                  <img src={(selectedLocation as any).realSceneImages[0]} className="sheet-photo" alt={selectedLocation.name} />
-                ) : selectedLocation.photos && selectedLocation.photos.length > 0 ? (
+                {selectedLocation.photos && selectedLocation.photos.length > 0 ? (
                   <img src={selectedLocation.photos[0]} className="sheet-photo" alt={selectedLocation.name} />
                 ) : (
                   <div 
@@ -468,68 +416,76 @@ export default function App() {
                   <div className="sheet-subtitle">{selectedLocation.branch} • {selectedLocation.openHours}</div>
                 </div>
 
+                {/* Description & Tags */}
+                <div style={{ padding: '0 24px 16px 24px' }}>
+                  {selectedLocation.desc && (
+                    <p style={{ fontSize: '14px', color: 'var(--liquid-muted)', lineHeight: '1.6', margin: '0 0 12px 0' }}>
+                      {selectedLocation.desc}
+                    </p>
+                  )}
+                  {selectedLocation.tags && (
+                    <div className="amenity-tags">
+                      {selectedLocation.tags.map(tag => (
+                        <span key={tag} className="amenity-tag">#{tag}</span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
                 <div className="pill-actions">
-                  {/* 一鍵導航 */}
                   <button 
                     className="action-pill primary tactile-btn"
                     onClick={() => {
-                      const destLat = selectedLocation.navLat ?? selectedLocation.lat;
-                      const destLng = selectedLocation.navLng ?? selectedLocation.lng;
-                      let url: string;
-                      if (userLat !== null && userLng !== null) {
-                        url = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(userLat + ',' + userLng)}&destination=${encodeURIComponent(destLat + ',' + destLng)}&travelmode=walking`;
-                      } else {
-                        url = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destLat + ',' + destLng)}&travelmode=walking`;
-                      }
+                      const destLat = selectedLocation.lat;
+                      const destLng = selectedLocation.lng;
+                      let url = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destLat + ',' + destLng)}&travelmode=walking`;
                       openExternal(url);
                     }}
                   >
                     <span>📍</span> 一鍵導航
                   </button>
                   
-                  {/* 樓層平面圖 */}
+                  {selectedLocation.badge && (
+                    <button 
+                      className={`badge-btn ${isBadgeUnlocked(selectedLocation.badge.id) ? 'unlocked' : 'locked'} tactile-btn`}
+                      onClick={() => checkIn(selectedLocation.id)}
+                    >
+                      {isBadgeUnlocked(selectedLocation.badge.id) ? (
+                        <><span>✨</span> 已解鎖『{selectedLocation.badge.name}』</>
+                      ) : (
+                        <><span>📍</span> 抵達解鎖徽章</>
+                      )}
+                    </button>
+                  )}
+                  
                   <button 
                     className="action-pill tactile-btn"
                     onClick={() => {
-                      if (selectedLocation.mapUrl) {
-                        openExternal(selectedLocation.mapUrl);
-                      } else {
-                        showToast('🗺️ 該場域尚未提供樓層平面圖');
-                      }
+                      if (selectedLocation.mapUrl) openExternal(selectedLocation.mapUrl);
+                      else if (selectedLocation.floorGuideUrl) openExternal(selectedLocation.floorGuideUrl);
+                      else showToast('🗺️ 尚未提供樓層指南');
                     }}
                   >
-                    <span>🗺️</span> 樓層平面圖
+                    <span>🖼️</span> 樓層指南
                   </button>
 
-                  {/* 官方網站 — 僅在有 officialWebsiteUrl 時顯示 */}
                   {selectedLocation.officialWebsiteUrl && (
                     <button 
                       className="action-pill tactile-btn"
                       onClick={() => openExternal(selectedLocation.officialWebsiteUrl!)}
                     >
-                      <span>🌐</span> 官方網站
+                      <span>🌐</span> 官網
                     </button>
                   )}
-
-                  {/* 設備清單 */}
-                  <button 
-                    className="action-pill tactile-btn"
-                    onClick={() => {
-                      document.getElementById('facility-section')?.scrollIntoView({ behavior: 'smooth' });
-                    }}
-                  >
-                    <span>✨</span> 設備清單
-                  </button>
                 </div>
 
                 <div id="facility-section" className="section-title">提供設施</div>
-                <div className="amenity-grid-3">
+                <div className="amenity-grid-3" style={{ paddingBottom: '32px' }}>
                   {ALL_FACILITIES.map(key => {
                     const fac = selectedLocation.facilities.find(f => f.id === key);
                     const isAvailable = fac?.available ?? false;
-                    
                     return (
-                      <div key={key} className={`amenity-card tactile-btn ${isAvailable ? 'active' : 'inactive'}`} style={{ flexShrink: 0, minWidth: '90px' }}>
+                      <div key={key} className={`amenity-card tactile-btn ${isAvailable ? 'active' : 'inactive'}`}>
                         <div className="amenity-card-icon">{FACILITY_LABELS[key].split(' ')[0]}</div>
                         <div className="amenity-card-label">{FACILITY_LABELS[key].split(' ')[1]}</div>
                       </div>
@@ -544,203 +500,70 @@ export default function App() {
     </div>
   );
 
-
   const renderTaskScreen = () => {
-    const isMallUnlocked = Object.keys(visitedLocations).some(id => locations.find(l => l.id === id)?.type === 'mall');
-    
-    const svgDefs = (
-      <svg style={{ width: 0, height: 0, position: 'absolute' }}>
-        <defs>
-          <linearGradient id="metal-gold" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#FFF2A8" />
-            <stop offset="25%" stopColor="#D4AF37" />
-            <stop offset="50%" stopColor="#FFF2A8" />
-            <stop offset="75%" stopColor="#AA7C11" />
-            <stop offset="100%" stopColor="#FFF2A8" />
-          </linearGradient>
-          <linearGradient id="metal-silver" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#FFFFFF" />
-            <stop offset="25%" stopColor="#B0B0B0" />
-            <stop offset="50%" stopColor="#FFFFFF" />
-            <stop offset="75%" stopColor="#808080" />
-            <stop offset="100%" stopColor="#FFFFFF" />
-          </linearGradient>
-          <linearGradient id="metal-bronze" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#FFC8A8" />
-            <stop offset="25%" stopColor="#CD7F32" />
-            <stop offset="50%" stopColor="#FFC8A8" />
-            <stop offset="75%" stopColor="#8C491A" />
-            <stop offset="100%" stopColor="#FFC8A8" />
-          </linearGradient>
-          <radialGradient id="inner-glow" cx="50%" cy="50%" r="50%">
-            <stop offset="70%" stopColor="var(--brand-primary)" stopOpacity="1" />
-            <stop offset="100%" stopColor="var(--brand-navy)" stopOpacity="0.4" />
-          </radialGradient>
-          <radialGradient id="inner-glow-purple" cx="50%" cy="50%" r="50%">
-            <stop offset="70%" stopColor="var(--brand-secondary)" stopOpacity="1" />
-            <stop offset="100%" stopColor="var(--brand-navy)" stopOpacity="0.4" />
-          </radialGradient>
-        </defs>
-      </svg>
-    );
-
-    const hasBadge = (badgeId: string) => Object.keys(visitedLocations).some(id => locations.find(l => l.id === id)?.assignedBadgeId === badgeId);
-
-    const MEDALS = [
-      { id: 'first-step', title: '踩點大師', desc: '首次踩點', icon: <svg viewBox="0 0 100 100" style={{width:'100%', height:'100%'}}><circle cx="50" cy="50" r="46" fill="url(#inner-glow)" stroke="url(#metal-bronze)" strokeWidth="8"/><path d="M50 25 L56 40 L72 40 L59 50 L64 65 L50 55 L36 65 L41 50 L28 40 L44 40 Z" fill="url(#metal-bronze)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.4))"/></svg>, unlocked: Object.keys(visitedLocations).length >= 1 },
-      { id: 'nursing-3', title: '育兒守護者', desc: '踩點 3 個場域', icon: <svg viewBox="0 0 100 100" style={{width:'100%', height:'100%'}}><path d="M50 8 L90 20 L90 50 C90 75 50 95 50 95 C50 95 10 75 10 50 L10 20 Z" fill="url(#inner-glow-purple)" stroke="url(#metal-silver)" strokeWidth="8" strokeLinejoin="round"/><rect x="42" y="35" width="16" height="25" rx="8" fill="url(#metal-silver)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.4))"/><path d="M42 35 L58 35 L54 25 L46 25 Z" fill="url(#metal-silver)"/><circle cx="50" cy="22" r="3" fill="url(#metal-silver)"/></svg>, unlocked: Object.keys(visitedLocations).length >= 3 },
-      { id: 'mall-hero', title: '百貨獵人', desc: '解鎖任意百貨', icon: <svg viewBox="0 0 100 100" style={{width:'100%', height:'100%'}}><circle cx="50" cy="50" r="46" fill="url(#inner-glow)" stroke="url(#metal-gold)" strokeWidth="8" strokeDasharray="15 5"/><path d="M35 45 L65 45 L60 70 L40 70 Z" fill="url(#metal-gold)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.4))"/><path d="M40 45 C40 30 60 30 60 45" fill="none" stroke="url(#metal-gold)" strokeWidth="4"/></svg>, unlocked: hasBadge('mall-hero') },
-      { id: 'mitsui-shopper', title: '三井購物狂', desc: '解鎖三井 Outlet', icon: <svg viewBox="0 0 100 100" style={{width:'100%', height:'100%'}}><circle cx="50" cy="50" r="46" fill="url(#inner-glow-purple)" stroke="url(#metal-silver)" strokeWidth="8"/><path d="M30 40 L70 40 L65 70 L35 70 Z" fill="url(#metal-silver)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.4))"/><path d="M40 40 C40 25 60 25 60 40" fill="none" stroke="url(#metal-silver)" strokeWidth="4"/></svg>, unlocked: hasBadge('mitsui-shopper') },
-      { id: 'thsr-explorer', title: '高鐵探索者', desc: '解鎖高鐵站', icon: <svg viewBox="0 0 100 100" style={{width:'100%', height:'100%'}}><circle cx="50" cy="50" r="46" fill="url(#inner-glow)" stroke="url(#metal-gold)" strokeWidth="8"/><path d="M20 60 L80 60 L70 40 L30 40 Z M10 70 L90 70 M45 40 L80 20" stroke="url(#metal-gold)" strokeWidth="6" fill="none" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.4))"/></svg>, unlocked: hasBadge('thsr-explorer') },
-      { id: 'mrt-navigator', title: '北捷領航員', desc: '解鎖台北捷運站', icon: <svg viewBox="0 0 100 100" style={{width:'100%', height:'100%'}}><circle cx="50" cy="50" r="46" fill="url(#inner-glow-purple)" stroke="url(#metal-silver)" strokeWidth="8"/><path d="M25 50 A25 25 0 1 1 75 50 A25 25 0 1 1 25 50 M10 50 L90 50 M50 10 L50 90" stroke="url(#metal-silver)" strokeWidth="6" fill="none" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.4))"/></svg>, unlocked: hasBadge('mrt-navigator') },
-      { id: 'tymetro-master', title: '機捷達人', desc: '解鎖機場捷運', icon: <svg viewBox="0 0 100 100" style={{width:'100%', height:'100%'}}><circle cx="50" cy="50" r="46" fill="url(#inner-glow)" stroke="url(#metal-bronze)" strokeWidth="8"/><path d="M30 60 L50 30 L70 60 Z M10 70 L90 70" stroke="url(#metal-bronze)" strokeWidth="6" fill="none" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.4))"/></svg>, unlocked: hasBadge('tymetro-master') },
-      { id: 'krt-explorer', title: '高捷探索者', desc: '解鎖高雄捷運', icon: <svg viewBox="0 0 100 100" style={{width:'100%', height:'100%'}}><circle cx="50" cy="50" r="46" fill="url(#inner-glow-purple)" stroke="url(#metal-silver)" strokeWidth="8"/><path d="M30 30 L70 70 M30 70 L70 30 M15 50 L85 50" stroke="url(#metal-silver)" strokeWidth="6" fill="none" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.4))"/></svg>, unlocked: hasBadge('krt-explorer') },
-      { id: 'hospital-guardian', title: '醫療守護者', desc: '解鎖醫療院所', icon: <svg viewBox="0 0 100 100" style={{width:'100%', height:'100%'}}><circle cx="50" cy="50" r="46" fill="url(#inner-glow)" stroke="url(#metal-gold)" strokeWidth="8"/><path d="M40 30 L60 30 L60 40 L70 40 L70 60 L60 60 L60 70 L40 70 L40 60 L30 60 L30 40 L40 40 Z" fill="url(#metal-gold)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.4))"/></svg>, unlocked: hasBadge('hospital-guardian') },
-      { id: 'park-ranger', title: '公園探險家', desc: '解鎖公園景點', icon: <svg viewBox="0 0 100 100" style={{width:'100%', height:'100%'}}><circle cx="50" cy="50" r="46" fill="url(#inner-glow-purple)" stroke="url(#metal-bronze)" strokeWidth="8"/><path d="M50 20 L70 50 L60 50 L80 80 L20 80 L40 50 L30 50 Z" fill="url(#metal-bronze)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.4))"/></svg>, unlocked: hasBadge('park-ranger') },
-    ];
-    const unlockedCount = MEDALS.filter(m => m.unlocked).length;
-
-    const getMedalDate = (medalId: string) => {
-      const dates = Object.values(visitedLocations);
-      if (dates.length === 0) return '';
-      switch(medalId) {
-        case 'first-step': return dates[0];
-        case 'nursing-3': return dates.length >= 3 ? dates[2] : '';
-        case 'mall-hero': return isMallUnlocked ? Object.values(visitedLocations)[0] : '';
-        case 'hospital': return visitedLocations['linkou-cgmh'] || '';
-        case 'nursing-10': return dates.length >= 10 ? dates[9] : '';
-        case 'navigator': return dates.length >= 20 ? dates[19] : '';
-        default: return dates[0];
-      }
-    };
+    const discoveryBadges = locations.filter(l => l.badge).map(l => ({ ...l.badge!, placeName: l.name, placeId: l.id }));
+    const unlockedCount = unlockedBadges.length;
 
     return (
-      <div className="task-page">
-        {svgDefs}
-        {/* Hero Banner */}
+      <div className="task-page no-scrollbar" style={{ overflowY: 'auto', height: '100vh' }}>
         <div style={{
-          background: 'linear-gradient(135deg, #007AFF 0%, #5AC8FA 100%)',
-          padding: '56px 24px 36px',
+          background: 'linear-gradient(135deg, #007AFF 0%, #00F2FF 100%)',
+          padding: '64px 24px 40px',
           textAlign: 'center',
-          color: 'white'
+          color: 'white',
+          borderRadius: '0 0 32px 32px',
+          boxShadow: '0 12px 32px rgba(0,122,255,0.3)'
         }}>
-          <div style={{ fontSize: '12px', fontWeight: 700, color: 'rgba(255,255,255,0.7)', letterSpacing: '0.06em', marginBottom: '10px' }}>35DAILY 全台親子探索地圖</div>
-          <div style={{ fontSize: '30px', fontWeight: 800, color: 'white', lineHeight: 1.25 }}>
-            一鍵導航<br/>成就解鎖
-          </div>
-          <div style={{ fontSize: '14px', color: 'rgba(255,255,255,0.85)', marginTop: '10px', fontWeight: 600 }}>
-            全台百貨、景點、車站、醫院親子空間
-          </div>
+          <div style={{ fontSize: '12px', fontWeight: 700, opacity: 0.8, letterSpacing: '0.1em', marginBottom: '8px' }}>LIFE TO LINES</div>
+          <div style={{ fontSize: '32px', fontWeight: 900, lineHeight: 1.1 }}>探索成就</div>
         </div>
 
-        {/* Active Task (If in range) */}
-        {checkInLocation ? (
-          <div className="glass-panel" style={{ margin: '16px 16px 0', padding: '22px', borderColor: 'rgba(0,122,255,0.3)' }}>
-            <div style={{ fontSize: '11px', color: '#007AFF', fontWeight: 700, letterSpacing: '0.04em' }}>📍 偵測到您已抵達</div>
-            <div style={{ fontSize: '20px', fontWeight: 800, color: '#1D1D1F', marginTop: '6px' }}>
-              {checkInLocation.name}
-            </div>
-            <div style={{ fontSize: '13px', color: '#86868B', marginTop: '4px', fontWeight: 600 }}>
-              請上傳哺乳室或設備現況照片，協助更新資訊！
-            </div>
-            <button
-              className="tactile-btn"
-              style={{
-                width: '100%', marginTop: '16px',
-                background: '#007AFF', color: 'white',
-                padding: '17px', borderRadius: '14px',
-                fontSize: '16px', fontWeight: 700,
-              }}
-              onClick={handleSimulateUpload}
-            >
-              📸 模擬上傳照片並解鎖勳章
-            </button>
+        <div style={{ padding: '24px 20px 120px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <div style={{ fontSize: '20px', fontWeight: 800, color: 'var(--liquid-text)' }}>🏅 徽章收藏冊</div>
+            <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--liquid-cyan)' }}>{unlockedCount} / {discoveryBadges.length}</div>
           </div>
-        ) : (
-          <div className="glass-panel" style={{ margin: '16px 16px 0', padding: '22px', textAlign: 'center' }}>
-            <div style={{ fontSize: '14px', color: '#86868B', fontWeight: 600 }}>
-              尚未到達任何場域。<br/>請至地圖探索，靠近場域 50m 內即可解鎖回報任務！
-            </div>
-            <button
-              className="tactile-btn"
-              style={{
-                width: '100%', marginTop: '16px',
-                background: '#007AFF', color: 'white',
-                padding: '17px', borderRadius: '14px',
-                fontSize: '16px', fontWeight: 700,
-              }}
-              onClick={() => setCurrentScreen('map')}
-            >
-              🗺️ 前往地圖探索
-            </button>
-          </div>
-        )}
 
-        {/* Medal Album */}
-        <div style={{ margin: '24px 16px 0' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-            <div style={{ fontSize: '18px', fontWeight: 800, color: '#1D1D1F' }}>🏅 我的成就徽章冊</div>
-            <div style={{ fontSize: '12px', fontWeight: 600, color: '#86868B' }}>{unlockedCount}/{MEDALS.length} 解鎖</div>
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
-            {MEDALS.map(medal => {
-              const date = getMedalDate(medal.id);
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
+            {discoveryBadges.map(badge => {
+              const isUnlocked = unlockedBadges.includes(badge.id);
               return (
-                <div key={medal.id} 
-                  className={medal.unlocked ? 'medal-shimmer medal-glow' : ''}
-                  onClick={() => !medal.unlocked && showToast(`🔒 解鎖條件：${medal.desc}`)}
+                <div 
+                  key={badge.id} 
+                  className={`medal-card ${isUnlocked ? 'medal-shimmer medal-glow' : ''}`}
                   style={{
-                  background: medal.unlocked ? 'rgba(255,255,255,0.75)' : 'rgba(0,0,0,0.02)',
-                  backdropFilter: medal.unlocked ? 'blur(16px) saturate(180%)' : 'none',
-                  WebkitBackdropFilter: medal.unlocked ? 'blur(16px) saturate(180%)' : 'none',
-                  borderRadius: '20px',
-                  padding: '16px 8px',
-                  textAlign: 'center',
-                  boxShadow: medal.unlocked ? '0 4px 16px rgba(0,0,0,0.06), inset 0 1px 1px rgba(255,255,255,0.8)' : 'none',
-                  border: medal.unlocked ? '1px solid rgba(255,255,255,0.5)' : '1px solid transparent',
-                  transition: 'all 0.4s cubic-bezier(0.25,0.8,0.25,1)',
-                  cursor: medal.unlocked ? 'default' : 'pointer'
-                }}>
-                  <motion.div 
-                    initial={false}
-                    animate={{ 
-                      filter: medal.unlocked ? 'grayscale(0%) blur(0px)' : 'grayscale(100%) blur(12px)',
-                      opacity: medal.unlocked ? 1 : 0.6
-                    }}
-                    transition={{ duration: 0.8, ease: "easeOut" }}
-                    style={{ 
-                      width: '56px', height: '56px', margin: '0 auto 8px', position: 'relative'
-                    }}
-                  >
-                    {medal.icon}
-                    {!medal.unlocked && (
-                      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px', opacity: 0.8 }}>
-                        🔒
-                      </div>
-                    )}
-                  </motion.div>
-                  <div style={{ fontSize: '12px', fontWeight: 800, color: medal.unlocked ? '#1D1D1F' : '#86868B', lineHeight: 1.2 }}>{medal.title}</div>
-                  <div style={{ fontSize: '10px', color: medal.unlocked ? '#007AFF' : '#AEAEB2', fontWeight: 600, marginTop: '4px' }}>
-                    {medal.unlocked ? date : '點擊查看'}
+                    background: isUnlocked ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.02)',
+                    opacity: isUnlocked ? 1 : 0.5,
+                    filter: isUnlocked ? 'none' : 'grayscale(100%)'
+                  }}
+                  onClick={() => {
+                    if (!isUnlocked) {
+                      const loc = locations.find(l => l.id === badge.placeId);
+                      if (loc) {
+                        setCurrentScreen('map');
+                        setSelectedLocation(loc);
+                        if (mapInstance) mapInstance.flyTo([loc.lat, loc.lng], 15);
+                      }
+                    }
+                  }}
+                >
+                  <div style={{ fontSize: '48px', marginBottom: '12px' }}>{badge.icon}</div>
+                  <div style={{ fontSize: '15px', fontWeight: 800, color: 'var(--liquid-text)' }}>{badge.name}</div>
+                  <div style={{ fontSize: '11px', color: isUnlocked ? 'var(--liquid-cyan)' : 'var(--liquid-muted)', fontWeight: 700, marginTop: '4px' }}>
+                    {isUnlocked ? badge.placeName : '尚未解鎖'}
                   </div>
                 </div>
               );
             })}
           </div>
-          {Object.keys(visitedLocations).length >= 1 && (
+
+          {unlockedCount > 0 && (
             <button
-              className="tactile-btn"
-              onClick={() => showToast('🎨 成就證書功能將於正式版啟動，敬請期待！')}
-              style={{
-                width: '100%', marginTop: '16px',
-                background: '#007AFF',
-                color: 'white', border: 'none',
-                padding: '15px', borderRadius: '14px',
-                fontSize: '15px', fontWeight: 700,
-                boxShadow: '0 4px 16px rgba(0,122,255,0.25)'
-              }}
+              className="action-pill primary tactile-btn"
+              style={{ width: '100%', marginTop: '32px', padding: '18px' }}
+              onClick={() => showToast('🎨 成就海報生成中...')}
             >
-              🔗 分享成就海報（IG 演算法流量）
+              🔗 分享我的探索成就
             </button>
           )}
         </div>
@@ -750,27 +573,8 @@ export default function App() {
 
   return (
     <div className={`app-container ${selectedLocation ? 'sheet-open' : ''}`}>
-      {/* Toast Notification */}
       {toast && (
-        <div style={{
-          position: 'fixed',
-          top: '80px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          background: 'rgba(10, 17, 38, 0.75)',
-          backdropFilter: 'var(--glass-blur)',
-          WebkitBackdropFilter: 'var(--glass-blur)',
-          color: 'var(--liquid-text)',
-          padding: '14px 28px',
-          borderRadius: '999px',
-          fontSize: '14px',
-          fontWeight: 700,
-          zIndex: 9999,
-          whiteSpace: 'nowrap',
-          boxShadow: 'var(--glass-shadow)',
-          border: '1px solid rgba(255,255,255,0.2)',
-          animation: 'fade-in 0.3s ease-out'
-        }}>
+        <div className="toast-notification">
           {toast}
         </div>
       )}
@@ -778,7 +582,6 @@ export default function App() {
       {currentScreen === 'map' && renderMapScreen()}
       {currentScreen === 'contribute' && renderTaskScreen()}
 
-      {/* Bottom Nav */}
       <div className="bottom-nav">
         <button 
           className={`nav-item tactile-btn ${currentScreen === 'map' ? 'active' : ''}`}

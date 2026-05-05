@@ -10,6 +10,13 @@ export interface Facility {
   note?: string
 }
 
+export interface Badge {
+  id: string
+  icon: string
+  name: string
+  requirement: string
+}
+
 export interface Location {
   id: string
   name: string
@@ -35,6 +42,9 @@ export interface Location {
   navLat?: number
   navLng?: number
   assignedBadgeId?: string;
+  badge?: Badge;
+  desc?: string;
+  tags?: string[];
 }
 
 export const FACILITY_LABELS: Record<FacilityType, string> = {
