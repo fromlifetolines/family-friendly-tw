@@ -2,155 +2,75 @@ import React from 'react';
 
 interface HeaderProps {
   onSearch: (query: string) => void;
-  onCategorySelect: (category: string) => void;
-  unlockedBadgesCount: number;
-  onBadgeClick: () => void;
+  onCategorySelect?: (category: string) => void;
+  unlockedBadges?: string[];
 }
 
-const Header: React.FC<HeaderProps> = ({ onSearch, onCategorySelect, unlockedBadgesCount, onBadgeClick }) => {
-  const categories = ["全部", "玩樂", "美食", "休息"];
-
+const Header: React.FC<HeaderProps> = ({ onSearch, unlockedBadges = [] }) => {
   return (
+    // 強制置頂 z-[9999]，並確保寬度與定位完全固定
     <nav className="glass-panel" style={{ 
       position: 'fixed', 
       top: 0, 
       left: 0, 
       right: 0, 
-      zIndex: 50, 
-      borderRadius: '0 0 24px 24px',
-      borderTop: 'none',
-      background: 'rgba(20, 20, 25, 0.45)', // Matching sidebar style
-      padding: '16px'
+      zIndex: 9999, 
+      width: '100%', 
+      background: 'rgba(255, 255, 255, 0.9)', // Higher opacity as requested to prevent map clutter
+      backdropFilter: 'blur(20px)',
+      borderBottom: '1px solid rgba(0, 0, 0, 0.05)',
+      boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)'
     }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
         
-        {/* 第一層：品牌標題與互動徽章 */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        {/* 第一層：標題與徽章 */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <h1 style={{ 
-              fontSize: '20px', 
-              fontWeight: 900, 
-              color: 'var(--liquid-text)', 
-              lineHeight: 1.1, 
-              letterSpacing: '-0.02em',
-              margin: 0
-            }}>
+            <h1 style={{ fontSize: '20px', fontWeight: 900, color: '#1c1c1e', lineHeight: 1.1, margin: 0 }}>
               Family Friendly <span style={{ color: '#007AFF' }}>TW</span>
             </h1>
-            <p style={{ 
-              fontSize: '10px', 
-              color: 'var(--liquid-muted)', 
-              marginTop: '4px', 
-              textTransform: 'uppercase', 
-              letterSpacing: '0.1em', 
-              fontWeight: 700,
-              margin: 0
-            }}>
-              Explore with Xing-Wei
-            </p>
+            <span style={{ fontSize: '10px', color: '#8e8e93', fontWeight: 700, letterSpacing: '-0.01em', textTransform: 'uppercase', marginTop: '2px' }}>
+              Parent-Child Discovery
+            </span>
           </div>
           
-          {/* 數位徽章按鈕：採用 Apple 式毛玻璃質感 */}
           <button 
             className="tactile-btn"
-            onClick={onBadgeClick}
             style={{ 
-              position: 'relative', 
-              padding: '10px', 
-              borderRadius: '16px', 
-              background: 'rgba(255, 255, 255, 0.05)', 
-              border: '1px solid rgba(255, 255, 255, 0.1)',
+              background: '#f2f2f7', 
+              padding: '8px 12px', 
+              borderRadius: '12px', 
+              border: 'none',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center'
+              gap: '6px'
             }}
           >
-            <span style={{ fontSize: '20px' }}>🏆</span>
-            {unlockedBadgesCount > 0 && (
-              <span style={{ 
-                position: 'absolute', 
-                top: '-4px', 
-                right: '-4px', 
-                background: '#FF3B30', 
-                color: 'white', 
-                fontSize: '10px', 
-                width: '18px', 
-                height: '18px', 
-                borderRadius: '50%', 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center', 
-                border: '2px solid rgba(20,20,25,1)',
-                fontWeight: 900
-              }}>
-                {unlockedBadgesCount}
-              </span>
-            )}
+            <span style={{ fontSize: '18px' }}>🏆</span> 
+            <span style={{ fontFamily: 'monospace', fontSize: '14px', fontWeight: 700, color: '#1c1c1e' }}>{unlockedBadges.length}</span>
           </button>
         </div>
 
-        {/* 第二層：搜尋框 */}
-        <div style={{ position: 'relative' }}>
-          <span style={{ 
-            position: 'absolute', 
-            left: '14px', 
-            top: '50%', 
-            transform: 'translateY(-50%)', 
-            fontSize: '16px', 
-            color: '#86868B',
-            pointerEvents: 'none'
-          }}>🔍</span>
+        {/* 第二層：搜尋框 - 加上背景色防止透視地圖導致文字混亂 */}
+        <div style={{ position: 'relative', width: '100%' }}>
+          <span style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: '#8e8e93' }}>🔍</span>
           <input
             type="text"
             style={{
               width: '100%', 
-              padding: '12px 12px 12px 44px',
-              borderRadius: '16px',
-              border: '1px solid rgba(255,255,255,0.1)',
-              background: 'rgba(255, 255, 255, 0.05)', 
-              color: 'var(--liquid-text)',
-              fontSize: '15px', 
-              fontWeight: 600,
+              padding: '12px 12px 12px 40px',
+              background: '#f2f2f7', 
+              border: '1px solid transparent', 
+              borderRadius: '16px', 
+              fontSize: '14px', 
+              color: '#1c1c1e',
               outline: 'none',
-              boxSizing: 'border-box',
-              transition: 'all 0.3s var(--ease-liquid)'
+              transition: 'all 0.3s ease',
+              boxSizing: 'border-box'
             }}
-            placeholder="尋找星唯也愛的親子點位..."
+            placeholder="搜尋目的地..."
             onChange={(e) => onSearch(e.target.value)}
           />
-        </div>
-
-        {/* 第三層：類別橫向捲軸 */}
-        <div 
-          className="no-scrollbar"
-          style={{ 
-            display: 'flex', 
-            gap: '10px', 
-            overflowX: 'auto', 
-            paddingBottom: '4px',
-            WebkitOverflowScrolling: 'touch'
-          }}
-        >
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => onCategorySelect(cat)}
-              className="tactile-btn"
-              style={{
-                whiteSpace: 'nowrap',
-                padding: '8px 20px',
-                borderRadius: '12px',
-                background: 'rgba(255, 255, 255, 0.05)',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                fontSize: '13px',
-                fontWeight: 700,
-                color: 'var(--liquid-text)',
-                transition: 'all 0.3s ease'
-              }}
-            >
-              {cat}
-            </button>
-          ))}
         </div>
       </div>
     </nav>

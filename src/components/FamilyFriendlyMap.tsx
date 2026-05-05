@@ -1,5 +1,39 @@
 import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+
+// Sub-component to access map instance
+const MapController: React.FC<{ userLocation: { lat: number, lng: number } | null }> = ({ userLocation }) => {
+  const map = useMap();
+  
+  return (
+    <button
+      onClick={() => {
+        if (userLocation) {
+          map.flyTo([userLocation.lat, userLocation.lng], 15);
+        }
+      }}
+      style={{
+        position: 'fixed',
+        bottom: '100px',
+        right: '20px',
+        zIndex: 1000,
+        width: '50px',
+        height: '50px',
+        borderRadius: '25px',
+        background: 'white',
+        border: 'none',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: '20px',
+        cursor: 'pointer'
+      }}
+    >
+      📍
+    </button>
+  );
+};
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { Location } from '../data/locations';
@@ -29,7 +63,12 @@ const DefaultIcon = L.icon({
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
-const FamilyFriendlyMap: React.FC = () => {
+interface FamilyFriendlyMapProps {
+  searchQuery?: string;
+  onMarkerClick?: (loc: Location) => void;
+}
+
+const FamilyFriendlyMap: React.FC<FamilyFriendlyMapProps> = ({ searchQuery = '', onMarkerClick }) => {
   const [places, setPlaces] = useState<Location[]>([]);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [unlockedBadges, setUnlockedBadges] = useState<string[]>(() => {
@@ -102,16 +141,24 @@ const FamilyFriendlyMap: React.FC = () => {
       <MapContainer 
         center={[25.070685, 121.365312]} 
         zoom={14} 
-        style={{ width: '100%', height: '100vh' }}
+        style={{ width: '100%', height: '100%' }}
         zoomControl={false}
       >
         <TileLayer url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png" />
 
-        {places.map((place) => {
+        {places
+          .filter(p => searchQuery === '' || p.name.toLowerCase().includes(searchQuery.toLowerCase()) || p.address.toLowerCase().includes(searchQuery.toLowerCase()))
+          .map((place) => {
           const isUnlocked = place.badge ? unlockedBadges.includes(place.badge.id) : false;
 
           return (
-            <Marker key={place.id} position={[place.lat, place.lng]}>
+            <Marker 
+              key={place.id} 
+              position={[place.lat, place.lng]}
+              eventHandlers={{
+                click: () => onMarkerClick && onMarkerClick(place)
+              }}
+            >
               <Popup>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', minWidth: '200px', padding: '4px' }}>
                   <div>
@@ -164,6 +211,8 @@ const FamilyFriendlyMap: React.FC = () => {
             })}
           />
         )}
+        
+        <MapController userLocation={userLocation} />
       </MapContainer>
     </div>
   );
