@@ -98,25 +98,54 @@ export default function App() {
   
   const [mapInstance, setMapInstance] = useState<L.Map | null>(null);
 
-  // --- Check-in & Badge System ---
-  const [visitedLocations, setVisitedLocations] = useState<string[]>(() => {
-    try { return JSON.parse(localStorage.getItem('fft-visited') || '[]'); } catch { return []; }
+  // --- UGC Check-in & Badge System ---
+  const [visitedLocations, setVisitedLocations] = useState<Record<string, string>>(() => {
+    try { 
+      const old = JSON.parse(localStorage.getItem('fft-visited') || '[]');
+      if (Array.isArray(old) && old.length > 0) {
+        const migrated: Record<string, string> = {};
+        const today = new Date().toLocaleDateString('zh-TW');
+        old.forEach((id: string) => migrated[id] = today);
+        localStorage.setItem('fft-visited-badges', JSON.stringify(migrated));
+        localStorage.removeItem('fft-visited');
+        return migrated;
+      }
+      const stored = JSON.parse(localStorage.getItem('fft-visited-badges') || '{}');
+      if (typeof stored === 'object' && !Array.isArray(stored)) return stored;
+      return {};
+    } catch { return {}; }
   });
 
-  // Auto check-in when within 50m of a location
+  const [checkInLocation, setCheckInLocation] = useState<Location | null>(null);
+
+  // Proximity check for unlocking photo upload mode
   useEffect(() => {
     if (!userLat || !userLng) return;
+    let foundLoc: any = null;
     locations.forEach(loc => {
-      if (!visitedLocations.includes(loc.id) && getDistance(userLat, userLng, loc.lat, loc.lng) < 50) {
-        setVisitedLocations(prev => {
-          const updated = [...prev, loc.id];
-          localStorage.setItem('fft-visited', JSON.stringify(updated));
-          return updated;
-        });
-        showToast(`📍抵達場域：點擊領取【${loc.name}】勳章`);
+      if (!visitedLocations[loc.id] && getDistance(userLat, userLng, loc.lat, loc.lng) < 50) {
+        foundLoc = loc;
       }
     });
-  }, [userLat, userLng]);
+    if (foundLoc && foundLoc.id !== checkInLocation?.id) {
+      setCheckInLocation(foundLoc);
+      showToast(`📍抵達【${foundLoc.name}】，請回報實景解鎖勳章！`);
+    } else if (!foundLoc && checkInLocation) {
+      setCheckInLocation(null);
+    }
+  }, [userLat, userLng, visitedLocations, checkInLocation]);
+
+  const handleSimulateUpload = () => {
+    if (!checkInLocation) return;
+    const today = new Date().toLocaleDateString('zh-TW');
+    setVisitedLocations(prev => {
+      const updated = { ...prev, [checkInLocation.id]: today };
+      localStorage.setItem('fft-visited-badges', JSON.stringify(updated));
+      return updated;
+    });
+    showToast(`📸 感謝回報！成功解鎖【${checkInLocation.name}】勳章！`);
+    setCheckInLocation(null);
+  };
 
   const showToast = (msg: string) => {
     setToast(msg);
@@ -206,14 +235,14 @@ export default function App() {
       <div className="brand-header">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: '10px', fontWeight: 800, color: '#FFA07A', letterSpacing: '0.1em', marginBottom: '3px' }}>35DAILY 親子地圖</div>
-            <div style={{ fontSize: '18px', fontWeight: 900, color: '#262626', lineHeight: 1.2 }}>尋找被看見的親子空間</div>
-            <div style={{ fontSize: '11px', color: '#A3A3A3', fontWeight: 600, marginTop: '3px' }}>林口三井·願院·捷運站，哺乳室設施一鍵直達</div>
+            <div style={{ fontSize: '10px', fontWeight: 800, color: 'var(--brand-accent)', letterSpacing: '0.1em', marginBottom: '3px' }}>35DAILY 親子探索地圖</div>
+            <div style={{ fontSize: '18px', fontWeight: 900, color: 'var(--brand-navy)', lineHeight: 1.2 }}>發掘林口友善空間</div>
+            <div style={{ fontSize: '11px', color: 'var(--brand-muted)', fontWeight: 600, marginTop: '3px' }}>踩點上傳照片，解鎖專屬成就徽章！</div>
           </div>
-          <div style={{ width: '38px', height: '38px', background: '#FFD8C4', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px', flexShrink: 0, marginLeft: '12px' }}>🗺️</div>
+          <div style={{ width: '38px', height: '38px', background: 'var(--brand-primary-light)', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px', flexShrink: 0, marginLeft: '12px' }}>🗺️</div>
         </div>
         {closestLoc && userLat && (
-          <div style={{ marginTop: '8px', paddingTop: '8px', borderTop: '1px solid rgba(0,0,0,0.06)', fontSize: '12px', color: '#FFA07A', fontWeight: 700 }}>
+          <div style={{ marginTop: '8px', paddingTop: '8px', borderTop: '1px solid rgba(0,0,0,0.06)', fontSize: '12px', color: 'var(--brand-accent)', fontWeight: 700 }}>
             📍 最近：{closestLoc.name}
           </div>
         )}
@@ -264,7 +293,7 @@ export default function App() {
 
       {/* GPS Button */}
       <button
-        className="gps-btn"
+        className="gps-btn tactile-btn"
         onClick={handleGPSLocate}
         disabled={gpsLoading}
         style={{ 
@@ -289,7 +318,7 @@ export default function App() {
           return (
             <button 
               key={key}
-              className={`quick-filter-btn ${isActive ? 'active' : ''}`}
+              className={`quick-filter-btn tactile-btn ${isActive ? 'active' : ''}`}
               onClick={() => toggleFilter(key)}
             >
               <span style={{ fontSize: '18px' }}>{FACILITY_LABELS[key].split(' ')[0]}</span>
@@ -358,7 +387,7 @@ export default function App() {
                 <div className="pill-actions">
                   {/* 一鍵導航 */}
                   <button 
-                    className="action-pill primary"
+                    className="action-pill primary tactile-btn"
                     onClick={() => {
                       const destLat = selectedLocation.navLat ?? selectedLocation.lat;
                       const destLng = selectedLocation.navLng ?? selectedLocation.lng;
@@ -376,7 +405,7 @@ export default function App() {
                   
                   {/* 樓層平面圖 */}
                   <button 
-                    className="action-pill"
+                    className="action-pill tactile-btn"
                     onClick={() => {
                       if (selectedLocation.mapUrl) {
                         openExternal(selectedLocation.mapUrl);
@@ -391,7 +420,7 @@ export default function App() {
                   {/* 官方網站 — 僅在有 officialWebsiteUrl 時顯示 */}
                   {selectedLocation.officialWebsiteUrl && (
                     <button 
-                      className="action-pill"
+                      className="action-pill tactile-btn"
                       onClick={() => openExternal(selectedLocation.officialWebsiteUrl!)}
                     >
                       <span>🌐</span> 官方網站
@@ -400,7 +429,7 @@ export default function App() {
 
                   {/* 設備清單 */}
                   <button 
-                    className="action-pill"
+                    className="action-pill tactile-btn"
                     onClick={() => {
                       document.getElementById('facility-section')?.scrollIntoView({ behavior: 'smooth' });
                     }}
@@ -432,119 +461,141 @@ export default function App() {
   );
 
 
-  const renderTaskScreen = () => (
-    <div className="task-page">
-      {/* Hero Banner */}
-      <div style={{
-        background: 'linear-gradient(160deg, #FFD8C4 0%, #FFF5F0 55%, #FFFFFF 100%)',
-        padding: '56px 24px 36px',
-        textAlign: 'center'
-      }}>
-        <div style={{ fontSize: '12px', fontWeight: 800, color: '#FFA07A', letterSpacing: '0.08em', marginBottom: '10px' }}>35DAILY 親子地圖</div>
-        <div style={{ fontSize: '30px', fontWeight: 900, color: '#262626', lineHeight: 1.25 }}>
-          鍵入日常、<br/>尋找被看見的親子空間
-        </div>
-        <div style={{ fontSize: '14px', color: '#A3A3A3', marginTop: '10px', fontWeight: 600 }}>
-          探索回報 · 解鎖勳章 · 守護育兒時光
-        </div>
-      </div>
+  const renderTaskScreen = () => {
+    const MEDALS = [
+      { id: 'first-step', title: '第一步', desc: '首次踩點', icon: '👣', unlocked: Object.keys(visitedLocations).length >= 1 },
+      { id: 'nursing-3', title: '哺乳先鋒', desc: '踩點 3 個場域', icon: '🍼', unlocked: Object.keys(visitedLocations).length >= 3 },
+      { id: 'linkou-hero', title: '三井探險家', desc: '解鎖林口三井', icon: '🏆', unlocked: !!visitedLocations['linkou-mitsui-1'] || !!visitedLocations['linkou-mitsui-2'] },
+      { id: 'hospital', title: '長庚守護者', desc: '解鎖林口長庚', icon: '⚕️', unlocked: !!visitedLocations['linkou-cgmh'] },
+      { id: 'nursing-10', title: '奶瓶大師', desc: '踩點 10 個場域', icon: '🏅', unlocked: Object.keys(visitedLocations).length >= 10 },
+      { id: 'navigator', title: '育兒領航員', desc: '踩點 20 個場域', icon: '🧭', unlocked: Object.keys(visitedLocations).length >= 20 },
+    ];
+    const unlockedCount = MEDALS.filter(m => m.unlocked).length;
 
-      {/* Coin Wallet */}
-      <div style={{ margin: '0 16px', marginTop: '-20px', background: '#262626', borderRadius: '24px', padding: '24px', color: 'white' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div>
-            <div style={{ fontSize: '12px', opacity: 0.55, fontWeight: 700 }}>我的育兒金</div>
-            <div style={{ fontSize: '38px', fontWeight: 900, display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
-              🪙 <span>{visitedLocations.length * 50}</span> <span style={{ fontSize: '16px', opacity: 0.5, fontWeight: 700 }}>點</span>
-            </div>
+    const getMedalDate = (medalId: string) => {
+      const dates = Object.values(visitedLocations);
+      if (dates.length === 0) return '';
+      switch(medalId) {
+        case 'first-step': return dates[0];
+        case 'nursing-3': return dates.length >= 3 ? dates[2] : '';
+        case 'linkou-hero': return visitedLocations['linkou-mitsui-1'] || visitedLocations['linkou-mitsui-2'] || '';
+        case 'hospital': return visitedLocations['linkou-cgmh'] || '';
+        case 'nursing-10': return dates.length >= 10 ? dates[9] : '';
+        case 'navigator': return dates.length >= 20 ? dates[19] : '';
+        default: return dates[0];
+      }
+    };
+
+    return (
+      <div className="task-page">
+        {/* Hero Banner */}
+        <div style={{
+          background: 'linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%)',
+          padding: '56px 24px 36px',
+          textAlign: 'center',
+          color: 'white'
+        }}>
+          <div style={{ fontSize: '12px', fontWeight: 800, color: 'var(--brand-primary-light)', letterSpacing: '0.08em', marginBottom: '10px' }}>35DAILY 親子探索地圖</div>
+          <div style={{ fontSize: '30px', fontWeight: 900, color: 'white', lineHeight: 1.25 }}>
+            發掘林口友善空間<br/>解鎖專屬成就
           </div>
-          <div style={{ textAlign: 'right', fontSize: '12px', opacity: 0.55, fontWeight: 700 }}>
-            還需 <span style={{ color: '#FFD8C4', opacity: 1 }}>{Math.max(0, 500 - (visitedLocations.length * 50))} 點</span><br/>兌換首張折價券
+          <div style={{ fontSize: '14px', color: 'rgba(255,255,255,0.8)', marginTop: '10px', fontWeight: 600 }}>
+            上傳實景照片 · 守護育兒時光
           </div>
         </div>
-        <div style={{ marginTop: '16px', background: 'rgba(255,255,255,0.12)', borderRadius: '999px', height: '6px' }}>
-          <div style={{ width: `${Math.min(visitedLocations.length * 10, 100)}%`, background: 'linear-gradient(90deg, #FFD8C4, #FFA07A)', height: '100%', borderRadius: '999px', transition: 'width 0.8s ease' }} />
-        </div>
-        <div style={{ marginTop: '12px', fontSize: '11px', opacity: 0.6, fontWeight: 700 }}>踩點 {visitedLocations.length} 個場域，擁有 {visitedLocations.length * 50} 育兒金</div>
-      </div>
 
-      {/* Active Task */}
-      <div style={{ margin: '16px 16px 0', background: '#FFF5F0', borderRadius: '24px', padding: '22px' }}>
-        <div style={{ fontSize: '11px', color: '#FFA07A', fontWeight: 800, letterSpacing: '0.06em' }}>限時任務</div>
-        <div style={{ fontSize: '20px', fontWeight: 900, color: '#262626', marginTop: '6px' }}>
-          📍 踩點回報最新設施狀態
-        </div>
-        <div style={{ fontSize: '13px', color: '#A3A3A3', marginTop: '4px', fontWeight: 600 }}>
-          上傳哺乳室或設備現況照片
-        </div>
-        <div style={{ fontSize: '36px', fontWeight: 900, color: '#FFA07A', marginTop: '6px' }}>+50 育兒金</div>
-        <button
-          style={{
-            width: '100%', marginTop: '16px',
-            background: '#262626', color: 'white',
-            padding: '17px', borderRadius: '16px',
-            fontSize: '16px', fontWeight: 800, border: 'none',
-          }}
-          onClick={() => showToast('🔥 任務帹片開啟！請到地圖上選擇一個場域進行回報。')}
-        >
-          領取回報任務 (+50點)
-        </button>
-      </div>
-
-      {/* Medal Album */}
-      {(() => {
-        const MEDALS = [
-          { id: 'first-step', title: '第一步', desc: '首次踩點', icon: '👣', unlocked: visitedLocations.length >= 1 },
-          { id: 'nursing-3', title: '哺乳先锋', desc: '踩點 3 個場域', icon: '🍼', unlocked: visitedLocations.length >= 3 },
-          { id: 'linkou-hero', title: '三井活動家', desc: '解鎖林口三井', icon: '🏆', unlocked: visitedLocations.includes('linkou-mitsui') },
-          { id: 'hospital', title: '長庚守護者', desc: '解鎖林口長庚', icon: '⚕️', unlocked: visitedLocations.includes('linkou-cgmh') },
-          { id: 'nursing-10', title: '奶瓶大師', desc: '踩點 10 個場域', icon: '🏅', unlocked: visitedLocations.length >= 10 },
-          { id: 'navigator', title: '育兒領航員', desc: '踩點 20 個場域', icon: '🧭', unlocked: visitedLocations.length >= 20 },
-        ];
-        const unlockedCount = MEDALS.filter(m => m.unlocked).length;
-        return (
-          <div style={{ margin: '24px 16px 0' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-              <div style={{ fontSize: '18px', fontWeight: 900, color: '#262626' }}>🏅 勳章堈</div>
-              <div style={{ fontSize: '12px', fontWeight: 700, color: '#A3A3A3' }}>{unlockedCount}/{MEDALS.length} 解鎖</div>
+        {/* Active Task (If in range) */}
+        {checkInLocation ? (
+          <div style={{ margin: '16px 16px 0', background: 'white', border: '2px solid var(--brand-primary)', borderRadius: '24px', padding: '22px', boxShadow: 'var(--shadow-soft)' }}>
+            <div style={{ fontSize: '11px', color: 'var(--brand-accent)', fontWeight: 800, letterSpacing: '0.06em' }}>📍 偵測到您已抵達</div>
+            <div style={{ fontSize: '20px', fontWeight: 900, color: 'var(--brand-navy)', marginTop: '6px' }}>
+              {checkInLocation.name}
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
-              {MEDALS.map(medal => (
+            <div style={{ fontSize: '13px', color: 'var(--brand-muted)', marginTop: '4px', fontWeight: 600 }}>
+              請上傳哺乳室或設備現況照片，協助更新資訊！
+            </div>
+            <button
+              className="tactile-btn"
+              style={{
+                width: '100%', marginTop: '16px',
+                background: 'var(--brand-primary)', color: 'var(--brand-navy)',
+                padding: '17px', borderRadius: '16px',
+                fontSize: '16px', fontWeight: 800, borderTop: 'none', borderLeft: 'none', borderRight: 'none',
+              }}
+              onClick={handleSimulateUpload}
+            >
+              📸 模擬上傳照片並解鎖勳章
+            </button>
+          </div>
+        ) : (
+          <div style={{ margin: '16px 16px 0', background: 'var(--brand-bg)', borderRadius: '24px', padding: '22px', textAlign: 'center' }}>
+            <div style={{ fontSize: '14px', color: 'var(--brand-muted)', fontWeight: 700 }}>
+              尚未到達任何場域。<br/>請至地圖探索，靠近場域 50m 內即可解鎖回報任務！
+            </div>
+            <button
+              className="tactile-btn"
+              style={{
+                width: '100%', marginTop: '16px',
+                background: 'var(--brand-secondary)', color: 'white',
+                padding: '17px', borderRadius: '16px',
+                fontSize: '16px', fontWeight: 800, borderTop: 'none', borderLeft: 'none', borderRight: 'none',
+              }}
+              onClick={() => setCurrentScreen('map')}
+            >
+              🗺️ 前往地圖探索
+            </button>
+          </div>
+        )}
+
+        {/* Medal Album */}
+        <div style={{ margin: '24px 16px 0' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+            <div style={{ fontSize: '18px', fontWeight: 900, color: 'var(--brand-navy)' }}>🏅 我的成就徽章冊</div>
+            <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--brand-muted)' }}>{unlockedCount}/{MEDALS.length} 解鎖</div>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
+            {MEDALS.map(medal => {
+              const date = getMedalDate(medal.id);
+              return (
                 <div key={medal.id} style={{
-                  background: medal.unlocked ? 'white' : '#F5F5F5',
+                  background: medal.unlocked ? 'white' : '#ECE8EF',
                   borderRadius: '20px',
                   padding: '16px 8px',
                   textAlign: 'center',
                   boxShadow: medal.unlocked ? 'var(--shadow-soft)' : 'none',
-                  opacity: medal.unlocked ? 1 : 0.4,
-                  border: medal.unlocked ? '2px solid #FFD8C4' : '2px dashed #E0E0E0',
+                  border: medal.unlocked ? '2px solid var(--brand-primary)' : '2px dashed #D1C4E9',
                   transition: 'all 0.4s cubic-bezier(0.16,1,0.3,1)'
                 }}>
-                  <div style={{ fontSize: '28px', marginBottom: '6px' }}>{medal.icon}</div>
-                  <div style={{ fontSize: '12px', fontWeight: 900, color: '#262626', lineHeight: 1.2 }}>{medal.title}</div>
-                  <div style={{ fontSize: '10px', color: '#A3A3A3', fontWeight: 600, marginTop: '4px' }}>{medal.desc}</div>
+                  <div style={{ fontSize: '28px', marginBottom: '6px', filter: medal.unlocked ? 'none' : 'grayscale(100%) opacity(0.5)' }}>
+                    {medal.unlocked ? medal.icon : '🔒'}
+                  </div>
+                  <div style={{ fontSize: '12px', fontWeight: 900, color: medal.unlocked ? 'var(--brand-navy)' : 'var(--brand-muted)', lineHeight: 1.2 }}>{medal.title}</div>
+                  <div style={{ fontSize: '10px', color: medal.unlocked ? 'var(--brand-secondary)' : '#A3A3A3', fontWeight: 600, marginTop: '4px' }}>
+                    {medal.unlocked ? date : medal.desc}
+                  </div>
                 </div>
-              ))}
-            </div>
-            {visitedLocations.length >= 1 && (
-              <button
-                onClick={() => showToast('🎨 成就證書功能將於正式版啟動，敬請期待！')}
-                style={{
-                  width: '100%', marginTop: '16px',
-                  background: 'linear-gradient(135deg, #FFD8C4, #FFA07A)',
-                  color: '#262626', border: 'none',
-                  padding: '15px', borderRadius: '16px',
-                  fontSize: '15px', fontWeight: 800
-                }}
-              >
-                🔗 分享成就海報（IG 演串流量）
-              </button>
-            )}
+              );
+            })}
           </div>
-        );
-      })()}
-    </div>
-  );
+          {Object.keys(visitedLocations).length >= 1 && (
+            <button
+              className="tactile-btn"
+              onClick={() => showToast('🎨 成就證書功能將於正式版啟動，敬請期待！')}
+              style={{
+                width: '100%', marginTop: '16px',
+                background: 'linear-gradient(135deg, var(--brand-primary), var(--brand-secondary))',
+                color: 'white', border: 'none',
+                padding: '15px', borderRadius: '16px',
+                fontSize: '15px', fontWeight: 800
+              }}
+            >
+              🔗 分享成就海報（IG 演算法流量）
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className={`app-container ${selectedLocation ? 'sheet-open' : ''}`}>
@@ -576,18 +627,18 @@ export default function App() {
       {/* Bottom Nav */}
       <div className="bottom-nav">
         <button 
-          className={`nav-item ${currentScreen === 'map' ? 'active' : ''}`}
+          className={`nav-item tactile-btn ${currentScreen === 'map' ? 'active' : ''}`}
           onClick={() => { setCurrentScreen('map'); setSelectedLocation(null); }}
         >
           <span className="nav-icon">🗺️</span>
           地圖探索
         </button>
         <button 
-          className={`nav-item ${currentScreen === 'contribute' ? 'active' : ''}`}
+          className={`nav-item tactile-btn ${currentScreen === 'contribute' ? 'active' : ''}`}
           onClick={() => { setCurrentScreen('contribute'); setSelectedLocation(null); }}
         >
-          <span className="nav-icon">🪙</span>
-          領取任務
+          <span className="nav-icon">🏅</span>
+          探索任務
         </button>
       </div>
     </div>

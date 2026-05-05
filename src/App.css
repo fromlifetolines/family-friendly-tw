@@ -119,8 +119,8 @@
 .action-pill {
   flex: 0 0 auto; /* flex-shrink-0 equivalent — critical to prevent squishing */
   min-width: 80px; /* Absolute minimum — prevents squishing on small screens */
-  background: var(--brand-coral-light);
-  color: var(--brand-coral-dark);
+  background: var(--brand-primary-light);
+  color: var(--brand-secondary-dark);
   padding: 14px 24px;
   border-radius: var(--r-pill);
   font-weight: 800;
@@ -134,8 +134,8 @@
 }
 
 .action-pill.primary {
-  background: var(--brand-navy);
-  color: white;
+  background: var(--brand-primary);
+  color: var(--brand-navy);
   box-shadow: var(--shadow-soft);
 }
 
@@ -174,7 +174,7 @@
 .amenity-card.active {
   background: white;
   box-shadow: var(--shadow-soft);
-  border: 2px solid var(--brand-coral-light);
+  border: 2px solid var(--brand-primary);
 }
 
 .amenity-card.inactive {
@@ -369,4 +369,17 @@
   height: 14px;
   border-radius: 50%;
   background: var(--marker-color);
+}
+
+/* Tactile Physical Button Feedback */
+.tactile-btn {
+  border-bottom: 4px solid var(--brand-secondary-dark);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: all 75ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tactile-btn:active {
+  transform: translateY(4px);
+  border-bottom-color: transparent;
+  box-shadow: none;
 }
