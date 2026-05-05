@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { MapContainer, TileLayer, Marker } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { motion, AnimatePresence } from 'framer-motion';
 import L from 'leaflet';
 import './App.css';
@@ -37,22 +37,6 @@ const createCustomIcon = (type: LocationType, locName: string, isSelected: boole
   });
 };
 
-const createUserIcon = () => {
-  return L.divIcon({
-    className: 'user-pin-wrapper',
-    html: `
-      <div style="
-        width: 16px; height: 16px;
-        background: #007AFF;
-        border-radius: 50%;
-        border: 3px solid rgba(0,122,255,0.3);
-        box-shadow: 0 0 12px rgba(0,122,255,0.4), 0 0 4px rgba(0,122,255,0.3);
-      "></div>
-    `,
-    iconSize: [28, 28],
-    iconAnchor: [14, 14]
-  });
-};
 
 // --- Helpers ---
 function getDistance(lat1: number, lng1: number, lat2: number, lng2: number): number {
@@ -167,20 +151,22 @@ export default function App() {
 
   useEffect(() => {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
+      const watchId = navigator.geolocation.watchPosition(
         (pos) => {
           const lat = pos.coords.latitude;
           const lng = pos.coords.longitude;
           updateUserLocation(lat, lng);
-          if (mapInstance) {
+          // Only auto-fly on first position lock
+          if (mapInstance && !userLat) {
             mapInstance.flyTo([lat, lng], 14, { animate: true, duration: 1.5 });
           }
         },
         () => {},
-        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 10000 }
       );
+      return () => navigator.geolocation.clearWatch(watchId);
     }
-  }, [mapInstance, updateUserLocation]);
+  }, [mapInstance, updateUserLocation, userLat]);
 
   const handleGPSLocate = () => {
     if (!navigator.geolocation) {
@@ -285,28 +271,85 @@ export default function App() {
           attribution='&copy; <a href="https://carto.com/">CARTO</a>'
         />
         
-        {filteredLocations.map(loc => (
-          <Marker 
-            key={loc.id} 
-            position={[loc.lat, loc.lng]} 
-            icon={createCustomIcon(
-              loc.type, 
-              loc.name, 
-              selectedLocation?.id === loc.id,
-              isBadgeUnlocked(loc.badge?.id),
-              userLat && userLng ? getDistanceText(userLat, userLng, loc.lat, loc.lng) : undefined
-            )}
-            eventHandlers={{
-              click: () => handleMarkerClick(loc)
-            }}
-          />
-        ))}
+        {filteredLocations.map(loc => {
+          const isUnlocked = loc.badge ? unlockedBadges.includes(loc.badge.id) : false;
+          return (
+            <Marker 
+              key={loc.id} 
+              position={[loc.lat, loc.lng]} 
+              icon={createCustomIcon(
+                loc.type, 
+                loc.name, 
+                selectedLocation?.id === loc.id,
+                isUnlocked,
+                userLat && userLng ? getDistanceText(userLat, userLng, loc.lat, loc.lng) : undefined
+              )}
+            >
+              <Popup className="premium-popup">
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', minWidth: '200px', padding: '4px' }}>
+                  <div>
+                    <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 800, color: 'var(--liquid-text)' }}>{loc.name}</h3>
+                    <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: 'var(--liquid-muted)' }}>{loc.address}</p>
+                  </div>
+
+                  {loc.badge && (
+                    <button
+                      onClick={() => checkIn(loc.id)}
+                      className="tactile-btn"
+                      style={{
+                        width: '100%',
+                        padding: '12px',
+                        borderRadius: '12px',
+                        fontSize: '13px',
+                        fontWeight: 700,
+                        border: 'none',
+                        cursor: 'pointer',
+                        transition: 'all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)',
+                        ...(isUnlocked ? {
+                          background: 'linear-gradient(135deg, #34C759 0%, #007AFF 100%)',
+                          color: 'white',
+                          boxShadow: '0 4px 12px rgba(52, 199, 89, 0.3)',
+                          pointerEvents: 'none'
+                        } : {
+                          background: 'rgba(255, 255, 255, 0.05)',
+                          color: 'var(--liquid-cyan)',
+                          border: '1px solid rgba(255, 255, 255, 0.1)'
+                        })
+                      }}
+                    >
+                      {isUnlocked ? '✨ 已解鎖成就' : '📍 抵達解鎖徽章'}
+                    </button>
+                  )}
+                  
+                  <button 
+                    className="tactile-btn"
+                    onClick={() => {
+                      handleMarkerClick(loc);
+                    }}
+                    style={{
+                      width: '100%', padding: '10px', borderRadius: '10px',
+                      background: 'rgba(255,255,255,0.05)', color: 'var(--liquid-text)',
+                      fontSize: '12px', fontWeight: 600, border: '1px solid rgba(255,255,255,0.1)'
+                    }}
+                  >
+                    查看設施詳情
+                  </button>
+                </div>
+              </Popup>
+            </Marker>
+          );
+        })}
 
         {userLat !== null && userLng !== null && (
           <Marker 
-            position={[userLat, userLng]} 
-            icon={createUserIcon()} 
-            zIndexOffset={2000} 
+            position={[userLat, userLng]}
+            icon={L.divIcon({
+              className: 'user-location-marker',
+              html: `<div style="width: 14px; height: 14px; background: #007AFF; border: 3px solid white; border-radius: 50%; box-shadow: 0 0 12px rgba(0,122,255,0.6);"></div>`,
+              iconSize: [20, 20],
+              iconAnchor: [10, 10]
+            })}
+            zIndexOffset={2000}
           />
         )}
       </MapContainer>
