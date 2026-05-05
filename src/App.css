@@ -338,11 +338,11 @@
   overscroll-behavior-y: contain;
 }
 
-/* ── Map Markers ── */
+/* ── Map Markers (44×44, anchor at bottom-center) ── */
 .marker-wrap {
   position: relative;
-  width: 110px;
-  height: 58px;
+  width: 44px;
+  height: 44px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -353,21 +353,26 @@
 .marker-chip {
   background: rgba(10,14,39,0.92);
   color: var(--space-white);
-  padding: 4px 10px;
+  padding: 3px 8px;
   border-radius: 999px;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 800;
   white-space: nowrap;
   box-shadow: 0 2px 12px rgba(0,0,0,0.5);
-  margin-bottom: 4px;
+  margin-bottom: 3px;
   opacity: 0;
   transition: opacity 0.2s;
-  max-width: 108px;
+  max-width: 120px;
   overflow: hidden;
   text-overflow: ellipsis;
   pointer-events: none;
   font-family: 'Nunito', 'Noto Sans TC', sans-serif;
   border: 1px solid rgba(255,255,255,0.1);
+  /* chip floats above the 44px box via absolute */
+  position: absolute;
+  bottom: 46px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .marker-wrap.selected .marker-chip {
@@ -375,8 +380,8 @@
 }
 
 .marker-ring {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background: rgba(10,14,39,0.9);
   border: 2.5px solid var(--marker-color);
@@ -387,6 +392,7 @@
   pointer-events: all;
   cursor: pointer;
   transition: filter 0.2s;
+  flex-shrink: 0;
 }
 
 .marker-wrap.selected .marker-ring {
@@ -396,13 +402,13 @@
 
 @keyframes marker-pop {
   0%   { transform: scale(1) translateY(0); }
-  60%  { transform: scale(1.35) translateY(-8px); }
+  60%  { transform: scale(1.35) translateY(-6px); }
   100% { transform: scale(1.15) translateY(-4px); }
 }
 
 .marker-dot {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   background: var(--marker-color);
 }

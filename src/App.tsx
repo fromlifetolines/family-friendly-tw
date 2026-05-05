@@ -30,8 +30,9 @@ const createCustomIcon = (type: LocationType, locName: string, isSelected: boole
   return L.divIcon({
     className: '', // empty — avoid leaflet default overflow clipping
     html,
-    iconSize: [110, 58],
-    iconAnchor: [55, 54], // bottom-center of ring maps to coordinate
+    iconSize: [44, 44],
+    iconAnchor: [22, 44],   // pin tip aligns to coordinate point
+    popupAnchor: [0, -44],
   });
 };
 
@@ -171,12 +172,20 @@ export default function App() {
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (pos) => updateUserLocation(pos.coords.latitude, pos.coords.longitude),
-        () => {}, // Silent fail on initial load
+        (pos) => {
+          const lat = pos.coords.latitude;
+          const lng = pos.coords.longitude;
+          updateUserLocation(lat, lng);
+          // Fly to user location after GPS resolves
+          if (mapInstance) {
+            mapInstance.flyTo([lat, lng], 14, { animate: true, duration: 1.5 });
+          }
+        },
+        () => {}, // Silent fail — map stays at default Taiwan overview
         { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
       );
     }
-  }, []);
+  }, [mapInstance]); // Re-run if mapInstance becomes available after GPS resolves
 
   // Data Validation Hook
   useEffect(() => {
@@ -318,7 +327,7 @@ export default function App() {
       <MapContainer 
         ref={setMapInstance}
         center={[25.0408, 121.5674]} 
-        zoom={14} 
+        zoom={11} 
         zoomControl={false}
         attributionControl={false}
         className="w-full h-full z-[10]"
