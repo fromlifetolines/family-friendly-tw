@@ -383,3 +383,32 @@
   border-bottom-color: transparent;
   box-shadow: none;
 }
+
+/* Medal Shimmer & Shine */
+.medal-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.medal-shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.6), transparent);
+  transform: skewX(-20deg);
+  animation: shimmer 4s infinite;
+  pointer-events: none;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  20% { left: 200%; }
+  100% { left: 200%; }
+}
+
+.medal-glow {
+  filter: drop-shadow(0 0 15px rgba(149, 193, 30, 0.6));
+}

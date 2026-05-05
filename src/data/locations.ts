@@ -29,6 +29,8 @@ export interface Location {
   lastUpdated: string
   photos?: string[]
   officialWebsiteUrl?: string
+  floorGuideUrl?: string
+  realSceneImages?: string[]
   mapUrl?: string
   navLat?: number
   navLng?: number
@@ -106,6 +108,8 @@ export const locations: Location[] = [
     ],
     lastUpdated: '2025-01-20',
     photos: ['https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&q=80&w=1200&h=675'],
+    officialWebsiteUrl: 'https://www.taipei-101.com.tw/tw/shopping/parent-child-service',
+    realSceneImages: ['https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&q=80&w=1200&h=675'],
   },
   {
     id: 'sogo-zhongxiao',

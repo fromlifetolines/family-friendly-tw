@@ -12,15 +12,18 @@ type Screen = 'map' | 'contribute';
 const ALL_FACILITIES = Object.keys(FACILITY_LABELS) as FacilityType[];
 
 // --- Icons Definition (From Life To Lines style: white ring + pastel dot + name chip) ---
-const createCustomIcon = (type: LocationType, locName: string, isSelected: boolean, distanceText?: string) => {
+const createCustomIcon = (type: LocationType, locName: string, isSelected: boolean, isUnlocked: boolean, distanceText?: string) => {
   const color = TYPE_CONFIG[type].color;
   const chipLabel = locName.length > 10 ? locName.slice(0, 10) + '…' : locName;
   const tooltip = distanceText ? `${chipLabel} · ${distanceText}` : chipLabel;
 
   const html = `
-    <div class="marker-wrap ${isSelected ? 'selected' : ''}" style="--marker-color: ${color};">
+    <div class="marker-wrap ${isSelected ? 'selected' : ''}" style="--marker-color: ${color}; ${isUnlocked ? 'filter: drop-shadow(0 0 6px var(--brand-primary));' : ''}">
       <div class="marker-chip">${tooltip}</div>
-      <div class="marker-ring"><div class="marker-dot"></div></div>
+      <div class="marker-ring">
+        <div class="marker-dot"></div>
+        ${isUnlocked ? `<div style="position:absolute; top:-10px; right:-10px; font-size: 14px; z-index: 10;">✅</div>` : ''}
+      </div>
     </div>
   `;
 
@@ -88,6 +91,7 @@ export default function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('map');
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
   const [activeFilters, setActiveFilters] = useState<FacilityType[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
   
   // GPS State: null = not yet fetched, explicit coords when ready
   const [userLat, setUserLat] = useState<number | null>(null);
@@ -219,30 +223,57 @@ export default function App() {
     }
   };
 
-  const filteredLocations = activeFilters.length > 0
-    ? locations.filter(loc => 
-        activeFilters.every(filter => 
-          loc.facilities.some(f => f.id === filter && f.available)
-        )
-      )
-    : locations;
+  const filteredLocations = locations.filter(loc => {
+    // Search query matching
+    const matchesSearch = searchQuery === '' || 
+      loc.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      loc.address.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    if (!matchesSearch) return false;
+    
+    // Facility filters matching
+    if (activeFilters.length === 0) return true;
+    return activeFilters.every(filter => 
+      loc.facilities.some(f => f.id === filter && f.available)
+    );
+  });
 
 
 
   const renderMapScreen = () => (
     <div className="map-page">
       {/* Brand Header */}
-      <div className="brand-header">
+      <div className="brand-header" style={{ paddingBottom: '16px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: '10px', fontWeight: 800, color: 'var(--brand-accent)', letterSpacing: '0.1em', marginBottom: '3px' }}>35DAILY 親子探索地圖</div>
-            <div style={{ fontSize: '18px', fontWeight: 900, color: 'var(--brand-navy)', lineHeight: 1.2 }}>發掘林口友善空間</div>
-            <div style={{ fontSize: '11px', color: 'var(--brand-muted)', fontWeight: 600, marginTop: '3px' }}>踩點上傳照片，解鎖專屬成就徽章！</div>
+            <div style={{ fontSize: '10px', fontWeight: 800, color: 'var(--brand-accent)', letterSpacing: '0.1em', marginBottom: '3px' }}>35DAILY 全台親子探索地圖</div>
+            <div style={{ fontSize: '18px', fontWeight: 900, color: 'var(--brand-navy)', lineHeight: 1.2 }}>一鍵導航，成就解鎖</div>
+            <div style={{ fontSize: '11px', color: 'var(--brand-muted)', fontWeight: 600, marginTop: '3px' }}>全台百貨、景點、車站、醫院親子空間</div>
           </div>
           <div style={{ width: '38px', height: '38px', background: 'var(--brand-primary-light)', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px', flexShrink: 0, marginLeft: '12px' }}>🗺️</div>
         </div>
+        
+        {/* Search Bar */}
+        <div style={{ marginTop: '12px', position: 'relative' }}>
+          <span style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', fontSize: '18px', color: 'var(--brand-secondary)' }}>🔍</span>
+          <input 
+            type="text" 
+            placeholder="搜尋台北 101、新光三越..." 
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            style={{
+              width: '100%', padding: '12px 12px 12px 42px',
+              borderRadius: '99px', border: 'none',
+              background: 'white', color: 'var(--brand-navy)',
+              fontSize: '15px', fontWeight: 700,
+              boxShadow: 'var(--shadow-soft)',
+              outline: 'none'
+            }}
+          />
+        </div>
+
         {closestLoc && userLat && (
-          <div style={{ marginTop: '8px', paddingTop: '8px', borderTop: '1px solid rgba(0,0,0,0.06)', fontSize: '12px', color: 'var(--brand-accent)', fontWeight: 700 }}>
+          <div style={{ marginTop: '10px', paddingTop: '10px', borderTop: '1px solid rgba(0,0,0,0.06)', fontSize: '12px', color: 'var(--brand-accent)', fontWeight: 700 }}>
             📍 最近：{closestLoc.name}
           </div>
         )}
@@ -269,11 +300,13 @@ export default function App() {
             distanceText = getDistanceText(userLat, userLng, loc.lat, loc.lng);
           }
           
+          const isUnlocked = !!visitedLocations[loc.id];
+          
           return (
             <Marker 
               key={loc.id}
               position={[loc.lat, loc.lng]}
-              icon={createCustomIcon(loc.type, loc.name, isSelected, distanceText)}
+              icon={createCustomIcon(loc.type, loc.name, isSelected, isUnlocked, distanceText)}
               eventHandlers={{
                 click: () => handleMarkerClick(loc)
               }}
@@ -357,7 +390,9 @@ export default function App() {
               <div className="sheet-drag-handle" />
               
               <div className="sheet-content">
-                {selectedLocation.photos && selectedLocation.photos.length > 0 ? (
+                {(selectedLocation as any).realSceneImages && (selectedLocation as any).realSceneImages.length > 0 ? (
+                  <img src={(selectedLocation as any).realSceneImages[0]} className="sheet-photo" alt={selectedLocation.name} />
+                ) : selectedLocation.photos && selectedLocation.photos.length > 0 ? (
                   <img src={selectedLocation.photos[0]} className="sheet-photo" alt={selectedLocation.name} />
                 ) : (
                   <div 
@@ -367,15 +402,15 @@ export default function App() {
                       flexDirection: 'column',
                       alignItems: 'center', 
                       justifyContent: 'center',
-                      background: 'linear-gradient(135deg, var(--brand-coral-light) 0%, var(--brand-cream) 100%)',
+                      background: 'linear-gradient(135deg, var(--brand-secondary-light) 0%, #ECE8EF 100%)',
                       gap: '12px'
                     }}
                   >
                     <div dangerouslySetInnerHTML={{ 
-                        __html: `<svg viewBox="0 0 24 24" style="width: 48px; height: 48px; stroke: var(--brand-coral-dark); stroke-width: 1.5; fill: none; opacity: 0.8;">${TYPE_CONFIG[selectedLocation.type].svg}</svg>` 
+                        __html: `<svg viewBox="0 0 24 24" style="width: 48px; height: 48px; stroke: var(--brand-secondary); stroke-width: 1.5; fill: none; opacity: 0.6;">${TYPE_CONFIG[selectedLocation.type].svg}</svg>` 
                       }} 
                     />
-                    <span style={{ fontSize: '13px', fontWeight: 800, color: 'var(--brand-coral-dark)', opacity: 0.8 }}>場域實景處理中</span>
+                    <span style={{ fontSize: '13px', fontWeight: 800, color: 'var(--brand-secondary)', opacity: 0.8 }}>35daily 質感佔位插畫</span>
                   </div>
                 )}
                 
@@ -439,13 +474,13 @@ export default function App() {
                 </div>
 
                 <div id="facility-section" className="section-title">提供設施</div>
-                <div className="amenity-grid-3">
+                <div className="amenity-grid-3" style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', paddingBottom: '8px' }}>
                   {ALL_FACILITIES.map(key => {
                     const fac = selectedLocation.facilities.find(f => f.id === key);
                     const isAvailable = fac?.available ?? false;
                     
                     return (
-                      <div key={key} className={`amenity-card ${isAvailable ? 'active' : 'inactive'}`}>
+                      <div key={key} className={`amenity-card tactile-btn ${isAvailable ? 'active' : 'inactive'}`} style={{ flexShrink: 0, minWidth: '90px' }}>
                         <div className="amenity-card-icon">{FACILITY_LABELS[key].split(' ')[0]}</div>
                         <div className="amenity-card-label">{FACILITY_LABELS[key].split(' ')[1]}</div>
                       </div>
@@ -462,13 +497,51 @@ export default function App() {
 
 
   const renderTaskScreen = () => {
+    const isMallUnlocked = Object.keys(visitedLocations).some(id => locations.find(l => l.id === id)?.type === 'mall');
+    
+    const svgDefs = (
+      <svg style={{ width: 0, height: 0, position: 'absolute' }}>
+        <defs>
+          <linearGradient id="metal-gold" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#FFF2A8" />
+            <stop offset="25%" stopColor="#D4AF37" />
+            <stop offset="50%" stopColor="#FFF2A8" />
+            <stop offset="75%" stopColor="#AA7C11" />
+            <stop offset="100%" stopColor="#FFF2A8" />
+          </linearGradient>
+          <linearGradient id="metal-silver" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#FFFFFF" />
+            <stop offset="25%" stopColor="#B0B0B0" />
+            <stop offset="50%" stopColor="#FFFFFF" />
+            <stop offset="75%" stopColor="#808080" />
+            <stop offset="100%" stopColor="#FFFFFF" />
+          </linearGradient>
+          <linearGradient id="metal-bronze" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#FFC8A8" />
+            <stop offset="25%" stopColor="#CD7F32" />
+            <stop offset="50%" stopColor="#FFC8A8" />
+            <stop offset="75%" stopColor="#8C491A" />
+            <stop offset="100%" stopColor="#FFC8A8" />
+          </linearGradient>
+          <radialGradient id="inner-glow" cx="50%" cy="50%" r="50%">
+            <stop offset="70%" stopColor="var(--brand-primary)" stopOpacity="1" />
+            <stop offset="100%" stopColor="var(--brand-navy)" stopOpacity="0.4" />
+          </radialGradient>
+          <radialGradient id="inner-glow-purple" cx="50%" cy="50%" r="50%">
+            <stop offset="70%" stopColor="var(--brand-secondary)" stopOpacity="1" />
+            <stop offset="100%" stopColor="var(--brand-navy)" stopOpacity="0.4" />
+          </radialGradient>
+        </defs>
+      </svg>
+    );
+
     const MEDALS = [
-      { id: 'first-step', title: '第一步', desc: '首次踩點', icon: '👣', unlocked: Object.keys(visitedLocations).length >= 1 },
-      { id: 'nursing-3', title: '哺乳先鋒', desc: '踩點 3 個場域', icon: '🍼', unlocked: Object.keys(visitedLocations).length >= 3 },
-      { id: 'linkou-hero', title: '三井探險家', desc: '解鎖林口三井', icon: '🏆', unlocked: !!visitedLocations['linkou-mitsui-1'] || !!visitedLocations['linkou-mitsui-2'] },
-      { id: 'hospital', title: '長庚守護者', desc: '解鎖林口長庚', icon: '⚕️', unlocked: !!visitedLocations['linkou-cgmh'] },
-      { id: 'nursing-10', title: '奶瓶大師', desc: '踩點 10 個場域', icon: '🏅', unlocked: Object.keys(visitedLocations).length >= 10 },
-      { id: 'navigator', title: '育兒領航員', desc: '踩點 20 個場域', icon: '🧭', unlocked: Object.keys(visitedLocations).length >= 20 },
+      { id: 'first-step', title: '踩點大師', desc: '首次踩點', icon: <svg viewBox="0 0 100 100" style={{width:'100%', height:'100%'}}><circle cx="50" cy="50" r="46" fill="url(#inner-glow)" stroke="url(#metal-bronze)" strokeWidth="8"/><path d="M50 25 L56 40 L72 40 L59 50 L64 65 L50 55 L36 65 L41 50 L28 40 L44 40 Z" fill="url(#metal-bronze)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.4))"/></svg>, unlocked: Object.keys(visitedLocations).length >= 1 },
+      { id: 'nursing-3', title: '育兒守護者', desc: '踩點 3 個場域', icon: <svg viewBox="0 0 100 100" style={{width:'100%', height:'100%'}}><path d="M50 8 L90 20 L90 50 C90 75 50 95 50 95 C50 95 10 75 10 50 L10 20 Z" fill="url(#inner-glow-purple)" stroke="url(#metal-silver)" strokeWidth="8" strokeLinejoin="round"/><rect x="42" y="35" width="16" height="25" rx="8" fill="url(#metal-silver)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.4))"/><path d="M42 35 L58 35 L54 25 L46 25 Z" fill="url(#metal-silver)"/><circle cx="50" cy="22" r="3" fill="url(#metal-silver)"/></svg>, unlocked: Object.keys(visitedLocations).length >= 3 },
+      { id: 'mall-hero', title: '百貨獵人', desc: '解鎖任意百貨', icon: <svg viewBox="0 0 100 100" style={{width:'100%', height:'100%'}}><circle cx="50" cy="50" r="46" fill="url(#inner-glow)" stroke="url(#metal-gold)" strokeWidth="8" strokeDasharray="15 5"/><path d="M35 45 L65 45 L60 70 L40 70 Z" fill="url(#metal-gold)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.4))"/><path d="M40 45 C40 30 60 30 60 45" fill="none" stroke="url(#metal-gold)" strokeWidth="4"/></svg>, unlocked: isMallUnlocked },
+      { id: 'hospital', title: '長庚守護者', desc: '解鎖林口長庚', icon: <svg viewBox="0 0 100 100" style={{width:'100%', height:'100%'}}><circle cx="50" cy="50" r="46" fill="url(#inner-glow-purple)" stroke="url(#metal-silver)" strokeWidth="8"/><path d="M40 30 L60 30 L60 40 L70 40 L70 60 L60 60 L60 70 L40 70 L40 60 L30 60 L30 40 L40 40 Z" fill="url(#metal-silver)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.4))"/></svg>, unlocked: !!visitedLocations['linkou-cgmh'] },
+      { id: 'nursing-10', title: '奶瓶大師', desc: '踩點 10 個場域', icon: <svg viewBox="0 0 100 100" style={{width:'100%', height:'100%'}}><circle cx="50" cy="50" r="46" fill="url(#inner-glow)" stroke="url(#metal-gold)" strokeWidth="8"/><path d="M25 65 L20 40 L35 50 L50 30 L65 50 L80 40 L75 65 Z" fill="url(#metal-gold)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.4))"/></svg>, unlocked: Object.keys(visitedLocations).length >= 10 },
+      { id: 'navigator', title: '育兒領航員', desc: '踩點 20 個場域', icon: <svg viewBox="0 0 100 100" style={{width:'100%', height:'100%'}}><circle cx="50" cy="50" r="46" fill="url(#inner-glow-purple)" stroke="url(#metal-gold)" strokeWidth="8"/><circle cx="50" cy="50" r="30" fill="none" stroke="url(#metal-gold)" strokeWidth="3" strokeDasharray="5 5"/><polygon points="50 20 58 42 80 50 58 58 50 80 42 58 20 50 42 42" fill="url(#metal-gold)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.4))"/></svg>, unlocked: Object.keys(visitedLocations).length >= 20 },
     ];
     const unlockedCount = MEDALS.filter(m => m.unlocked).length;
 
@@ -478,7 +551,7 @@ export default function App() {
       switch(medalId) {
         case 'first-step': return dates[0];
         case 'nursing-3': return dates.length >= 3 ? dates[2] : '';
-        case 'linkou-hero': return visitedLocations['linkou-mitsui-1'] || visitedLocations['linkou-mitsui-2'] || '';
+        case 'mall-hero': return isMallUnlocked ? Object.values(visitedLocations)[0] : '';
         case 'hospital': return visitedLocations['linkou-cgmh'] || '';
         case 'nursing-10': return dates.length >= 10 ? dates[9] : '';
         case 'navigator': return dates.length >= 20 ? dates[19] : '';
@@ -488,6 +561,7 @@ export default function App() {
 
     return (
       <div className="task-page">
+        {svgDefs}
         {/* Hero Banner */}
         <div style={{
           background: 'linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%)',
@@ -495,12 +569,12 @@ export default function App() {
           textAlign: 'center',
           color: 'white'
         }}>
-          <div style={{ fontSize: '12px', fontWeight: 800, color: 'var(--brand-primary-light)', letterSpacing: '0.08em', marginBottom: '10px' }}>35DAILY 親子探索地圖</div>
+          <div style={{ fontSize: '12px', fontWeight: 800, color: 'var(--brand-primary-light)', letterSpacing: '0.08em', marginBottom: '10px' }}>35DAILY 全台親子探索地圖</div>
           <div style={{ fontSize: '30px', fontWeight: 900, color: 'white', lineHeight: 1.25 }}>
-            發掘林口友善空間<br/>解鎖專屬成就
+            一鍵導航<br/>成就解鎖
           </div>
           <div style={{ fontSize: '14px', color: 'rgba(255,255,255,0.8)', marginTop: '10px', fontWeight: 600 }}>
-            上傳實景照片 · 守護育兒時光
+            全台百貨、景點、車站、醫院親子空間
           </div>
         </div>
 
@@ -557,21 +631,29 @@ export default function App() {
             {MEDALS.map(medal => {
               const date = getMedalDate(medal.id);
               return (
-                <div key={medal.id} style={{
-                  background: medal.unlocked ? 'white' : '#ECE8EF',
+                <div key={medal.id} 
+                  className={medal.unlocked ? 'medal-shimmer medal-glow' : ''}
+                  onClick={() => !medal.unlocked && showToast(`🔒 解鎖條件：${medal.desc}`)}
+                  style={{
+                  background: medal.unlocked ? 'white' : 'rgba(31, 13, 43, 0.04)',
                   borderRadius: '20px',
                   padding: '16px 8px',
                   textAlign: 'center',
                   boxShadow: medal.unlocked ? 'var(--shadow-soft)' : 'none',
-                  border: medal.unlocked ? '2px solid var(--brand-primary)' : '2px dashed #D1C4E9',
-                  transition: 'all 0.4s cubic-bezier(0.16,1,0.3,1)'
+                  border: medal.unlocked ? '2px solid var(--brand-primary)' : '2px solid transparent',
+                  transition: 'all 0.4s cubic-bezier(0.16,1,0.3,1)',
+                  cursor: medal.unlocked ? 'default' : 'pointer'
                 }}>
-                  <div style={{ fontSize: '28px', marginBottom: '6px', filter: medal.unlocked ? 'none' : 'grayscale(100%) opacity(0.5)' }}>
-                    {medal.unlocked ? medal.icon : '🔒'}
+                  <div style={{ 
+                    width: '56px', height: '56px', margin: '0 auto 8px', 
+                    filter: medal.unlocked ? 'none' : 'grayscale(100%) blur(1.5px)',
+                    opacity: medal.unlocked ? 1 : 0.6 
+                  }}>
+                    {medal.icon}
                   </div>
                   <div style={{ fontSize: '12px', fontWeight: 900, color: medal.unlocked ? 'var(--brand-navy)' : 'var(--brand-muted)', lineHeight: 1.2 }}>{medal.title}</div>
                   <div style={{ fontSize: '10px', color: medal.unlocked ? 'var(--brand-secondary)' : '#A3A3A3', fontWeight: 600, marginTop: '4px' }}>
-                    {medal.unlocked ? date : medal.desc}
+                    {medal.unlocked ? date : '點擊查看'}
                   </div>
                 </div>
               );
