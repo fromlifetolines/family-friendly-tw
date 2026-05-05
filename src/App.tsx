@@ -5,6 +5,7 @@ import L from 'leaflet';
 import './App.css';
 import { locations, FACILITY_LABELS, TYPE_CONFIG } from './data/locations';
 import type { Location, FacilityType, LocationType } from './data/locations';
+import Header from './components/layout/Header';
 
 // --- Types ---
 type Screen = 'map' | 'contribute';
@@ -88,6 +89,7 @@ export default function App() {
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
   const [activeFilters, setActiveFilters] = useState<FacilityType[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('全部');
   const [locationsList, setLocationsList] = useState<Location[]>(locations);
   
   useEffect(() => {
@@ -224,6 +226,14 @@ export default function App() {
   };
 
   const filteredLocations = locationsList.filter(loc => {
+    // Category filter
+    const matchesCategory = selectedCategory === '全部' || 
+      (selectedCategory === '玩樂' && ['park', 'play'].includes(loc.type)) ||
+      (selectedCategory === '美食' && loc.type === 'restaurant') ||
+      (selectedCategory === '休息' && ['hospital', 'transport', 'mall'].includes(loc.type));
+
+    if (!matchesCategory) return false;
+
     const matchesSearch = searchQuery === '' || 
       loc.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
       loc.address.toLowerCase().includes(searchQuery.toLowerCase());
@@ -238,63 +248,24 @@ export default function App() {
 
   const renderMapScreen = () => (
     <div className="map-page">
-      {/* Brand Header */}
-      <div className="brand-header" style={{ paddingBottom: '16px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ flex: 1 }}>
-            <div style={{ fontSize: '18px', fontWeight: 900, color: 'var(--liquid-text)', lineHeight: 1.2, letterSpacing: '-0.02em' }}>🗺️ 親子友善地圖</div>
-            <div style={{ fontSize: '11px', color: 'var(--liquid-muted)', fontWeight: 600, marginTop: '3px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>探索全台最完整的親子設施</div>
-          </div>
-          <div style={{
-            padding: '5px 14px',
-            background: '#007AFF',
-            borderRadius: '999px',
-            fontSize: '12px', fontWeight: 700, color: 'white',
-            flexShrink: 0, marginLeft: '12px',
-            boxShadow: '0 4px 12px rgba(0,122,255,0.25)'
-          }}>探索版</div>
-        </div>
-        
-        {/* Search Bar */}
-        <div style={{ marginTop: '12px', position: 'relative' }}>
-          <span style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', fontSize: '16px', color: '#86868B' }}>🔍</span>
-          <input 
-            type="text" 
-            placeholder="搜尋台北 101、新光三越..." 
-            value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
-            style={{
-              width: '100%', padding: '14px 14px 14px 44px',
-              borderRadius: '99px',
-              border: '1px solid rgba(255,255,255,0.1)',
-              background: 'rgba(255, 255, 255, 0.05)', color: 'var(--liquid-text)',
-              fontSize: '15px', fontWeight: 600,
-              boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.2)',
-              outline: 'none',
-              transition: 'all 0.4s var(--ease-liquid)'
-            }}
-          />
-          {searchQuery && filteredLocations.length > 0 && (
-            <ul className="search-dropdown">
-              {filteredLocations.slice(0, 5).map(loc => (
-                <li 
-                  key={loc.id} 
-                  className="search-item"
-                  onClick={() => {
-                    setSearchQuery('');
-                    handleMarkerClick(loc);
-                  }}
-                >
-                  <span className="search-item-title">{loc.name}</span>
-                  <span className="search-item-address">{loc.address}</span>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+      <Header 
+        onSearch={setSearchQuery}
+        onCategorySelect={setSelectedCategory}
+        unlockedBadgesCount={unlockedBadges.length}
+        onBadgeClick={() => setCurrentScreen('contribute')}
+      />
 
+      <div style={{ position: 'fixed', top: '180px', left: '20px', zIndex: 100 }}>
         {closestLoc && userLat && (
-          <div style={{ marginTop: '12px', paddingTop: '10px', borderTop: '1px solid rgba(255,255,255,0.1)', fontSize: '12px', color: 'var(--liquid-cyan)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
+          <div className="glass-panel" style={{ 
+            padding: '8px 16px', 
+            fontSize: '12px', 
+            color: 'var(--liquid-cyan)', 
+            fontWeight: 700, 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '6px' 
+          }}>
             <span style={{ fontSize: '14px' }}>📍</span> 最近：{closestLoc.name}
           </div>
         )}
