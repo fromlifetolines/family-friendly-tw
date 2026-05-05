@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════════════
-   Apple Glassmorphism — App.css
+   Liquid Tech Glass — App.css
    ══════════════════════════════════════════════ */
 
 /* ── App Shell ── */
@@ -11,12 +11,10 @@
   flex-direction: column;
   position: relative;
   overflow: hidden;
-  background-color: var(--apple-light);
+  background: var(--liquid-deep);
 }
 
-.app-container.sheet-open {
-  overflow: hidden;
-}
+.app-container.sheet-open { overflow: hidden; }
 
 .map-page {
   flex: 1;
@@ -26,41 +24,54 @@
   overflow: hidden;
 }
 
-/* ── Glass Panel Foundation ── */
+/* ── Glass Panel Foundation (Liquid Tech) ── */
 .glass-panel {
-  background: var(--glass-bg);
+  background: var(--liquid-card);
   -webkit-backdrop-filter: var(--glass-blur);
   backdrop-filter: var(--glass-blur);
   border: 1px solid var(--glass-border);
   border-radius: var(--r-card);
   box-shadow: var(--glass-shadow);
-  transition: all 0.4s var(--ease-liquid);
+  transition: all 0.6s var(--ease-liquid);
+  position: relative;
   overflow: hidden;
 }
 
+.glass-panel::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(circle at top left, rgba(255,255,255,0.05), transparent 70%);
+  pointer-events: none;
+}
+
 .glass-panel:hover {
-  transform: translateY(-4px) scale(1.01);
-  background: rgba(255, 255, 255, 0.8);
+  background: var(--glass-bg-hover);
   box-shadow: var(--glass-hover);
+  transform: translateY(-4px) scale(1.01);
+  border-color: rgba(255, 255, 255, 0.25);
 }
 
 /* ── Brand Header ── */
 .brand-header {
   position: absolute;
-  top: 12px;
-  left: 12px;
-  right: 12px;
+  top: 16px;
+  left: 16px;
+  right: 16px;
   z-index: 1000;
-  background: rgba(255, 255, 255, 0.72);
-  -webkit-backdrop-filter: var(--glass-blur);
-  backdrop-filter: var(--glass-blur);
-  border-radius: 22px;
-  padding: 14px 18px;
-  box-shadow: var(--glass-shadow);
-  border: 1px solid rgba(255,255,255,0.6);
+  background: rgba(10, 17, 38, 0.45);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%);
+  border-radius: 24px;
+  padding: 16px 20px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-/* ── Bottom Sheet ── */
+/* ── Bottom Sheet (Liquid Dark) ── */
 .bottom-sheet {
   position: absolute;
   bottom: 0;
@@ -68,26 +79,27 @@
   width: 100%;
   max-width: 100%;
   height: 85dvh;
-  background: rgba(255, 255, 255, 0.88);
-  -webkit-backdrop-filter: blur(40px) saturate(200%);
-  backdrop-filter: blur(40px) saturate(200%);
+  background: rgba(5, 8, 20, 0.85);
+  -webkit-backdrop-filter: blur(50px) saturate(220%);
+  backdrop-filter: blur(50px) saturate(220%);
   border-radius: 32px 32px 0 0;
   z-index: 2000;
-  box-shadow: 0 -8px 40px rgba(0,0,0,0.08);
+  box-shadow: 0 -16px 64px rgba(0,0,0,0.6);
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  padding-bottom: 80px;
-  border-top: 1px solid rgba(255,255,255,0.8);
+  padding-bottom: 90px;
+  border-top: 1px solid rgba(255,255,255,0.12);
 }
 
 .sheet-drag-handle {
-  width: 40px;
-  height: 5px;
-  background: rgba(0,0,0,0.12);
+  width: 48px;
+  height: 6px;
+  background: rgba(255,255,255,0.2);
   border-radius: 3px;
-  margin: 12px auto;
+  margin: 14px auto;
   flex-shrink: 0;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
 }
 
 .sheet-content {
@@ -103,258 +115,185 @@
   max-width: calc(100% - 32px);
   aspect-ratio: 16 / 9;
   object-fit: cover;
-  object-position: center;
-  background: var(--apple-light);
-  border-radius: 16px;
+  border-radius: 20px;
   margin: 0 16px 16px 16px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-  display: block;
-  flex-shrink: 0;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  border: 1px solid rgba(255,255,255,0.1);
 }
 
 .sheet-header {
-  padding: 0 24px 16px 24px;
+  padding: 8px 24px 16px 24px;
 }
 
 .sheet-title {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 800;
-  color: var(--apple-dark);
-  margin-bottom: 4px;
-  line-height: 1.2;
+  color: var(--liquid-text);
+  margin-bottom: 6px;
+  letter-spacing: -0.02em;
 }
 
 .sheet-subtitle {
   font-size: 14px;
-  color: var(--apple-gray);
+  color: var(--liquid-muted);
   font-weight: 600;
 }
 
-/* ── Action Pills (Glass Buttons) ── */
+/* ── Action Pills ── */
 .pill-actions {
   display: flex;
-  gap: 10px;
-  padding: 8px 24px 16px 24px;
+  gap: 12px;
+  padding: 8px 24px 24px 24px;
   overflow-x: auto;
   scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
   flex-shrink: 0;
 }
-
-.pill-actions::-webkit-scrollbar { display: none; }
 
 .action-pill {
   flex: 0 0 auto;
   min-width: 44px;
-  min-height: 44px;
-  background: rgba(255, 255, 255, 0.65);
-  color: var(--apple-dark);
-  padding: 12px 20px;
+  min-height: 48px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--liquid-text);
+  padding: 12px 24px;
   border-radius: var(--r-pill);
   font-weight: 700;
-  font-size: 14px;
+  font-size: 15px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  transition: all 0.4s var(--ease-liquid);
-  white-space: nowrap;
-  border: 1px solid rgba(255,255,255,0.5);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  backdrop-filter: blur(24px) saturate(180%);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.06), inset 0 1px 1px rgba(255,255,255,0.8);
-}
-
-.action-pill:hover {
-  transform: translateY(-2px);
-  background: rgba(255, 255, 255, 0.85);
-  box-shadow: 0 8px 28px rgba(0,0,0,0.1), inset 0 1px 1px rgba(255,255,255,0.9);
-}
-
-.action-pill:active {
-  transform: scale(0.96) translateY(0);
+  gap: 8px;
+  transition: all 0.5s var(--ease-liquid);
+  border: 1px solid rgba(255,255,255,0.12);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
 }
 
 .action-pill.primary {
-  background: var(--apple-blue);
-  border-color: rgba(0, 122, 255, 0.3);
+  background: linear-gradient(135deg, rgba(0,122,255,0.6), rgba(0,242,255,0.4));
+  border-color: rgba(255,255,255,0.2);
   color: white;
-  box-shadow: 0 4px 20px rgba(0,122,255,0.25), inset 0 1px 0 rgba(255,255,255,0.2);
+  box-shadow: 0 8px 32px rgba(0,122,255,0.3);
 }
 
-.action-pill.primary:hover {
-  background: #0A84FF;
-  box-shadow: 0 8px 32px rgba(0,122,255,0.35), inset 0 1px 0 rgba(255,255,255,0.25);
+.action-pill:hover {
+  transform: translateY(-4px) scale(1.05);
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.4);
 }
 
-/* ── Section Title ── */
-.section-title {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--apple-gray);
-  padding: 16px 24px 8px 24px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-/* ── Facility Cards (Horizontal Scroll) ── */
+/* ── Facility Cards ── */
 .amenity-grid-3 {
   display: flex;
-  flex-wrap: nowrap;
-  gap: 10px;
+  gap: 12px;
   padding: 8px 24px 32px 24px;
   overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
 }
 
-.amenity-grid-3::-webkit-scrollbar { display: none; }
-
 .amenity-card {
-  background: rgba(255, 255, 255, 0.6);
-  -webkit-backdrop-filter: blur(16px) saturate(160%);
-  backdrop-filter: blur(16px) saturate(160%);
-  border-radius: 16px;
-  padding: 16px 14px;
+  background: rgba(255, 255, 255, 0.06);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 18px 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 6px;
-  text-align: center;
-  transition: all 0.4s var(--ease-liquid);
-  flex: 0 0 auto;
-  min-width: 80px;
-  min-height: 44px;
-  border: 1px solid rgba(255,255,255,0.4);
-  box-shadow: 0 2px 12px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.7);
+  gap: 8px;
+  transition: all 0.5s var(--ease-liquid);
+  min-width: 90px;
+  border: 1px solid rgba(255,255,255,0.1);
 }
 
 .amenity-card.active {
-  background: rgba(0, 122, 255, 0.08);
-  border: 1px solid rgba(0, 122, 255, 0.25);
-  box-shadow: 0 4px 16px rgba(0,122,255,0.08), inset 0 1px 0 rgba(255,255,255,0.6);
+  background: rgba(0, 242, 255, 0.15);
+  border-color: rgba(0, 242, 255, 0.3);
+  box-shadow: 0 0 24px rgba(0, 242, 255, 0.2);
 }
 
-.amenity-card.inactive {
-  opacity: 0.35;
-  background: rgba(255,255,255,0.3);
-}
-
-.amenity-card-icon {
-  font-size: 26px;
-}
-
-.amenity-card-label {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--apple-dark);
-}
-
-/* ── Quick Filter Bar ── */
+/* ── Quick Filter Bar (FIXED OVERLAP) ── */
 .quick-filter-scroll {
   position: absolute;
-  bottom: 88px;
+  bottom: 110px; /* Lifted up to clear nav */
   left: 0;
   width: 100%;
   display: flex;
-  gap: 8px;
+  gap: 10px;
   padding: 0 16px;
   overflow-x: auto;
   z-index: 1000;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  transition: transform 0.4s var(--ease-liquid), opacity 0.3s;
-  scrollbar-width: none;
+  transition: transform 0.5s var(--ease-liquid), opacity 0.3s;
 }
 
-.quick-filter-scroll::-webkit-scrollbar { display: none; }
-
 .quick-filter-btn {
-  background: rgba(255, 255, 255, 0.72);
+  background: rgba(10, 17, 38, 0.65);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
   backdrop-filter: blur(24px) saturate(180%);
   border-radius: var(--r-pill);
-  padding: 10px 16px;
-  font-size: 13px;
+  padding: 12px 18px;
+  font-size: 14px;
   font-weight: 700;
-  color: var(--apple-dark);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.06), inset 0 1px 1px rgba(255,255,255,0.8);
+  color: var(--liquid-muted);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08);
   white-space: nowrap;
   flex: 0 0 auto;
   min-height: 44px;
-  scroll-snap-align: start;
-  transition: all 0.4s var(--ease-liquid);
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  border: 1px solid rgba(255,255,255,0.5);
-}
-
-.quick-filter-btn:hover {
-  transform: translateY(-2px);
-  background: rgba(255, 255, 255, 0.88);
-  box-shadow: var(--glass-hover);
+  transition: all 0.5s var(--ease-liquid);
+  border: 1px solid rgba(255,255,255,0.12);
 }
 
 .quick-filter-btn.active {
-  background: var(--apple-blue);
-  border-color: rgba(0,122,255,0.3);
+  background: linear-gradient(135deg, rgba(0,122,255,0.7), rgba(0,242,255,0.5));
+  border-color: rgba(255,255,255,0.25);
   color: white;
-  box-shadow: 0 4px 20px rgba(0,122,255,0.25);
+  box-shadow: 0 6px 24px rgba(0,122,255,0.4);
 }
 
 /* ── GPS Button ── */
 .gps-btn {
   position: absolute;
   right: 16px;
-  bottom: 150px;
+  bottom: 176px; /* Lifted up to clear filter bar */
   z-index: 1000;
-  width: 52px;
-  height: 52px;
-  background: rgba(255, 255, 255, 0.78);
+  width: 56px;
+  height: 56px;
+  background: rgba(10, 17, 38, 0.6);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
   backdrop-filter: blur(24px) saturate(180%);
   border-radius: 50%;
-  box-shadow: var(--glass-shadow);
-  border: 1px solid rgba(255,255,255,0.5);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.5);
+  border: 1px solid rgba(255,255,255,0.15);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
-  transition: all 0.4s var(--ease-liquid);
+  font-size: 24px;
+  transition: all 0.5s var(--ease-liquid);
 }
 
 .gps-btn:hover {
-  transform: translateY(-3px) scale(1.05);
-  background: rgba(255, 255, 255, 0.92);
-  box-shadow: var(--glass-hover);
+  transform: translateY(-4px) scale(1.1);
+  background: rgba(20, 34, 76, 0.8);
 }
 
-.gps-btn:active {
-  transform: scale(0.92);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-}
-
-/* ── Glassmorphism Bottom Nav ── */
+/* ── Bottom Navigation (Liquid Tech) ── */
 .bottom-nav {
   position: absolute;
-  bottom: 12px;
-  left: 12px;
-  right: 12px;
-  height: auto;
-  background: rgba(255, 255, 255, 0.72);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  backdrop-filter: blur(24px) saturate(180%);
-  border-radius: 28px;
+  bottom: 16px;
+  left: 16px;
+  right: 16px;
+  background: rgba(10, 17, 38, 0.45); /* User requested transparency */
+  -webkit-backdrop-filter: blur(30px) saturate(200%);
+  backdrop-filter: blur(30px) saturate(200%);
+  border-radius: 32px;
   display: flex;
   justify-content: space-around;
   align-items: center;
-  box-shadow: var(--glass-shadow);
-  border: 1px solid rgba(255,255,255,0.5);
+  box-shadow: 0 12px 48px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15); /* User requested border */
   z-index: 3000;
-  padding: 10px 8px;
-  padding-bottom: calc(10px + env(safe-area-inset-bottom));
+  padding: 12px 8px;
+  padding-bottom: calc(12px + env(safe-area-inset-bottom));
 }
 
 .nav-item {
@@ -362,222 +301,109 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3px;
-  font-size: 11px;
-  color: var(--apple-gray);
+  gap: 4px;
+  font-size: 12px;
+  color: var(--liquid-muted);
   font-weight: 700;
-  padding: 8px 8px;
-  min-height: 44px;
-  border-radius: 16px;
-  transition: all 0.35s var(--ease-liquid);
+  min-height: 48px;
+  border-radius: 20px;
+  transition: all 0.5s var(--ease-liquid);
 }
 
 .nav-item.active {
-  color: var(--apple-blue);
+  color: var(--liquid-cyan);
+  background: rgba(255, 255, 255, 0.05);
 }
 
-.nav-icon {
-  font-size: 20px;
+.nav-item.active .nav-icon {
+  transform: scale(1.2);
+  filter: drop-shadow(0 0 12px rgba(0, 242, 255, 0.5));
 }
 
-/* ── Task / Achievement Page ── */
-.task-page {
-  flex: 1;
-  width: 100%;
-  max-width: 100%;
-  overflow-y: auto;
-  overflow-x: hidden;
-  background: var(--apple-light);
-  padding-bottom: 100px;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: contain;
-}
+.nav-icon { font-size: 22px; transition: transform 0.4s var(--ease-liquid); }
 
-/* ── Map Markers (44×44, anchor at bottom-center) ── */
-.marker-wrap {
-  position: relative;
-  width: 44px;
-  height: 44px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  pointer-events: none;
-}
-
-.marker-chip {
-  background: rgba(255, 255, 255, 0.88);
-  -webkit-backdrop-filter: blur(12px) saturate(180%);
-  backdrop-filter: blur(12px) saturate(180%);
-  color: var(--apple-dark);
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 10px;
-  font-weight: 800;
-  white-space: nowrap;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
-  opacity: 0;
-  transition: opacity 0.25s var(--ease-liquid);
-  max-width: 120px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  pointer-events: none;
-  font-family: -apple-system, BlinkMacSystemFont, 'Nunito', 'Noto Sans TC', sans-serif;
-  border: 1px solid rgba(255,255,255,0.6);
-  position: absolute;
-  bottom: 48px;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.marker-wrap.selected .marker-chip {
-  opacity: 1;
-}
-
+/* ── Map Markers (Liquid Tech) ── */
 .marker-ring {
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(5, 8, 20, 0.8);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
   border: 2.5px solid var(--marker-color);
-  box-shadow: 0 3px 16px rgba(0,0,0,0.12);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--marker-color) 40%, transparent);
   display: flex;
   align-items: center;
   justify-content: center;
-  pointer-events: all;
-  cursor: pointer;
-  transition: all 0.35s var(--ease-liquid);
-  flex-shrink: 0;
+  transition: all 0.5s var(--ease-liquid);
 }
 
 .marker-wrap.selected .marker-ring {
-  animation: marker-pop 0.4s var(--ease-liquid) forwards;
-  box-shadow: 0 6px 24px rgba(0,0,0,0.15);
-}
-
-@keyframes marker-pop {
-  0%   { transform: scale(1) translateY(0); }
-  60%  { transform: scale(1.35) translateY(-6px); }
-  100% { transform: scale(1.15) translateY(-4px); }
+  transform: scale(1.3) translateY(-8px);
+  box-shadow: 0 0 30px var(--marker-color);
 }
 
 .marker-dot {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   background: var(--marker-color);
+  box-shadow: 0 0 12px var(--marker-color);
 }
 
-/* ── Glass Button System ── */
-.glass-btn {
-  background: rgba(255, 255, 255, 0.65);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  backdrop-filter: blur(24px) saturate(180%);
-  border-radius: var(--r-btn);
-  color: var(--apple-dark);
-  font-weight: 700;
-  transition: all 0.4s var(--ease-liquid);
-  box-shadow: var(--glass-shadow);
+/* ── Task Page ── */
+.task-page {
+  flex: 1;
+  background: var(--liquid-deep);
+  padding: 80px 20px 120px 20px;
 }
 
-.glass-btn:hover,
-.glass-btn:focus {
-  transform: translateY(-2px);
-  background: rgba(255, 255, 255, 0.85);
-  box-shadow: var(--glass-hover);
-}
-
-/* ── Tactile Feedback (replaces old heavy border-bottom) ── */
-.tactile-btn {
-  transition: all 0.4s var(--ease-liquid);
-  border: none;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.6);
-}
-
-.tactile-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.8);
-}
-
-.tactile-btn:active {
-  transform: translateY(1px) scale(0.98);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-}
-
-/* ── Medal Shimmer ── */
-.medal-shimmer {
-  position: relative;
-  overflow: hidden;
-}
-
-.medal-shimmer::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 50%;
-  height: 100%;
-  background: linear-gradient(to right, transparent, rgba(255,255,255,0.7), transparent);
-  transform: skewX(-20deg);
-  animation: shimmer 4s infinite;
-  pointer-events: none;
-}
-
-@keyframes shimmer {
-  0%   { left: -100%; }
-  20%  { left: 200%; }
-  100% { left: 200%; }
-}
-
-.medal-glow {
-  filter: drop-shadow(0 0 12px rgba(0,122,255,0.3));
-}
-
-/* ── Search Dropdown ── */
-.search-dropdown {
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
-  width: 100%;
-  background: rgba(255, 255, 255, 0.88);
-  -webkit-backdrop-filter: blur(32px) saturate(200%);
-  backdrop-filter: blur(32px) saturate(200%);
-  border-radius: 20px;
-  box-shadow: 0 12px 48px rgba(0,0,0,0.1);
-  list-style: none;
-  padding: 8px 0;
-  margin: 0;
-  z-index: 2000;
-  max-height: 250px;
-  overflow-y: auto;
-  border: 1px solid rgba(255,255,255,0.6);
-}
-
-.search-item {
-  padding: 12px 20px;
+.place-card {
+  background: rgba(255, 255, 255, 0.05); /* User requested */
+  border: 1px solid rgba(255, 255, 255, 0.1); /* User requested */
+  border-radius: 16px; /* User requested */
+  padding: 1.2rem;
+  margin-bottom: 1rem;
   cursor: pointer;
+  transition: all 0.4s var(--ease-liquid);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.place-card:hover, .place-card.active {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-4px) scale(1.02);
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+}
+
+/* ── Medal Album UI ── */
+.medal-card {
+  background: var(--liquid-card);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  transition: background 0.25s var(--ease-liquid);
-  min-height: 44px;
-  justify-content: center;
+  align-items: center;
+  transition: all 0.5s var(--ease-liquid);
 }
 
-.search-item:active,
-.search-item:hover {
-  background: rgba(0, 122, 255, 0.06);
+.medal-card:hover {
+  transform: translateY(-6px) rotate(2deg);
+  background: var(--glass-bg-hover);
 }
 
-.search-item-title {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--apple-dark);
+/* ── Shimmer & Shine ── */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
 
-.search-item-address {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--apple-gray);
-  margin-top: 2px;
+.shimmer-text {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 3s infinite;
+  -webkit-background-clip: text;
+  background-clip: text;
 }

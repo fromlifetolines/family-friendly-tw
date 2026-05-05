@@ -268,8 +268,8 @@ export default function App() {
       <div className="brand-header" style={{ paddingBottom: '16px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: '17px', fontWeight: 800, color: '#1D1D1F', lineHeight: 1.2 }}>🗺️ 親子友善地圖</div>
-            <div style={{ fontSize: '11px', color: '#86868B', fontWeight: 600, marginTop: '3px' }}>探索全台最完整的親子設施</div>
+            <div style={{ fontSize: '18px', fontWeight: 900, color: 'var(--liquid-text)', lineHeight: 1.2, letterSpacing: '-0.02em' }}>🗺️ 親子友善地圖</div>
+            <div style={{ fontSize: '11px', color: 'var(--liquid-muted)', fontWeight: 600, marginTop: '3px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>探索全台最完整的親子設施</div>
           </div>
           <div style={{
             padding: '5px 14px',
@@ -290,14 +290,14 @@ export default function App() {
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
             style={{
-              width: '100%', padding: '12px 12px 12px 40px',
+              width: '100%', padding: '14px 14px 14px 44px',
               borderRadius: '99px',
-              border: '1px solid rgba(0,0,0,0.06)',
-              background: 'rgba(0, 0, 0, 0.04)', color: '#1D1D1F',
-              fontSize: '14px', fontWeight: 600,
-              boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.04)',
+              border: '1px solid rgba(255,255,255,0.1)',
+              background: 'rgba(255, 255, 255, 0.05)', color: 'var(--liquid-text)',
+              fontSize: '15px', fontWeight: 600,
+              boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.2)',
               outline: 'none',
-              transition: 'all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)'
+              transition: 'all 0.4s var(--ease-liquid)'
             }}
           />
           {searchQuery && filteredLocations.length > 0 && (
@@ -320,8 +320,8 @@ export default function App() {
         </div>
 
         {closestLoc && userLat && (
-          <div style={{ marginTop: '10px', paddingTop: '10px', borderTop: '1px solid rgba(0,0,0,0.06)', fontSize: '12px', color: '#007AFF', fontWeight: 700 }}>
-            📍 最近：{closestLoc.name}
+          <div style={{ marginTop: '12px', paddingTop: '10px', borderTop: '1px solid rgba(255,255,255,0.1)', fontSize: '12px', color: 'var(--liquid-cyan)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <span style={{ fontSize: '14px' }}>📍</span> 最近：{closestLoc.name}
           </div>
         )}
       </div>
@@ -336,7 +336,7 @@ export default function App() {
         style={{ width: '100%', height: '100%' }}
       >
         <TileLayer
-          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+          url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
           attribution='&copy; <a href="https://carto.com/">CARTO</a>'
         />
         
@@ -419,8 +419,8 @@ export default function App() {
               exit={{ opacity: 0 }}
               style={{
                 position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-                background: 'rgba(0,0,0,0.25)', zIndex: 1500,
-                backdropFilter: 'blur(4px)', WebkitBackdropFilter: 'blur(4px)'
+                background: 'rgba(0,0,0,0.5)', zIndex: 1500,
+                backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)'
               }}
               onClick={() => setSelectedLocation(null)}
             />
@@ -757,18 +757,18 @@ export default function App() {
           top: '80px',
           left: '50%',
           transform: 'translateX(-50%)',
-          background: 'rgba(255,255,255,0.88)',
-          backdropFilter: 'blur(24px) saturate(180%)',
-          WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-          color: '#1D1D1F',
-          padding: '14px 24px',
+          background: 'rgba(10, 17, 38, 0.75)',
+          backdropFilter: 'var(--glass-blur)',
+          WebkitBackdropFilter: 'var(--glass-blur)',
+          color: 'var(--liquid-text)',
+          padding: '14px 28px',
           borderRadius: '999px',
           fontSize: '14px',
           fontWeight: 700,
           zIndex: 9999,
           whiteSpace: 'nowrap',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.08), inset 0 1px 1px rgba(255,255,255,0.8)',
-          border: '1px solid rgba(255,255,255,0.5)',
+          boxShadow: 'var(--glass-shadow)',
+          border: '1px solid rgba(255,255,255,0.2)',
           animation: 'fade-in 0.3s ease-out'
         }}>
           {toast}
