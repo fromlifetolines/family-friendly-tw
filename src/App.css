@@ -1,66 +1,68 @@
-/* App.css (Behance Style / App-like) */
+/* ── App Shell ── */
 
 .app-container {
   height: 100dvh;
   width: 100%;
-  max-width: 100%; /* RWD safety */
+  max-width: 100%;
   display: flex;
   flex-direction: column;
   position: relative;
   overflow: hidden;
-  background-color: var(--brand-cream);
+  background-color: var(--space-deep);
 }
 
 .app-container.sheet-open {
-  overflow: hidden; /* Scroll lock: prevent map scroll when sheet is open */
+  overflow: hidden;
 }
 
 .map-page {
   flex: 1;
   position: relative;
   width: 100%;
-  height: 100dvh; /* Use dvh instead of vh */
+  height: 100dvh;
   overflow: hidden;
 }
 
-/* Brand Header (From Life To Lines style) */
+/* ── Brand Header ── */
 .brand-header {
   position: absolute;
   top: 12px;
   left: 12px;
   right: 12px;
   z-index: 1000;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background: linear-gradient(135deg, #1a1f4e 0%, #0d1333 100%);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
   border-radius: 20px;
   padding: 14px 18px;
-  box-shadow: var(--shadow-soft);
-  border: 1px solid rgba(255,255,255,0.7);
+  box-shadow: var(--glass-shadow);
+  border-bottom: 1px solid rgba(108,99,255,0.3);
+  border: 1px solid rgba(108,99,255,0.25);
 }
 
-/* Bottom Sheet */
+/* ── Bottom Sheet ── */
 .bottom-sheet {
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
-  max-width: 100%; /* prevent blowout */
-  height: 85dvh; /* dvh for dynamic toolbar */
-  background: white;
+  max-width: 100%;
+  height: 85dvh;
+  background: var(--space-navy);
   border-radius: 32px 32px 0 0;
   z-index: 2000;
-  box-shadow: 0 -8px 30px rgba(0,0,0,0.08);
+  box-shadow: 0 -8px 40px rgba(108,99,255,0.2);
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  padding-bottom: 80px; /* Space for floating bottom nav */
+  padding-bottom: 80px;
+  border-top: 1px solid rgba(108,99,255,0.2);
 }
 
 .sheet-drag-handle {
   width: 48px;
   height: 5px;
-  background: #E5E5E5;
+  background: rgba(255,255,255,0.15);
   border-radius: 4px;
   margin: 12px auto;
   flex-shrink: 0;
@@ -70,20 +72,20 @@
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  overscroll-behavior-y: contain; /* Prevent scroll bleed through to map */
+  overscroll-behavior-y: contain;
   -webkit-overflow-scrolling: touch;
 }
 
 .sheet-photo {
   width: calc(100% - 32px);
-  max-width: calc(100% - 32px); /* RWD guard */
-  aspect-ratio: 16 / 9; /* Fixed ratio regardless of screen size */
+  max-width: calc(100% - 32px);
+  aspect-ratio: 16 / 9;
   object-fit: cover;
   object-position: center;
-  background: #FAFAFA;
+  background: var(--space-deep);
   border-radius: var(--r-card);
   margin: 0 16px 16px 16px;
-  box-shadow: var(--shadow-soft);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
   display: block;
   flex-shrink: 0;
 }
@@ -95,17 +97,18 @@
 .sheet-title {
   font-size: 22px;
   font-weight: 800;
-  color: var(--brand-navy);
+  color: var(--space-white);
   margin-bottom: 6px;
   line-height: 1.2;
 }
 
 .sheet-subtitle {
   font-size: 14px;
-  color: var(--brand-muted);
+  color: var(--space-muted);
   font-weight: 600;
 }
 
+/* ── Pill Actions ── */
 .pill-actions {
   display: flex;
   gap: 12px;
@@ -113,47 +116,54 @@
   overflow-x: auto;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
+  flex-shrink: 0;
 }
 
-.pill-actions::-webkit-scrollbar {
-  display: none;
-}
+.pill-actions::-webkit-scrollbar { display: none; }
 
 .action-pill {
-  flex: 0 0 auto; /* flex-shrink-0 equivalent — critical to prevent squishing */
-  min-width: 80px; /* Absolute minimum — prevents squishing on small screens */
-  background: var(--brand-primary-light);
-  color: var(--brand-secondary-dark);
-  padding: 14px 24px;
+  flex: 0 0 auto;
+  min-width: 80px;
+  background: var(--glass-bg);
+  color: var(--space-white);
+  padding: 12px 20px;
   border-radius: var(--r-pill);
-  font-weight: 800;
-  font-size: 15px;
+  font-weight: 700;
+  font-size: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: all 0.2s ease;
   white-space: nowrap;
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
 }
 
 .action-pill.primary {
-  background: var(--brand-primary);
-  color: var(--brand-navy);
-  box-shadow: var(--shadow-soft);
+  background: linear-gradient(135deg, rgba(108,99,255,0.6), rgba(0,198,255,0.4));
+  border-color: rgba(108,99,255,0.5);
+  color: var(--space-white);
+  box-shadow: 0 4px 24px rgba(108,99,255,0.3), inset 0 1px 0 rgba(255,255,255,0.15);
 }
 
 .action-pill:active {
   transform: scale(0.96);
 }
 
+/* ── Section Title ── */
 .section-title {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 800;
-  color: var(--brand-navy);
+  color: var(--space-muted);
   padding: 16px 24px 8px 24px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
-/* Facility Grid in Sheet */
+/* ── Facility Cards (Horizontal Scroll) ── */
 .amenity-grid-3 {
   display: flex;
   flex-wrap: nowrap;
@@ -164,29 +174,28 @@
   scrollbar-width: none;
 }
 
-.amenity-grid-3::-webkit-scrollbar {
-  display: none;
-}
+.amenity-grid-3::-webkit-scrollbar { display: none; }
 
 .amenity-card {
-  background: #F9F9F9;
-  border-radius: 20px;
-  padding: 18px 12px;
+  background: rgba(17,25,54,0.8);
+  border-radius: 16px;
+  padding: 16px 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
   text-align: center;
   transition: all 0.3s;
-  flex: 0 0 auto;  /* prevent squeeze in scrollable row */
-  min-width: 80px; /* guard against too-narrow cards */
+  flex: 0 0 auto;
+  min-width: 80px;
+  border: 1px solid rgba(255,255,255,0.06);
 }
 
 .amenity-card.active {
-  background: white;
-  box-shadow: var(--shadow-soft);
-  border: 2px solid var(--brand-primary);
+  background: rgba(108,99,255,0.15);
+  border: 1px solid rgba(108,99,255,0.35);
+  box-shadow: 0 0 20px rgba(108,99,255,0.15);
 }
 
 .amenity-card.inactive {
@@ -194,90 +203,101 @@
 }
 
 .amenity-card-icon {
-  font-size: 32px;
+  font-size: 28px;
 }
 
 .amenity-card-label {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
-  color: var(--brand-navy);
+  color: var(--space-white);
 }
 
-/* Map Quick Filter */
+/* ── Quick Filter Bar ── */
 .quick-filter-scroll {
   position: absolute;
   bottom: 88px;
   left: 0;
   width: 100%;
   display: flex;
-  gap: 16px; /* gap-4 */
-  padding: 0 24px; /* px-6 */
+  gap: 10px;
+  padding: 0 20px;
   overflow-x: auto;
   z-index: 1000;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s;
+  scrollbar-width: none;
 }
 
+.quick-filter-scroll::-webkit-scrollbar { display: none; }
+
 .quick-filter-btn {
-  background: white;
+  background: rgba(10,14,39,0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-radius: var(--r-pill);
-  padding: 12px 20px;
-  font-size: 15px;
+  padding: 10px 18px;
+  font-size: 13px;
   font-weight: 800;
-  color: var(--brand-navy);
-  box-shadow: var(--shadow-soft);
+  color: var(--space-muted);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
   white-space: nowrap;
-  flex: 0 0 auto; /* flex-shrink-0 */
-  scroll-snap-align: start; /* snap-start */
-  transition: all 0.2s;
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+  border: 1px solid rgba(255,255,255,0.1);
 }
 
 .quick-filter-btn.active {
-  background: var(--brand-navy);
+  background: linear-gradient(135deg, #6C63FF, #00C6FF);
+  border-color: #6C63FF;
   color: white;
+  box-shadow: 0 4px 20px rgba(108,99,255,0.4);
 }
 
-/* GPS Button */
+/* ── GPS Button ── */
 .gps-btn {
   position: absolute;
   right: 16px;
-  bottom: 150px; /* Raised to clear floating nav */
+  bottom: 150px;
   z-index: 1000;
   width: 52px;
   height: 52px;
-  background-color: white;
+  background: linear-gradient(135deg, #6C63FF, #00C6FF);
   border-radius: 50%;
-  box-shadow: var(--shadow-float);
+  box-shadow: 0 4px 20px rgba(108,99,255,0.5);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 22px;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border: none;
 }
 
 .gps-btn:active {
   transform: scale(0.9);
+  box-shadow: 0 2px 10px rgba(108,99,255,0.4);
 }
 
-/* Floating Glassmorphism Bottom Nav */
+/* ── Glassmorphism Bottom Nav ── */
 .bottom-nav {
   position: absolute;
   bottom: 12px;
   left: 12px;
   right: 12px;
   height: auto;
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(10,14,39,0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border-radius: 28px;
   display: flex;
   justify-content: space-around;
   align-items: center;
-  box-shadow: 0 4px 28px rgba(0,0,0,0.10), 0 0 0 1px rgba(255,255,255,0.5);
+  box-shadow: 0 4px 28px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06);
+  border-top: 1px solid rgba(255,255,255,0.08);
   z-index: 3000;
   padding: 10px 8px;
   padding-bottom: calc(10px + env(safe-area-inset-bottom));
@@ -290,7 +310,7 @@
   align-items: center;
   gap: 4px;
   font-size: 11px;
-  color: var(--brand-muted);
+  color: var(--space-muted);
   font-weight: 800;
   padding: 6px 8px;
   border-radius: 20px;
@@ -298,28 +318,27 @@
 }
 
 .nav-item.active {
-  background: var(--brand-navy);
-  color: white;
+  color: var(--space-blue);
 }
 
 .nav-icon {
   font-size: 20px;
 }
 
-/* Gamification / Task Board Page */
+/* ── Task / Achievement Page ── */
 .task-page {
   flex: 1;
   width: 100%;
-  max-width: 100%; /* RWD guard */
+  max-width: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  background: white;
+  background: var(--space-navy);
   padding-bottom: 100px;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-y: contain;
 }
 
-/* Custom Marker — From Life To Lines: white ring + pastel dot + name chip */
+/* ── Map Markers ── */
 .marker-wrap {
   position: relative;
   width: 110px;
@@ -332,14 +351,14 @@
 }
 
 .marker-chip {
-  background: white;
-  color: #262626;
+  background: rgba(10,14,39,0.92);
+  color: var(--space-white);
   padding: 4px 10px;
   border-radius: 999px;
   font-size: 11px;
   font-weight: 800;
   white-space: nowrap;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.10);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.5);
   margin-bottom: 4px;
   opacity: 0;
   transition: opacity 0.2s;
@@ -348,6 +367,7 @@
   text-overflow: ellipsis;
   pointer-events: none;
   font-family: 'Nunito', 'Noto Sans TC', sans-serif;
+  border: 1px solid rgba(255,255,255,0.1);
 }
 
 .marker-wrap.selected .marker-chip {
@@ -358,24 +378,25 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: white;
+  background: rgba(10,14,39,0.9);
   border: 2.5px solid var(--marker-color);
-  box-shadow: 0 3px 14px rgba(0,0,0,0.14);
+  box-shadow: 0 3px 14px rgba(0,0,0,0.4);
   display: flex;
   align-items: center;
   justify-content: center;
   pointer-events: all;
   cursor: pointer;
+  transition: filter 0.2s;
 }
 
 .marker-wrap.selected .marker-ring {
   animation: marker-pop 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  box-shadow: 0 6px 22px rgba(0,0,0,0.20);
+  filter: drop-shadow(0 0 8px var(--marker-color));
 }
 
 @keyframes marker-pop {
   0%   { transform: scale(1) translateY(0); }
-  60%  { transform: scale(1.3) translateY(-6px); }
+  60%  { transform: scale(1.35) translateY(-8px); }
   100% { transform: scale(1.15) translateY(-4px); }
 }
 
@@ -386,20 +407,41 @@
   background: var(--marker-color);
 }
 
-/* Tactile Physical Button Feedback */
+/* ── Glass Button System ── */
+.glass-btn {
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.20);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 14px;
+  color: #F0F4FF;
+  font-weight: 700;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.15);
+}
+
+.glass-btn:hover,
+.glass-btn:focus {
+  background: rgba(255,255,255,0.18);
+  border-color: rgba(255,255,255,0.35);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+
+/* ── Tactile Feedback ── */
 .tactile-btn {
-  border-bottom: 4px solid var(--brand-secondary-dark);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  transition: all 75ms cubic-bezier(0.4, 0, 0.2, 1);
+  border-bottom: 3px solid rgba(108,99,255,0.5);
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3);
+  transition: all 75ms cubic-bezier(0.4,0,0.2,1);
 }
 
 .tactile-btn:active {
-  transform: translateY(4px);
+  transform: translateY(3px);
   border-bottom-color: transparent;
   box-shadow: none;
 }
 
-/* Medal Shimmer & Shine */
+/* ── Medal Shimmer ── */
 .medal-shimmer {
   position: relative;
   overflow: hidden;
@@ -412,37 +454,39 @@
   left: -100%;
   width: 50%;
   height: 100%;
-  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.6), transparent);
+  background: linear-gradient(to right, transparent, rgba(255,255,255,0.45), transparent);
   transform: skewX(-20deg);
   animation: shimmer 4s infinite;
   pointer-events: none;
 }
 
 @keyframes shimmer {
-  0% { left: -100%; }
-  20% { left: 200%; }
+  0%   { left: -100%; }
+  20%  { left: 200%; }
   100% { left: 200%; }
 }
 
 .medal-glow {
-  filter: drop-shadow(0 0 15px rgba(149, 193, 30, 0.6));
+  filter: drop-shadow(0 0 16px rgba(108,99,255,0.7));
 }
 
-/* Search Dropdown */
+/* ── Search Dropdown ── */
 .search-dropdown {
   position: absolute;
   top: calc(100% + 8px);
   left: 0;
   width: 100%;
-  background: white;
+  background: rgba(17,25,54,0.97);
   border-radius: 20px;
-  box-shadow: var(--shadow-float);
+  box-shadow: var(--glass-shadow);
   list-style: none;
   padding: 8px 0;
   margin: 0;
   z-index: 2000;
   max-height: 250px;
   overflow-y: auto;
+  border: 1px solid rgba(108,99,255,0.25);
+  backdrop-filter: blur(20px);
 }
 
 .search-item {
@@ -453,19 +497,20 @@
   transition: background 0.2s;
 }
 
-.search-item:active {
-  background: rgba(0,0,0,0.05);
+.search-item:active,
+.search-item:hover {
+  background: rgba(108,99,255,0.15);
 }
 
 .search-item-title {
   font-size: 15px;
   font-weight: 800;
-  color: var(--brand-navy);
+  color: var(--space-white);
 }
 
 .search-item-address {
   font-size: 12px;
   font-weight: 600;
-  color: var(--brand-muted);
+  color: var(--space-muted);
   margin-top: 4px;
 }

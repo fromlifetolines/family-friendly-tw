@@ -40,11 +40,11 @@ const createUserIcon = () => {
     className: 'user-pin-wrapper',
     html: `
       <div style="
-        width: 20px; height: 20px;
-        background: var(--brand-green);
+        width: 18px; height: 18px;
+        background: #00C6FF;
         border-radius: 50%;
-        border: 4px solid white;
-        box-shadow: 0 0 12px rgba(0,0,0,0.15);
+        border: 3px solid rgba(0,198,255,0.4);
+        box-shadow: 0 0 16px rgba(0,198,255,0.8), 0 0 6px rgba(0,198,255,0.6);
       "></div>
     `,
     iconSize: [28, 28],
@@ -259,27 +259,33 @@ export default function App() {
       <div className="brand-header" style={{ paddingBottom: '16px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: '10px', fontWeight: 800, color: 'var(--brand-accent)', letterSpacing: '0.1em', marginBottom: '3px' }}>35DAILY 全台親子探索地圖</div>
-            <div style={{ fontSize: '18px', fontWeight: 900, color: 'var(--brand-navy)', lineHeight: 1.2 }}>一鍵導航，成就解鎖</div>
-            <div style={{ fontSize: '11px', color: 'var(--brand-muted)', fontWeight: 600, marginTop: '3px' }}>全台百貨、景點、車站、醫院親子空間</div>
+            <div style={{ fontSize: '17px', fontWeight: 800, color: '#F0F4FF', lineHeight: 1.2 }}>🚀 親子友善地圖</div>
+            <div style={{ fontSize: '11px', color: 'rgba(240,244,255,0.6)', fontWeight: 600, marginTop: '3px' }}>探索全台最完整的親子設施</div>
           </div>
-          <div style={{ width: '38px', height: '38px', background: 'var(--brand-primary-light)', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px', flexShrink: 0, marginLeft: '12px' }}>🗺️</div>
+          <div style={{
+            padding: '5px 14px',
+            background: 'linear-gradient(90deg, #6C63FF, #00C6FF)',
+            borderRadius: '999px',
+            fontSize: '12px', fontWeight: 800, color: 'white',
+            flexShrink: 0, marginLeft: '12px',
+            boxShadow: '0 0 16px rgba(108,99,255,0.5)'
+          }}>探索版</div>
         </div>
         
         {/* Search Bar */}
         <div style={{ marginTop: '12px', position: 'relative' }}>
-          <span style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', fontSize: '18px', color: 'var(--brand-secondary)' }}>🔍</span>
+          <span style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', fontSize: '16px', color: '#6C63FF' }}>🔍</span>
           <input 
             type="text" 
             placeholder="搜尋台北 101、新光三越..." 
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
             style={{
-              width: '100%', padding: '12px 12px 12px 42px',
-              borderRadius: '99px', border: 'none',
-              background: 'white', color: 'var(--brand-navy)',
-              fontSize: '15px', fontWeight: 700,
-              boxShadow: 'var(--shadow-soft)',
+              width: '100%', padding: '12px 12px 12px 40px',
+              borderRadius: '99px', border: '1px solid rgba(108,99,255,0.3)',
+              background: 'rgba(255,255,255,0.07)', color: '#F0F4FF',
+              fontSize: '14px', fontWeight: 700,
+              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.08)',
               outline: 'none'
             }}
           />
@@ -303,7 +309,7 @@ export default function App() {
         </div>
 
         {closestLoc && userLat && (
-          <div style={{ marginTop: '10px', paddingTop: '10px', borderTop: '1px solid rgba(0,0,0,0.06)', fontSize: '12px', color: 'var(--brand-accent)', fontWeight: 700 }}>
+          <div style={{ marginTop: '10px', paddingTop: '10px', borderTop: '1px solid rgba(108,99,255,0.2)', fontSize: '12px', color: '#00C6FF', fontWeight: 700 }}>
             📍 最近：{closestLoc.name}
           </div>
         )}
@@ -319,7 +325,8 @@ export default function App() {
         style={{ width: '100%', height: '100%' }}
       >
         <TileLayer
-          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+          url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+          attribution='&copy; <a href="https://carto.com/">CARTO</a>'
         />
         
         {filteredLocations.map(loc => {
@@ -397,11 +404,11 @@ export default function App() {
           <>
             <motion.div
               initial={{ opacity: 0 }}
-              animate={{ opacity: 0.3 }}
+              animate={{ opacity: 0.6 }}
               exit={{ opacity: 0 }}
               style={{
                 position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-                background: 'black', zIndex: 1500
+                background: 'rgba(10,14,39,0.85)', zIndex: 1500
               }}
               onClick={() => setSelectedLocation(null)}
             />
@@ -432,15 +439,15 @@ export default function App() {
                       flexDirection: 'column',
                       alignItems: 'center', 
                       justifyContent: 'center',
-                      background: 'linear-gradient(135deg, var(--brand-secondary-light) 0%, #ECE8EF 100%)',
+                      background: 'linear-gradient(135deg, rgba(108,99,255,0.2) 0%, rgba(0,14,39,0.8) 100%)',
                       gap: '12px'
                     }}
                   >
                     <div dangerouslySetInnerHTML={{ 
-                        __html: `<svg viewBox="0 0 24 24" style="width: 48px; height: 48px; stroke: var(--brand-secondary); stroke-width: 1.5; fill: none; opacity: 0.6;">${TYPE_CONFIG[selectedLocation.type].svg}</svg>` 
+                        __html: `<svg viewBox="0 0 24 24" style="width: 48px; height: 48px; stroke: #6C63FF; stroke-width: 1.5; fill: none; opacity: 0.8;">${TYPE_CONFIG[selectedLocation.type].svg}</svg>` 
                       }} 
                     />
-                    <span style={{ fontSize: '13px', fontWeight: 800, color: 'var(--brand-secondary)', opacity: 0.8 }}>35daily 質感佔位插畫</span>
+                    <span style={{ fontSize: '13px', fontWeight: 800, color: 'rgba(240,244,255,0.5)' }}>35daily 太空探索地圖</span>
                   </div>
                 )}
                 
@@ -504,7 +511,7 @@ export default function App() {
                 </div>
 
                 <div id="facility-section" className="section-title">提供設施</div>
-                <div className="amenity-grid-3" style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', paddingBottom: '8px' }}>
+                <div className="amenity-grid-3">
                   {ALL_FACILITIES.map(key => {
                     const fac = selectedLocation.facilities.find(f => f.id === key);
                     const isAvailable = fac?.available ?? false;

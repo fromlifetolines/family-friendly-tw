@@ -1280,5 +1280,749 @@
     ],
     "officialWebsiteUrl": "https://www.zoo.taipei.gov.tw",
     "assignedBadgeId": "park-ranger"
+  },
+  {
+    "id": "taoyuan-mrt-a8",
+    "name": "機場捷運 A8 長庚醫院站",
+    "branch": "站內哺乳室",
+    "type": "transport",
+    "lat": 25.06842,
+    "lng": 121.35673,
+    "address": "桃園市龜山區文化一路100號",
+    "phone": "03-286-8789",
+    "website": "https://www.tymetro.com.tw",
+    "openHours": "06:00–23:30",
+    "isPremium": false,
+    "rating": 4.0,
+    "reviewCount": 23,
+    "floorInfo": "B1",
+    "facilities": [
+      {
+        "id": "nursing_room",
+        "available": true
+      },
+      {
+        "id": "stroller_rental",
+        "available": false
+      },
+      {
+        "id": "diaper_table",
+        "available": true
+      },
+      {
+        "id": "hot_water",
+        "available": false
+      },
+      {
+        "id": "elevator",
+        "available": true
+      },
+      {
+        "id": "play_area",
+        "available": false
+      },
+      {
+        "id": "priority_lane",
+        "available": true
+      },
+      {
+        "id": "family_restroom",
+        "available": true
+      }
+    ],
+    "lastUpdated": "2025-01-20",
+    "officialWebsiteUrl": "https://www.tymetro.com.tw/tymetro-new/tw/_pages/travel-guide/road.html?id=10",
+    "assignedBadgeId": "tymetro-master"
+  },
+  {
+    "id": "taoyuan-mrt-a1",
+    "name": "機場捷運 A1 台北車站",
+    "branch": "B1 哺乳室",
+    "type": "transport",
+    "lat": 25.0476,
+    "lng": 121.517,
+    "address": "台北市中正區北平西路3號 B1",
+    "phone": "03-286-8789",
+    "website": "https://www.tymetro.com.tw",
+    "openHours": "06:00–23:30",
+    "isPremium": false,
+    "rating": 4.1,
+    "reviewCount": 34,
+    "floorInfo": "B1",
+    "facilities": [
+      {
+        "id": "nursing_room",
+        "available": true
+      },
+      {
+        "id": "stroller_rental",
+        "available": false
+      },
+      {
+        "id": "diaper_table",
+        "available": true
+      },
+      {
+        "id": "hot_water",
+        "available": false
+      },
+      {
+        "id": "elevator",
+        "available": true
+      },
+      {
+        "id": "play_area",
+        "available": false
+      },
+      {
+        "id": "priority_lane",
+        "available": true
+      },
+      {
+        "id": "family_restroom",
+        "available": true
+      }
+    ],
+    "lastUpdated": "2025-01-20",
+    "officialWebsiteUrl": "https://www.tymetro.com.tw/tymetro-new/tw/_pages/travel-guide/road.html?id=1",
+    "assignedBadgeId": "tymetro-master"
+  },
+  {
+    "id": "taoyuan-mrt-a13",
+    "name": "機場捷運 A13 林口站",
+    "branch": "站內哺乳室",
+    "type": "transport",
+    "lat": 25.0728,
+    "lng": 121.3795,
+    "address": "新北市林口區文化三路一段",
+    "phone": "03-286-8789",
+    "website": "https://www.tymetro.com.tw",
+    "openHours": "06:00–23:30",
+    "isPremium": false,
+    "rating": 3.9,
+    "reviewCount": 18,
+    "floorInfo": "站內",
+    "facilities": [
+      {
+        "id": "nursing_room",
+        "available": true
+      },
+      {
+        "id": "stroller_rental",
+        "available": false
+      },
+      {
+        "id": "diaper_table",
+        "available": true
+      },
+      {
+        "id": "hot_water",
+        "available": false
+      },
+      {
+        "id": "elevator",
+        "available": true
+      },
+      {
+        "id": "play_area",
+        "available": false
+      },
+      {
+        "id": "priority_lane",
+        "available": false
+      },
+      {
+        "id": "family_restroom",
+        "available": true
+      }
+    ],
+    "lastUpdated": "2025-01-15",
+    "officialWebsiteUrl": "https://www.tymetro.com.tw",
+    "assignedBadgeId": "tymetro-master"
+  },
+  {
+    "id": "mrt-taipei-city-hall",
+    "name": "捷運市政府站",
+    "branch": "站內哺乳室",
+    "type": "transport",
+    "lat": 25.04085,
+    "lng": 121.56494,
+    "address": "台北市信義區市府路1號",
+    "phone": "02-218-12345",
+    "website": "https://www.metro.taipei",
+    "openHours": "06:00–24:00",
+    "isPremium": false,
+    "rating": 4.0,
+    "reviewCount": 29,
+    "floorInfo": "B1",
+    "facilities": [
+      {
+        "id": "nursing_room",
+        "available": true
+      },
+      {
+        "id": "stroller_rental",
+        "available": false
+      },
+      {
+        "id": "diaper_table",
+        "available": true
+      },
+      {
+        "id": "hot_water",
+        "available": false
+      },
+      {
+        "id": "elevator",
+        "available": true
+      },
+      {
+        "id": "play_area",
+        "available": false
+      },
+      {
+        "id": "priority_lane",
+        "available": true
+      },
+      {
+        "id": "family_restroom",
+        "available": true
+      }
+    ],
+    "lastUpdated": "2025-01-10",
+    "officialWebsiteUrl": "https://www.metro.taipei/",
+    "assignedBadgeId": "mrt-navigator"
+  },
+  {
+    "id": "mrt-banqiao",
+    "name": "捷運板橋站",
+    "branch": "站內哺乳室",
+    "type": "transport",
+    "lat": 25.0144,
+    "lng": 121.4638,
+    "address": "新北市板橋區縣民大道二段7號",
+    "phone": "02-218-12345",
+    "website": "https://www.metro.taipei",
+    "openHours": "06:00–24:00",
+    "isPremium": false,
+    "rating": 4.1,
+    "reviewCount": 22,
+    "floorInfo": "B2",
+    "facilities": [
+      {
+        "id": "nursing_room",
+        "available": true
+      },
+      {
+        "id": "stroller_rental",
+        "available": false
+      },
+      {
+        "id": "diaper_table",
+        "available": true
+      },
+      {
+        "id": "hot_water",
+        "available": false
+      },
+      {
+        "id": "elevator",
+        "available": true
+      },
+      {
+        "id": "play_area",
+        "available": false
+      },
+      {
+        "id": "priority_lane",
+        "available": true
+      },
+      {
+        "id": "family_restroom",
+        "available": true
+      }
+    ],
+    "lastUpdated": "2025-01-08",
+    "officialWebsiteUrl": "https://www.metro.taipei/",
+    "assignedBadgeId": "mrt-navigator"
+  },
+  {
+    "id": "taichung-tiger-city",
+    "name": "台中老虎城",
+    "branch": "4F 哺乳室",
+    "type": "mall",
+    "lat": 24.1638,
+    "lng": 120.6472,
+    "address": "台中市西屯區河南路二段257號",
+    "phone": "04-2251-8899",
+    "website": "https://www.tigercity.com.tw",
+    "openHours": "11:00–21:30",
+    "isPremium": false,
+    "rating": 4.2,
+    "reviewCount": 55,
+    "floorInfo": "4F",
+    "facilities": [
+      {
+        "id": "nursing_room",
+        "available": true
+      },
+      {
+        "id": "stroller_rental",
+        "available": true
+      },
+      {
+        "id": "diaper_table",
+        "available": true
+      },
+      {
+        "id": "hot_water",
+        "available": true
+      },
+      {
+        "id": "elevator",
+        "available": true
+      },
+      {
+        "id": "play_area",
+        "available": true
+      },
+      {
+        "id": "priority_lane",
+        "available": false
+      },
+      {
+        "id": "family_restroom",
+        "available": true
+      }
+    ],
+    "lastUpdated": "2025-01-12",
+    "officialWebsiteUrl": "https://www.tigercity.com.tw",
+    "assignedBadgeId": "mall-hero"
+  },
+  {
+    "id": "taichung-global-mall",
+    "name": "台中環球購物中心",
+    "branch": "3F 親子室",
+    "type": "mall",
+    "lat": 24.1719,
+    "lng": 120.6544,
+    "address": "台中市西屯區台灣大道三段301號",
+    "phone": "04-2255-6789",
+    "website": "https://www.global-mall.com.tw/taichung",
+    "openHours": "11:00–21:30",
+    "isPremium": false,
+    "rating": 4.3,
+    "reviewCount": 67,
+    "floorInfo": "3F",
+    "facilities": [
+      {
+        "id": "nursing_room",
+        "available": true
+      },
+      {
+        "id": "stroller_rental",
+        "available": true,
+        "note": "免費借用"
+      },
+      {
+        "id": "diaper_table",
+        "available": true
+      },
+      {
+        "id": "hot_water",
+        "available": true
+      },
+      {
+        "id": "elevator",
+        "available": true
+      },
+      {
+        "id": "play_area",
+        "available": true
+      },
+      {
+        "id": "priority_lane",
+        "available": true
+      },
+      {
+        "id": "family_restroom",
+        "available": true
+      }
+    ],
+    "lastUpdated": "2025-01-18",
+    "officialWebsiteUrl": "https://www.global-mall.com.tw/taichung",
+    "assignedBadgeId": "mall-hero"
+  },
+  {
+    "id": "taichung-sogo",
+    "name": "SOGO 台中店",
+    "branch": "8F 哺乳室",
+    "type": "mall",
+    "lat": 24.1487,
+    "lng": 120.6734,
+    "address": "台中市中區台灣大道一段101號",
+    "phone": "04-2221-5555",
+    "website": "https://www.sogo.com.tw/taichung",
+    "openHours": "11:00–21:30",
+    "isPremium": false,
+    "rating": 4.1,
+    "reviewCount": 43,
+    "floorInfo": "8F",
+    "facilities": [
+      {
+        "id": "nursing_room",
+        "available": true
+      },
+      {
+        "id": "stroller_rental",
+        "available": false
+      },
+      {
+        "id": "diaper_table",
+        "available": true
+      },
+      {
+        "id": "hot_water",
+        "available": true
+      },
+      {
+        "id": "elevator",
+        "available": true
+      },
+      {
+        "id": "play_area",
+        "available": false
+      },
+      {
+        "id": "priority_lane",
+        "available": false
+      },
+      {
+        "id": "family_restroom",
+        "available": true
+      }
+    ],
+    "lastUpdated": "2024-12-20",
+    "officialWebsiteUrl": "https://www.sogo.com.tw/taichung",
+    "assignedBadgeId": "mall-hero"
+  },
+  {
+    "id": "kaohsiung-hanshin",
+    "name": "高雄漢神百貨",
+    "branch": "9F 哺乳室",
+    "type": "mall",
+    "lat": 22.6156,
+    "lng": 120.2987,
+    "address": "高雄市前金區成功一路266號",
+    "phone": "07-216-5888",
+    "website": "https://www.hanshin.com.tw",
+    "openHours": "11:00–21:30",
+    "isPremium": false,
+    "rating": 4.2,
+    "reviewCount": 38,
+    "floorInfo": "9F",
+    "facilities": [
+      {
+        "id": "nursing_room",
+        "available": true
+      },
+      {
+        "id": "stroller_rental",
+        "available": false
+      },
+      {
+        "id": "diaper_table",
+        "available": true
+      },
+      {
+        "id": "hot_water",
+        "available": true
+      },
+      {
+        "id": "elevator",
+        "available": true
+      },
+      {
+        "id": "play_area",
+        "available": false
+      },
+      {
+        "id": "priority_lane",
+        "available": false
+      },
+      {
+        "id": "family_restroom",
+        "available": true
+      }
+    ],
+    "lastUpdated": "2024-12-15",
+    "officialWebsiteUrl": "https://www.hanshin.com.tw",
+    "assignedBadgeId": "mall-hero"
+  },
+  {
+    "id": "kaohsiung-dream-mall",
+    "name": "高雄夢時代購物中心",
+    "branch": "5F 親子哺乳室",
+    "type": "mall",
+    "lat": 22.5987,
+    "lng": 120.3014,
+    "address": "高雄市前鎮區中華五路789號",
+    "phone": "07-973-3888",
+    "website": "https://www.dream-mall.com.tw",
+    "openHours": "11:00–22:00",
+    "isPremium": true,
+    "rating": 4.5,
+    "reviewCount": 124,
+    "floorInfo": "5F",
+    "facilities": [
+      {
+        "id": "nursing_room",
+        "available": true,
+        "note": "3間獨立隔間"
+      },
+      {
+        "id": "stroller_rental",
+        "available": true
+      },
+      {
+        "id": "diaper_table",
+        "available": true
+      },
+      {
+        "id": "hot_water",
+        "available": true
+      },
+      {
+        "id": "elevator",
+        "available": true
+      },
+      {
+        "id": "play_area",
+        "available": true,
+        "note": "大型室內遊樂場"
+      },
+      {
+        "id": "priority_lane",
+        "available": true
+      },
+      {
+        "id": "family_restroom",
+        "available": true
+      }
+    ],
+    "lastUpdated": "2025-01-22",
+    "officialWebsiteUrl": "https://www.dream-mall.com.tw",
+    "assignedBadgeId": "mall-hero"
+  },
+  {
+    "id": "kaohsiung-mrt-formosa",
+    "name": "捷運美麗島站",
+    "branch": "站內哺乳室",
+    "type": "transport",
+    "lat": 22.6269,
+    "lng": 120.3011,
+    "address": "高雄市新興區中山一路115號",
+    "phone": "07-793-8888",
+    "website": "https://www.krtc.com.tw",
+    "openHours": "06:00–24:00",
+    "isPremium": false,
+    "rating": 4.3,
+    "reviewCount": 31,
+    "floorInfo": "B1",
+    "facilities": [
+      {
+        "id": "nursing_room",
+        "available": true
+      },
+      {
+        "id": "stroller_rental",
+        "available": false
+      },
+      {
+        "id": "diaper_table",
+        "available": true
+      },
+      {
+        "id": "hot_water",
+        "available": false
+      },
+      {
+        "id": "elevator",
+        "available": true
+      },
+      {
+        "id": "play_area",
+        "available": false
+      },
+      {
+        "id": "priority_lane",
+        "available": true
+      },
+      {
+        "id": "family_restroom",
+        "available": true
+      }
+    ],
+    "lastUpdated": "2025-01-05",
+    "officialWebsiteUrl": "https://www.krtc.com.tw/",
+    "assignedBadgeId": "krt-explorer"
+  },
+  {
+    "id": "tainan-mitsukoshi",
+    "name": "新光三越台南新天地",
+    "branch": "B1 哺乳室",
+    "type": "mall",
+    "lat": 22.9928,
+    "lng": 120.2105,
+    "address": "台南市中西區西門路一段658號",
+    "phone": "06-303-0111",
+    "website": "https://www.skm.com.tw/store/tainan",
+    "openHours": "11:00–21:30",
+    "isPremium": true,
+    "rating": 4.4,
+    "reviewCount": 89,
+    "floorInfo": "B1",
+    "facilities": [
+      {
+        "id": "nursing_room",
+        "available": true
+      },
+      {
+        "id": "stroller_rental",
+        "available": true
+      },
+      {
+        "id": "diaper_table",
+        "available": true
+      },
+      {
+        "id": "hot_water",
+        "available": true
+      },
+      {
+        "id": "elevator",
+        "available": true
+      },
+      {
+        "id": "play_area",
+        "available": true
+      },
+      {
+        "id": "priority_lane",
+        "available": true
+      },
+      {
+        "id": "family_restroom",
+        "available": true
+      }
+    ],
+    "lastUpdated": "2025-01-20",
+    "officialWebsiteUrl": "https://www.skm.com.tw/store/tainan",
+    "assignedBadgeId": "mall-hero"
+  },
+  {
+    "id": "bearbrick-cafe-taipei",
+    "name": "BeBe 親子餐廳（信義）",
+    "branch": "全館親子友善",
+    "type": "restaurant",
+    "lat": 25.0392,
+    "lng": 121.5654,
+    "address": "台北市信義區忠孝東路五段68號2F",
+    "openHours": "11:00–21:00",
+    "isPremium": false,
+    "rating": 4.6,
+    "reviewCount": 143,
+    "floorInfo": "2F",
+    "facilities": [
+      {
+        "id": "nursing_room",
+        "available": true
+      },
+      {
+        "id": "stroller_rental",
+        "available": false
+      },
+      {
+        "id": "diaper_table",
+        "available": true
+      },
+      {
+        "id": "hot_water",
+        "available": true
+      },
+      {
+        "id": "elevator",
+        "available": true
+      },
+      {
+        "id": "play_area",
+        "available": true,
+        "note": "室內大型遊樂設施"
+      },
+      {
+        "id": "priority_lane",
+        "available": false
+      },
+      {
+        "id": "family_restroom",
+        "available": true
+      }
+    ],
+    "lastUpdated": "2025-01-25",
+    "officialWebsiteUrl": "https://www.metro.taipei/",
+    "assignedBadgeId": "mall-hero"
+  },
+  {
+    "id": "kids-land-linkou",
+    "name": "Kids Land 親子樂園餐廳（林口）",
+    "branch": "全館親子友善",
+    "type": "restaurant",
+    "lat": 25.0765,
+    "lng": 121.3874,
+    "address": "新北市林口區文化三路一段392號",
+    "openHours": "10:00–21:00",
+    "isPremium": false,
+    "rating": 4.7,
+    "reviewCount": 198,
+    "floorInfo": "1F",
+    "facilities": [
+      {
+        "id": "nursing_room",
+        "available": true,
+        "note": "獨立哺乳室"
+      },
+      {
+        "id": "stroller_rental",
+        "available": false
+      },
+      {
+        "id": "diaper_table",
+        "available": true
+      },
+      {
+        "id": "hot_water",
+        "available": true
+      },
+      {
+        "id": "elevator",
+        "available": false
+      },
+      {
+        "id": "play_area",
+        "available": true,
+        "note": "超大球池+溜滑梯"
+      },
+      {
+        "id": "priority_lane",
+        "available": false
+      },
+      {
+        "id": "family_restroom",
+        "available": true
+      }
+    ],
+    "lastUpdated": "2025-01-28",
+    "officialWebsiteUrl": "https://www.metro.taipei/",
+    "assignedBadgeId": "mall-hero"
   }
 ]
