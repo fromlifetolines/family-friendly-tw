@@ -88,6 +88,24 @@ export default function App() {
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
   const [activeFilters, setActiveFilters] = useState<FacilityType[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [locationsList, setLocationsList] = useState<Location[]>(locations);
+  
+  useEffect(() => {
+    // Fetch dynamic government data from Taipei Open Data (synced via script)
+    fetch('/data/map-locations.json')
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          setLocationsList(prev => {
+            const existingIds = new Set(prev.map(l => l.id));
+            const uniqueNewData = data.filter((l: any) => !existingIds.has(l.id));
+            return [...prev, ...uniqueNewData];
+          });
+        }
+      })
+      .catch(err => console.log('Notice: No dynamic data found or fetch failed. Using seed data only.'));
+  }, []);
+
   
   const [userLat, setUserLat] = useState<number | null>(null);
   const [userLng, setUserLng] = useState<number | null>(null);
@@ -105,7 +123,7 @@ export default function App() {
   });
 
   const checkIn = (placeId: string) => {
-    const loc = locations.find(l => l.id === placeId);
+    const loc = locationsList.find(l => l.id === placeId);
     if (!loc || !loc.badge || !userLat || !userLng) return;
 
     const distance = getDistance(userLat, userLng, loc.lat, loc.lng);
@@ -138,7 +156,7 @@ export default function App() {
     setUserLng(lng);
     let minDist = Infinity;
     let closest: Location | null = null;
-    locations.forEach(loc => {
+    locationsList.forEach(loc => {
       const d = getDistance(lat, lng, loc.lat, loc.lng);
       if (d < minDist) { minDist = d; closest = loc; }
     });
@@ -205,7 +223,7 @@ export default function App() {
     }
   };
 
-  const filteredLocations = locations.filter(loc => {
+  const filteredLocations = locationsList.filter(loc => {
     const matchesSearch = searchQuery === '' || 
       loc.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
       loc.address.toLowerCase().includes(searchQuery.toLowerCase());
@@ -501,7 +519,10 @@ export default function App() {
   );
 
   const renderTaskScreen = () => {
-    const discoveryBadges = locations.filter(l => l.badge).map(l => ({ ...l.badge!, placeName: l.name, placeId: l.id }));
+    // Get all possible badges from locationsList
+    const discoveryBadges = locationsList
+      .filter(l => l.badge)
+      .map(l => ({ ...l.badge!, placeName: l.name, placeId: l.id }));
     const unlockedCount = unlockedBadges.length;
 
     return (
@@ -538,7 +559,7 @@ export default function App() {
                   }}
                   onClick={() => {
                     if (!isUnlocked) {
-                      const loc = locations.find(l => l.id === badge.placeId);
+                      const loc = locationsList.find(l => l.id === badge.placeId);
                       if (loc) {
                         setCurrentScreen('map');
                         setSelectedLocation(loc);
