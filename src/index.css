@@ -28,16 +28,30 @@ body {
   color: var(--brand-navy);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden; /* Prevent X-axis blowout on mobile */
+  max-width: 100vw;
 }
 
 #root {
   max-width: 390px;
+  width: 100%;
   margin: 0 auto;
   min-height: 100vh;
   background-color: var(--brand-bg);
   position: relative;
   overflow-x: hidden;
   box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+/* ── Global RWD Safety Net ── */
+img, video, svg, canvas {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+img {
+  object-fit: cover; /* Prevent image aspect-ratio distortion */
 }
 
 button {
