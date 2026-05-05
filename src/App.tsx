@@ -18,11 +18,11 @@ const createCustomIcon = (type: LocationType, locName: string, isSelected: boole
   const tooltip = distanceText ? `${chipLabel} · ${distanceText}` : chipLabel;
 
   const html = `
-    <div class="marker-wrap ${isSelected ? 'selected' : ''}" style="--marker-color: ${color}; ${isUnlocked ? 'filter: drop-shadow(0 0 6px var(--brand-primary));' : ''}">
+    <div class="marker-wrap ${isSelected ? 'selected' : ''}" style="--marker-color: ${color};">
       <div class="marker-chip">${tooltip}</div>
       <div class="marker-ring">
         <div class="marker-dot"></div>
-        ${isUnlocked ? `<div style="position:absolute; top:-10px; right:-10px; font-size: 14px; z-index: 10;">✅</div>` : ''}
+        ${isUnlocked ? `<div style="position:absolute; top:-10px; right:-10px; font-size: 12px; z-index: 10; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.15));">✅</div>` : ''}
       </div>
     </div>
   `;
@@ -41,11 +41,11 @@ const createUserIcon = () => {
     className: 'user-pin-wrapper',
     html: `
       <div style="
-        width: 18px; height: 18px;
-        background: #00C6FF;
+        width: 16px; height: 16px;
+        background: #007AFF;
         border-radius: 50%;
-        border: 3px solid rgba(0,198,255,0.4);
-        box-shadow: 0 0 16px rgba(0,198,255,0.8), 0 0 6px rgba(0,198,255,0.6);
+        border: 3px solid rgba(0,122,255,0.3);
+        box-shadow: 0 0 12px rgba(0,122,255,0.4), 0 0 4px rgba(0,122,255,0.3);
       "></div>
     `,
     iconSize: [28, 28],
@@ -268,22 +268,22 @@ export default function App() {
       <div className="brand-header" style={{ paddingBottom: '16px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: '17px', fontWeight: 800, color: '#F0F4FF', lineHeight: 1.2 }}>🚀 親子友善地圖</div>
-            <div style={{ fontSize: '11px', color: 'rgba(240,244,255,0.6)', fontWeight: 600, marginTop: '3px' }}>探索全台最完整的親子設施</div>
+            <div style={{ fontSize: '17px', fontWeight: 800, color: '#1D1D1F', lineHeight: 1.2 }}>🗺️ 親子友善地圖</div>
+            <div style={{ fontSize: '11px', color: '#86868B', fontWeight: 600, marginTop: '3px' }}>探索全台最完整的親子設施</div>
           </div>
           <div style={{
             padding: '5px 14px',
-            background: 'linear-gradient(90deg, #6C63FF, #00C6FF)',
+            background: '#007AFF',
             borderRadius: '999px',
-            fontSize: '12px', fontWeight: 800, color: 'white',
+            fontSize: '12px', fontWeight: 700, color: 'white',
             flexShrink: 0, marginLeft: '12px',
-            boxShadow: '0 0 16px rgba(108,99,255,0.5)'
+            boxShadow: '0 4px 12px rgba(0,122,255,0.25)'
           }}>探索版</div>
         </div>
         
         {/* Search Bar */}
         <div style={{ marginTop: '12px', position: 'relative' }}>
-          <span style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', fontSize: '16px', color: '#6C63FF' }}>🔍</span>
+          <span style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', fontSize: '16px', color: '#86868B' }}>🔍</span>
           <input 
             type="text" 
             placeholder="搜尋台北 101、新光三越..." 
@@ -291,11 +291,13 @@ export default function App() {
             onChange={e => setSearchQuery(e.target.value)}
             style={{
               width: '100%', padding: '12px 12px 12px 40px',
-              borderRadius: '99px', border: '1px solid rgba(108,99,255,0.3)',
-              background: 'rgba(255,255,255,0.07)', color: '#F0F4FF',
-              fontSize: '14px', fontWeight: 700,
-              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.08)',
-              outline: 'none'
+              borderRadius: '99px',
+              border: '1px solid rgba(0,0,0,0.06)',
+              background: 'rgba(0, 0, 0, 0.04)', color: '#1D1D1F',
+              fontSize: '14px', fontWeight: 600,
+              boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.04)',
+              outline: 'none',
+              transition: 'all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)'
             }}
           />
           {searchQuery && filteredLocations.length > 0 && (
@@ -318,7 +320,7 @@ export default function App() {
         </div>
 
         {closestLoc && userLat && (
-          <div style={{ marginTop: '10px', paddingTop: '10px', borderTop: '1px solid rgba(108,99,255,0.2)', fontSize: '12px', color: '#00C6FF', fontWeight: 700 }}>
+          <div style={{ marginTop: '10px', paddingTop: '10px', borderTop: '1px solid rgba(0,0,0,0.06)', fontSize: '12px', color: '#007AFF', fontWeight: 700 }}>
             📍 最近：{closestLoc.name}
           </div>
         )}
@@ -334,7 +336,7 @@ export default function App() {
         style={{ width: '100%', height: '100%' }}
       >
         <TileLayer
-          url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
           attribution='&copy; <a href="https://carto.com/">CARTO</a>'
         />
         
@@ -413,11 +415,12 @@ export default function App() {
           <>
             <motion.div
               initial={{ opacity: 0 }}
-              animate={{ opacity: 0.6 }}
+              animate={{ opacity: 0.4 }}
               exit={{ opacity: 0 }}
               style={{
                 position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-                background: 'rgba(10,14,39,0.85)', zIndex: 1500
+                background: 'rgba(0,0,0,0.25)', zIndex: 1500,
+                backdropFilter: 'blur(4px)', WebkitBackdropFilter: 'blur(4px)'
               }}
               onClick={() => setSelectedLocation(null)}
             />
@@ -448,15 +451,15 @@ export default function App() {
                       flexDirection: 'column',
                       alignItems: 'center', 
                       justifyContent: 'center',
-                      background: 'linear-gradient(135deg, rgba(108,99,255,0.2) 0%, rgba(0,14,39,0.8) 100%)',
+                      background: 'linear-gradient(135deg, rgba(0,122,255,0.05) 0%, rgba(245,245,247,1) 100%)',
                       gap: '12px'
                     }}
                   >
                     <div dangerouslySetInnerHTML={{ 
-                        __html: `<svg viewBox="0 0 24 24" style="width: 48px; height: 48px; stroke: #6C63FF; stroke-width: 1.5; fill: none; opacity: 0.8;">${TYPE_CONFIG[selectedLocation.type].svg}</svg>` 
+                        __html: `<svg viewBox="0 0 24 24" style="width: 48px; height: 48px; stroke: #86868B; stroke-width: 1.5; fill: none; opacity: 0.5;">${TYPE_CONFIG[selectedLocation.type].svg}</svg>` 
                       }} 
                     />
-                    <span style={{ fontSize: '13px', fontWeight: 800, color: 'rgba(240,244,255,0.5)' }}>35daily 太空探索地圖</span>
+                    <span style={{ fontSize: '13px', fontWeight: 700, color: '#86868B' }}>親子友善地圖</span>
                   </div>
                 )}
                 
@@ -616,37 +619,37 @@ export default function App() {
         {svgDefs}
         {/* Hero Banner */}
         <div style={{
-          background: 'linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%)',
+          background: 'linear-gradient(135deg, #007AFF 0%, #5AC8FA 100%)',
           padding: '56px 24px 36px',
           textAlign: 'center',
           color: 'white'
         }}>
-          <div style={{ fontSize: '12px', fontWeight: 800, color: 'var(--brand-primary-light)', letterSpacing: '0.08em', marginBottom: '10px' }}>35DAILY 全台親子探索地圖</div>
-          <div style={{ fontSize: '30px', fontWeight: 900, color: 'white', lineHeight: 1.25 }}>
+          <div style={{ fontSize: '12px', fontWeight: 700, color: 'rgba(255,255,255,0.7)', letterSpacing: '0.06em', marginBottom: '10px' }}>35DAILY 全台親子探索地圖</div>
+          <div style={{ fontSize: '30px', fontWeight: 800, color: 'white', lineHeight: 1.25 }}>
             一鍵導航<br/>成就解鎖
           </div>
-          <div style={{ fontSize: '14px', color: 'rgba(255,255,255,0.8)', marginTop: '10px', fontWeight: 600 }}>
+          <div style={{ fontSize: '14px', color: 'rgba(255,255,255,0.85)', marginTop: '10px', fontWeight: 600 }}>
             全台百貨、景點、車站、醫院親子空間
           </div>
         </div>
 
         {/* Active Task (If in range) */}
         {checkInLocation ? (
-          <div style={{ margin: '16px 16px 0', background: 'white', border: '2px solid var(--brand-primary)', borderRadius: '24px', padding: '22px', boxShadow: 'var(--shadow-soft)' }}>
-            <div style={{ fontSize: '11px', color: 'var(--brand-accent)', fontWeight: 800, letterSpacing: '0.06em' }}>📍 偵測到您已抵達</div>
-            <div style={{ fontSize: '20px', fontWeight: 900, color: 'var(--brand-navy)', marginTop: '6px' }}>
+          <div className="glass-panel" style={{ margin: '16px 16px 0', padding: '22px', borderColor: 'rgba(0,122,255,0.3)' }}>
+            <div style={{ fontSize: '11px', color: '#007AFF', fontWeight: 700, letterSpacing: '0.04em' }}>📍 偵測到您已抵達</div>
+            <div style={{ fontSize: '20px', fontWeight: 800, color: '#1D1D1F', marginTop: '6px' }}>
               {checkInLocation.name}
             </div>
-            <div style={{ fontSize: '13px', color: 'var(--brand-muted)', marginTop: '4px', fontWeight: 600 }}>
+            <div style={{ fontSize: '13px', color: '#86868B', marginTop: '4px', fontWeight: 600 }}>
               請上傳哺乳室或設備現況照片，協助更新資訊！
             </div>
             <button
               className="tactile-btn"
               style={{
                 width: '100%', marginTop: '16px',
-                background: 'var(--brand-primary)', color: 'var(--brand-navy)',
-                padding: '17px', borderRadius: '16px',
-                fontSize: '16px', fontWeight: 800, borderTop: 'none', borderLeft: 'none', borderRight: 'none',
+                background: '#007AFF', color: 'white',
+                padding: '17px', borderRadius: '14px',
+                fontSize: '16px', fontWeight: 700,
               }}
               onClick={handleSimulateUpload}
             >
@@ -654,17 +657,17 @@ export default function App() {
             </button>
           </div>
         ) : (
-          <div style={{ margin: '16px 16px 0', background: 'var(--brand-bg)', borderRadius: '24px', padding: '22px', textAlign: 'center' }}>
-            <div style={{ fontSize: '14px', color: 'var(--brand-muted)', fontWeight: 700 }}>
+          <div className="glass-panel" style={{ margin: '16px 16px 0', padding: '22px', textAlign: 'center' }}>
+            <div style={{ fontSize: '14px', color: '#86868B', fontWeight: 600 }}>
               尚未到達任何場域。<br/>請至地圖探索，靠近場域 50m 內即可解鎖回報任務！
             </div>
             <button
               className="tactile-btn"
               style={{
                 width: '100%', marginTop: '16px',
-                background: 'var(--brand-secondary)', color: 'white',
-                padding: '17px', borderRadius: '16px',
-                fontSize: '16px', fontWeight: 800, borderTop: 'none', borderLeft: 'none', borderRight: 'none',
+                background: '#007AFF', color: 'white',
+                padding: '17px', borderRadius: '14px',
+                fontSize: '16px', fontWeight: 700,
               }}
               onClick={() => setCurrentScreen('map')}
             >
@@ -676,8 +679,8 @@ export default function App() {
         {/* Medal Album */}
         <div style={{ margin: '24px 16px 0' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-            <div style={{ fontSize: '18px', fontWeight: 900, color: 'var(--brand-navy)' }}>🏅 我的成就徽章冊</div>
-            <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--brand-muted)' }}>{unlockedCount}/{MEDALS.length} 解鎖</div>
+            <div style={{ fontSize: '18px', fontWeight: 800, color: '#1D1D1F' }}>🏅 我的成就徽章冊</div>
+            <div style={{ fontSize: '12px', fontWeight: 600, color: '#86868B' }}>{unlockedCount}/{MEDALS.length} 解鎖</div>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
             {MEDALS.map(medal => {
@@ -687,13 +690,15 @@ export default function App() {
                   className={medal.unlocked ? 'medal-shimmer medal-glow' : ''}
                   onClick={() => !medal.unlocked && showToast(`🔒 解鎖條件：${medal.desc}`)}
                   style={{
-                  background: medal.unlocked ? 'white' : 'rgba(31, 13, 43, 0.04)',
+                  background: medal.unlocked ? 'rgba(255,255,255,0.75)' : 'rgba(0,0,0,0.02)',
+                  backdropFilter: medal.unlocked ? 'blur(16px) saturate(180%)' : 'none',
+                  WebkitBackdropFilter: medal.unlocked ? 'blur(16px) saturate(180%)' : 'none',
                   borderRadius: '20px',
                   padding: '16px 8px',
                   textAlign: 'center',
-                  boxShadow: medal.unlocked ? 'var(--shadow-soft)' : 'none',
-                  border: medal.unlocked ? '2px solid var(--brand-primary)' : '2px solid transparent',
-                  transition: 'all 0.4s cubic-bezier(0.16,1,0.3,1)',
+                  boxShadow: medal.unlocked ? '0 4px 16px rgba(0,0,0,0.06), inset 0 1px 1px rgba(255,255,255,0.8)' : 'none',
+                  border: medal.unlocked ? '1px solid rgba(255,255,255,0.5)' : '1px solid transparent',
+                  transition: 'all 0.4s cubic-bezier(0.25,0.8,0.25,1)',
                   cursor: medal.unlocked ? 'default' : 'pointer'
                 }}>
                   <motion.div 
@@ -714,8 +719,8 @@ export default function App() {
                       </div>
                     )}
                   </motion.div>
-                  <div style={{ fontSize: '12px', fontWeight: 900, color: medal.unlocked ? 'var(--brand-navy)' : 'var(--brand-muted)', lineHeight: 1.2 }}>{medal.title}</div>
-                  <div style={{ fontSize: '10px', color: medal.unlocked ? 'var(--brand-secondary)' : '#A3A3A3', fontWeight: 600, marginTop: '4px' }}>
+                  <div style={{ fontSize: '12px', fontWeight: 800, color: medal.unlocked ? '#1D1D1F' : '#86868B', lineHeight: 1.2 }}>{medal.title}</div>
+                  <div style={{ fontSize: '10px', color: medal.unlocked ? '#007AFF' : '#AEAEB2', fontWeight: 600, marginTop: '4px' }}>
                     {medal.unlocked ? date : '點擊查看'}
                   </div>
                 </div>
@@ -728,10 +733,11 @@ export default function App() {
               onClick={() => showToast('🎨 成就證書功能將於正式版啟動，敬請期待！')}
               style={{
                 width: '100%', marginTop: '16px',
-                background: 'linear-gradient(135deg, var(--brand-primary), var(--brand-secondary))',
+                background: '#007AFF',
                 color: 'white', border: 'none',
-                padding: '15px', borderRadius: '16px',
-                fontSize: '15px', fontWeight: 800
+                padding: '15px', borderRadius: '14px',
+                fontSize: '15px', fontWeight: 700,
+                boxShadow: '0 4px 16px rgba(0,122,255,0.25)'
               }}
             >
               🔗 分享成就海報（IG 演算法流量）
@@ -751,15 +757,18 @@ export default function App() {
           top: '80px',
           left: '50%',
           transform: 'translateX(-50%)',
-          background: 'var(--brand-navy)',
-          color: 'white',
-          padding: '14px 20px',
-          borderRadius: 'var(--r-pill)',
+          background: 'rgba(255,255,255,0.88)',
+          backdropFilter: 'blur(24px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+          color: '#1D1D1F',
+          padding: '14px 24px',
+          borderRadius: '999px',
           fontSize: '14px',
           fontWeight: 700,
           zIndex: 9999,
           whiteSpace: 'nowrap',
-          boxShadow: 'var(--shadow-float)',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.08), inset 0 1px 1px rgba(255,255,255,0.8)',
+          border: '1px solid rgba(255,255,255,0.5)',
           animation: 'fade-in 0.3s ease-out'
         }}>
           {toast}

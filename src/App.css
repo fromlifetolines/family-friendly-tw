@@ -1,5 +1,8 @@
-/* ── App Shell ── */
+/* ══════════════════════════════════════════════
+   Apple Glassmorphism — App.css
+   ══════════════════════════════════════════════ */
 
+/* ── App Shell ── */
 .app-container {
   height: 100dvh;
   width: 100%;
@@ -8,7 +11,7 @@
   flex-direction: column;
   position: relative;
   overflow: hidden;
-  background-color: var(--space-deep);
+  background-color: var(--apple-light);
 }
 
 .app-container.sheet-open {
@@ -23,6 +26,24 @@
   overflow: hidden;
 }
 
+/* ── Glass Panel Foundation ── */
+.glass-panel {
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-card);
+  box-shadow: var(--glass-shadow);
+  transition: all 0.4s var(--ease-liquid);
+  overflow: hidden;
+}
+
+.glass-panel:hover {
+  transform: translateY(-4px) scale(1.01);
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: var(--glass-hover);
+}
+
 /* ── Brand Header ── */
 .brand-header {
   position: absolute;
@@ -30,14 +51,13 @@
   left: 12px;
   right: 12px;
   z-index: 1000;
-  background: linear-gradient(135deg, #1a1f4e 0%, #0d1333 100%);
-  backdrop-filter: var(--glass-blur);
+  background: rgba(255, 255, 255, 0.72);
   -webkit-backdrop-filter: var(--glass-blur);
-  border-radius: 20px;
+  backdrop-filter: var(--glass-blur);
+  border-radius: 22px;
   padding: 14px 18px;
   box-shadow: var(--glass-shadow);
-  border-bottom: 1px solid rgba(108,99,255,0.3);
-  border: 1px solid rgba(108,99,255,0.25);
+  border: 1px solid rgba(255,255,255,0.6);
 }
 
 /* ── Bottom Sheet ── */
@@ -48,22 +68,24 @@
   width: 100%;
   max-width: 100%;
   height: 85dvh;
-  background: var(--space-navy);
+  background: rgba(255, 255, 255, 0.88);
+  -webkit-backdrop-filter: blur(40px) saturate(200%);
+  backdrop-filter: blur(40px) saturate(200%);
   border-radius: 32px 32px 0 0;
   z-index: 2000;
-  box-shadow: 0 -8px 40px rgba(108,99,255,0.2);
+  box-shadow: 0 -8px 40px rgba(0,0,0,0.08);
   display: flex;
   flex-direction: column;
   overflow: hidden;
   padding-bottom: 80px;
-  border-top: 1px solid rgba(108,99,255,0.2);
+  border-top: 1px solid rgba(255,255,255,0.8);
 }
 
 .sheet-drag-handle {
-  width: 48px;
+  width: 40px;
   height: 5px;
-  background: rgba(255,255,255,0.15);
-  border-radius: 4px;
+  background: rgba(0,0,0,0.12);
+  border-radius: 3px;
   margin: 12px auto;
   flex-shrink: 0;
 }
@@ -82,10 +104,10 @@
   aspect-ratio: 16 / 9;
   object-fit: cover;
   object-position: center;
-  background: var(--space-deep);
-  border-radius: var(--r-card);
+  background: var(--apple-light);
+  border-radius: 16px;
   margin: 0 16px 16px 16px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
   display: block;
   flex-shrink: 0;
 }
@@ -97,21 +119,21 @@
 .sheet-title {
   font-size: 22px;
   font-weight: 800;
-  color: var(--space-white);
-  margin-bottom: 6px;
+  color: var(--apple-dark);
+  margin-bottom: 4px;
   line-height: 1.2;
 }
 
 .sheet-subtitle {
   font-size: 14px;
-  color: var(--space-muted);
+  color: var(--apple-gray);
   font-weight: 600;
 }
 
-/* ── Pill Actions ── */
+/* ── Action Pills (Glass Buttons) ── */
 .pill-actions {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   padding: 8px 24px 16px 24px;
   overflow-x: auto;
   scrollbar-width: none;
@@ -123,9 +145,10 @@
 
 .action-pill {
   flex: 0 0 auto;
-  min-width: 80px;
-  background: var(--glass-bg);
-  color: var(--space-white);
+  min-width: 44px;
+  min-height: 44px;
+  background: rgba(255, 255, 255, 0.65);
+  color: var(--apple-dark);
   padding: 12px 20px;
   border-radius: var(--r-pill);
   font-weight: 700;
@@ -133,41 +156,52 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  transition: all 0.2s ease;
+  gap: 6px;
+  transition: all 0.4s var(--ease-liquid);
   white-space: nowrap;
-  border: 1px solid var(--glass-border);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.5);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06), inset 0 1px 1px rgba(255,255,255,0.8);
 }
 
-.action-pill.primary {
-  background: linear-gradient(135deg, rgba(108,99,255,0.6), rgba(0,198,255,0.4));
-  border-color: rgba(108,99,255,0.5);
-  color: var(--space-white);
-  box-shadow: 0 4px 24px rgba(108,99,255,0.3), inset 0 1px 0 rgba(255,255,255,0.15);
+.action-pill:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.1), inset 0 1px 1px rgba(255,255,255,0.9);
 }
 
 .action-pill:active {
-  transform: scale(0.96);
+  transform: scale(0.96) translateY(0);
+}
+
+.action-pill.primary {
+  background: var(--apple-blue);
+  border-color: rgba(0, 122, 255, 0.3);
+  color: white;
+  box-shadow: 0 4px 20px rgba(0,122,255,0.25), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+
+.action-pill.primary:hover {
+  background: #0A84FF;
+  box-shadow: 0 8px 32px rgba(0,122,255,0.35), inset 0 1px 0 rgba(255,255,255,0.25);
 }
 
 /* ── Section Title ── */
 .section-title {
-  font-size: 16px;
-  font-weight: 800;
-  color: var(--space-muted);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--apple-gray);
   padding: 16px 24px 8px 24px;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
 }
 
 /* ── Facility Cards (Horizontal Scroll) ── */
 .amenity-grid-3 {
   display: flex;
   flex-wrap: nowrap;
-  gap: 12px;
+  gap: 10px;
   padding: 8px 24px 32px 24px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
@@ -177,39 +211,44 @@
 .amenity-grid-3::-webkit-scrollbar { display: none; }
 
 .amenity-card {
-  background: rgba(17,25,54,0.8);
+  background: rgba(255, 255, 255, 0.6);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  backdrop-filter: blur(16px) saturate(160%);
   border-radius: 16px;
-  padding: 16px 12px;
+  padding: 16px 14px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
   text-align: center;
-  transition: all 0.3s;
+  transition: all 0.4s var(--ease-liquid);
   flex: 0 0 auto;
   min-width: 80px;
-  border: 1px solid rgba(255,255,255,0.06);
+  min-height: 44px;
+  border: 1px solid rgba(255,255,255,0.4);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.7);
 }
 
 .amenity-card.active {
-  background: rgba(108,99,255,0.15);
-  border: 1px solid rgba(108,99,255,0.35);
-  box-shadow: 0 0 20px rgba(108,99,255,0.15);
+  background: rgba(0, 122, 255, 0.08);
+  border: 1px solid rgba(0, 122, 255, 0.25);
+  box-shadow: 0 4px 16px rgba(0,122,255,0.08), inset 0 1px 0 rgba(255,255,255,0.6);
 }
 
 .amenity-card.inactive {
   opacity: 0.35;
+  background: rgba(255,255,255,0.3);
 }
 
 .amenity-card-icon {
-  font-size: 28px;
+  font-size: 26px;
 }
 
 .amenity-card-label {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
-  color: var(--space-white);
+  color: var(--apple-dark);
 }
 
 /* ── Quick Filter Bar ── */
@@ -219,43 +258,50 @@
   left: 0;
   width: 100%;
   display: flex;
-  gap: 10px;
-  padding: 0 20px;
+  gap: 8px;
+  padding: 0 16px;
   overflow-x: auto;
   z-index: 1000;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s;
+  transition: transform 0.4s var(--ease-liquid), opacity 0.3s;
   scrollbar-width: none;
 }
 
 .quick-filter-scroll::-webkit-scrollbar { display: none; }
 
 .quick-filter-btn {
-  background: rgba(10,14,39,0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(255, 255, 255, 0.72);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%);
   border-radius: var(--r-pill);
-  padding: 10px 18px;
+  padding: 10px 16px;
   font-size: 13px;
-  font-weight: 800;
-  color: var(--space-muted);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  font-weight: 700;
+  color: var(--apple-dark);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06), inset 0 1px 1px rgba(255,255,255,0.8);
   white-space: nowrap;
   flex: 0 0 auto;
+  min-height: 44px;
   scroll-snap-align: start;
-  transition: all 0.2s ease;
+  transition: all 0.4s var(--ease-liquid);
   display: flex;
   align-items: center;
-  gap: 6px;
-  border: 1px solid rgba(255,255,255,0.1);
+  gap: 4px;
+  border: 1px solid rgba(255,255,255,0.5);
+}
+
+.quick-filter-btn:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: var(--glass-hover);
 }
 
 .quick-filter-btn.active {
-  background: linear-gradient(135deg, #6C63FF, #00C6FF);
-  border-color: #6C63FF;
+  background: var(--apple-blue);
+  border-color: rgba(0,122,255,0.3);
   color: white;
-  box-shadow: 0 4px 20px rgba(108,99,255,0.4);
+  box-shadow: 0 4px 20px rgba(0,122,255,0.25);
 }
 
 /* ── GPS Button ── */
@@ -266,20 +312,28 @@
   z-index: 1000;
   width: 52px;
   height: 52px;
-  background: linear-gradient(135deg, #6C63FF, #00C6FF);
+  background: rgba(255, 255, 255, 0.78);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%);
   border-radius: 50%;
-  box-shadow: 0 4px 20px rgba(108,99,255,0.5);
+  box-shadow: var(--glass-shadow);
+  border: 1px solid rgba(255,255,255,0.5);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 22px;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  border: none;
+  transition: all 0.4s var(--ease-liquid);
+}
+
+.gps-btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: var(--glass-hover);
 }
 
 .gps-btn:active {
-  transform: scale(0.9);
-  box-shadow: 0 2px 10px rgba(108,99,255,0.4);
+  transform: scale(0.92);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
 /* ── Glassmorphism Bottom Nav ── */
@@ -289,15 +343,15 @@
   left: 12px;
   right: 12px;
   height: auto;
-  background: rgba(10,14,39,0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.72);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%);
   border-radius: 28px;
   display: flex;
   justify-content: space-around;
   align-items: center;
-  box-shadow: 0 4px 28px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06);
-  border-top: 1px solid rgba(255,255,255,0.08);
+  box-shadow: var(--glass-shadow);
+  border: 1px solid rgba(255,255,255,0.5);
   z-index: 3000;
   padding: 10px 8px;
   padding-bottom: calc(10px + env(safe-area-inset-bottom));
@@ -308,17 +362,18 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
   font-size: 11px;
-  color: var(--space-muted);
-  font-weight: 800;
-  padding: 6px 8px;
-  border-radius: 20px;
-  transition: all 0.2s;
+  color: var(--apple-gray);
+  font-weight: 700;
+  padding: 8px 8px;
+  min-height: 44px;
+  border-radius: 16px;
+  transition: all 0.35s var(--ease-liquid);
 }
 
 .nav-item.active {
-  color: var(--space-blue);
+  color: var(--apple-blue);
 }
 
 .nav-icon {
@@ -332,7 +387,7 @@
   max-width: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  background: var(--space-navy);
+  background: var(--apple-light);
   padding-bottom: 100px;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-y: contain;
@@ -351,26 +406,26 @@
 }
 
 .marker-chip {
-  background: rgba(10,14,39,0.92);
-  color: var(--space-white);
-  padding: 3px 8px;
+  background: rgba(255, 255, 255, 0.88);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  backdrop-filter: blur(12px) saturate(180%);
+  color: var(--apple-dark);
+  padding: 4px 10px;
   border-radius: 999px;
   font-size: 10px;
   font-weight: 800;
   white-space: nowrap;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.5);
-  margin-bottom: 3px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
   opacity: 0;
-  transition: opacity 0.2s;
+  transition: opacity 0.25s var(--ease-liquid);
   max-width: 120px;
   overflow: hidden;
   text-overflow: ellipsis;
   pointer-events: none;
-  font-family: 'Nunito', 'Noto Sans TC', sans-serif;
-  border: 1px solid rgba(255,255,255,0.1);
-  /* chip floats above the 44px box via absolute */
+  font-family: -apple-system, BlinkMacSystemFont, 'Nunito', 'Noto Sans TC', sans-serif;
+  border: 1px solid rgba(255,255,255,0.6);
   position: absolute;
-  bottom: 46px;
+  bottom: 48px;
   left: 50%;
   transform: translateX(-50%);
 }
@@ -383,21 +438,21 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: rgba(10,14,39,0.9);
+  background: rgba(255, 255, 255, 0.85);
   border: 2.5px solid var(--marker-color);
-  box-shadow: 0 3px 14px rgba(0,0,0,0.4);
+  box-shadow: 0 3px 16px rgba(0,0,0,0.12);
   display: flex;
   align-items: center;
   justify-content: center;
   pointer-events: all;
   cursor: pointer;
-  transition: filter 0.2s;
+  transition: all 0.35s var(--ease-liquid);
   flex-shrink: 0;
 }
 
 .marker-wrap.selected .marker-ring {
-  animation: marker-pop 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  filter: drop-shadow(0 0 8px var(--marker-color));
+  animation: marker-pop 0.4s var(--ease-liquid) forwards;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.15);
 }
 
 @keyframes marker-pop {
@@ -415,36 +470,39 @@
 
 /* ── Glass Button System ── */
 .glass-btn {
-  background: rgba(255,255,255,0.10);
-  border: 1px solid rgba(255,255,255,0.20);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-radius: 14px;
-  color: #F0F4FF;
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%);
+  border-radius: var(--r-btn);
+  color: var(--apple-dark);
   font-weight: 700;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.15);
+  transition: all 0.4s var(--ease-liquid);
+  box-shadow: var(--glass-shadow);
 }
 
 .glass-btn:hover,
 .glass-btn:focus {
-  background: rgba(255,255,255,0.18);
-  border-color: rgba(255,255,255,0.35);
-  transform: translateY(-1px);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: var(--glass-hover);
 }
 
-/* ── Tactile Feedback ── */
+/* ── Tactile Feedback (replaces old heavy border-bottom) ── */
 .tactile-btn {
-  border-bottom: 3px solid rgba(108,99,255,0.5);
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3);
-  transition: all 75ms cubic-bezier(0.4,0,0.2,1);
+  transition: all 0.4s var(--ease-liquid);
+  border: none;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.6);
+}
+
+.tactile-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.8);
 }
 
 .tactile-btn:active {
-  transform: translateY(3px);
-  border-bottom-color: transparent;
-  box-shadow: none;
+  transform: translateY(1px) scale(0.98);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 
 /* ── Medal Shimmer ── */
@@ -460,7 +518,7 @@
   left: -100%;
   width: 50%;
   height: 100%;
-  background: linear-gradient(to right, transparent, rgba(255,255,255,0.45), transparent);
+  background: linear-gradient(to right, transparent, rgba(255,255,255,0.7), transparent);
   transform: skewX(-20deg);
   animation: shimmer 4s infinite;
   pointer-events: none;
@@ -473,7 +531,7 @@
 }
 
 .medal-glow {
-  filter: drop-shadow(0 0 16px rgba(108,99,255,0.7));
+  filter: drop-shadow(0 0 12px rgba(0,122,255,0.3));
 }
 
 /* ── Search Dropdown ── */
@@ -482,17 +540,18 @@
   top: calc(100% + 8px);
   left: 0;
   width: 100%;
-  background: rgba(17,25,54,0.97);
+  background: rgba(255, 255, 255, 0.88);
+  -webkit-backdrop-filter: blur(32px) saturate(200%);
+  backdrop-filter: blur(32px) saturate(200%);
   border-radius: 20px;
-  box-shadow: var(--glass-shadow);
+  box-shadow: 0 12px 48px rgba(0,0,0,0.1);
   list-style: none;
   padding: 8px 0;
   margin: 0;
   z-index: 2000;
   max-height: 250px;
   overflow-y: auto;
-  border: 1px solid rgba(108,99,255,0.25);
-  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.6);
 }
 
 .search-item {
@@ -500,23 +559,25 @@
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  transition: background 0.2s;
+  transition: background 0.25s var(--ease-liquid);
+  min-height: 44px;
+  justify-content: center;
 }
 
 .search-item:active,
 .search-item:hover {
-  background: rgba(108,99,255,0.15);
+  background: rgba(0, 122, 255, 0.06);
 }
 
 .search-item-title {
   font-size: 15px;
-  font-weight: 800;
-  color: var(--space-white);
+  font-weight: 700;
+  color: var(--apple-dark);
 }
 
 .search-item-address {
   font-size: 12px;
   font-weight: 600;
-  color: var(--space-muted);
-  margin-top: 4px;
+  color: var(--apple-gray);
+  margin-top: 2px;
 }
