@@ -1,0 +1,574 @@
+[
+  {
+    "id": "fc-1",
+    "name": "臺北市士林親子館",
+    "branch": "台北市公立親子館",
+    "type": "play",
+    "lat": 25.091486303099682,
+    "lng": 121.52108603880978,
+    "address": "臺北市士林區基河路130號1樓",
+    "phone": "(02)28830262",
+    "openHours": "09:00–17:30 (週一及國定假日休館)",
+    "isPremium": true,
+    "rating": 4.8,
+    "reviewCount": 0,
+    "facilities": [
+      {
+        "id": "nursing_room",
+        "available": true
+      },
+      {
+        "id": "play_area",
+        "available": true
+      },
+      {
+        "id": "diaper_table",
+        "available": true
+      },
+      {
+        "id": "hot_water",
+        "available": true
+      }
+    ],
+    "lastUpdated": "2026-05-05",
+    "desc": "具備完善的室內空間，提供 0-6 歲嬰幼兒共玩及親子課程。",
+    "tags": [
+      "公立親子館",
+      "室內遊戲"
+    ],
+    "badge": {
+      "id": "badge_fc_1",
+      "icon": "🎨",
+      "name": "室內探索家",
+      "requirement": "抵達 臺北市士林親子館 半徑 100m"
+    }
+  },
+  {
+    "id": "fc-2",
+    "name": "臺北市大同親子館",
+    "branch": "台北市公立親子館",
+    "type": "play",
+    "lat": 25.066633035066552,
+    "lng": 121.51260729581357,
+    "address": "臺北市大同區涼州街２-16號",
+    "phone": "(02)25571403",
+    "openHours": "09:00–17:30 (週一及國定假日休館)",
+    "isPremium": true,
+    "rating": 4.8,
+    "reviewCount": 0,
+    "facilities": [
+      {
+        "id": "nursing_room",
+        "available": true
+      },
+      {
+        "id": "play_area",
+        "available": true
+      },
+      {
+        "id": "diaper_table",
+        "available": true
+      },
+      {
+        "id": "hot_water",
+        "available": true
+      }
+    ],
+    "lastUpdated": "2026-05-05",
+    "desc": "具備完善的室內空間，提供 0-6 歲嬰幼兒共玩及親子課程。",
+    "tags": [
+      "公立親子館",
+      "室內遊戲"
+    ],
+    "badge": {
+      "id": "badge_fc_2",
+      "icon": "🎨",
+      "name": "室內探索家",
+      "requirement": "抵達 臺北市大同親子館 半徑 100m"
+    }
+  },
+  {
+    "id": "fc-3",
+    "name": "臺北市大安親子館",
+    "branch": "台北市公立親子館",
+    "type": "play",
+    "lat": 25.030758650603996,
+    "lng": 121.54698468487646,
+    "address": "臺北市大安區延吉街246巷10號1至3樓",
+    "phone": "(02)23254399",
+    "openHours": "09:00–17:30 (週一及國定假日休館)",
+    "isPremium": true,
+    "rating": 4.8,
+    "reviewCount": 0,
+    "facilities": [
+      {
+        "id": "nursing_room",
+        "available": true
+      },
+      {
+        "id": "play_area",
+        "available": true
+      },
+      {
+        "id": "diaper_table",
+        "available": true
+      },
+      {
+        "id": "hot_water",
+        "available": true
+      }
+    ],
+    "lastUpdated": "2026-05-05",
+    "desc": "具備完善的室內空間，提供 0-6 歲嬰幼兒共玩及親子課程。",
+    "tags": [
+      "公立親子館",
+      "室內遊戲"
+    ],
+    "badge": {
+      "id": "badge_fc_3",
+      "icon": "🎨",
+      "name": "室內探索家",
+      "requirement": "抵達 臺北市大安親子館 半徑 100m"
+    }
+  },
+  {
+    "id": "fc-4",
+    "name": "臺北市中山親子館",
+    "branch": "台北市公立親子館",
+    "type": "play",
+    "lat": 25.071822371469576,
+    "lng": 121.53073190533988,
+    "address": "臺北市中山區玉門街1號",
+    "phone": "(02)25980657",
+    "openHours": "09:00–17:30 (週一及國定假日休館)",
+    "isPremium": true,
+    "rating": 4.8,
+    "reviewCount": 0,
+    "facilities": [
+      {
+        "id": "nursing_room",
+        "available": true
+      },
+      {
+        "id": "play_area",
+        "available": true
+      },
+      {
+        "id": "diaper_table",
+        "available": true
+      },
+      {
+        "id": "hot_water",
+        "available": true
+      }
+    ],
+    "lastUpdated": "2026-05-05",
+    "desc": "具備完善的室內空間，提供 0-6 歲嬰幼兒共玩及親子課程。",
+    "tags": [
+      "公立親子館",
+      "室內遊戲"
+    ],
+    "badge": {
+      "id": "badge_fc_4",
+      "icon": "🎨",
+      "name": "室內探索家",
+      "requirement": "抵達 臺北市中山親子館 半徑 100m"
+    }
+  },
+  {
+    "id": "fc-5",
+    "name": "臺北市中正親子館",
+    "branch": "台北市公立親子館",
+    "type": "play",
+    "lat": 25.02891037471595,
+    "lng": 121.52151393221861,
+    "address": "臺北市中正區仁愛路1段17號3樓",
+    "phone": "(02)23516730",
+    "openHours": "09:00–17:30 (週一及國定假日休館)",
+    "isPremium": true,
+    "rating": 4.8,
+    "reviewCount": 0,
+    "facilities": [
+      {
+        "id": "nursing_room",
+        "available": true
+      },
+      {
+        "id": "play_area",
+        "available": true
+      },
+      {
+        "id": "diaper_table",
+        "available": true
+      },
+      {
+        "id": "hot_water",
+        "available": true
+      }
+    ],
+    "lastUpdated": "2026-05-05",
+    "desc": "具備完善的室內空間，提供 0-6 歲嬰幼兒共玩及親子課程。",
+    "tags": [
+      "公立親子館",
+      "室內遊戲"
+    ],
+    "badge": {
+      "id": "badge_fc_5",
+      "icon": "🎨",
+      "name": "室內探索家",
+      "requirement": "抵達 臺北市中正親子館 半徑 100m"
+    }
+  },
+  {
+    "id": "fc-6",
+    "name": "臺北市內湖親子館",
+    "branch": "台北市公立親子館",
+    "type": "play",
+    "lat": 25.064615474234238,
+    "lng": 121.59373050877034,
+    "address": "臺北市內湖區內湖路1段659號2樓",
+    "phone": "(02)77097990",
+    "openHours": "09:00–17:30 (週一及國定假日休館)",
+    "isPremium": true,
+    "rating": 4.8,
+    "reviewCount": 0,
+    "facilities": [
+      {
+        "id": "nursing_room",
+        "available": true
+      },
+      {
+        "id": "play_area",
+        "available": true
+      },
+      {
+        "id": "diaper_table",
+        "available": true
+      },
+      {
+        "id": "hot_water",
+        "available": true
+      }
+    ],
+    "lastUpdated": "2026-05-05",
+    "desc": "具備完善的室內空間，提供 0-6 歲嬰幼兒共玩及親子課程。",
+    "tags": [
+      "公立親子館",
+      "室內遊戲"
+    ],
+    "badge": {
+      "id": "badge_fc_6",
+      "icon": "🎨",
+      "name": "室內探索家",
+      "requirement": "抵達 臺北市內湖親子館 半徑 100m"
+    }
+  },
+  {
+    "id": "fc-7",
+    "name": "臺北市文山親子館",
+    "branch": "台北市公立親子館",
+    "type": "play",
+    "lat": 24.985190468185127,
+    "lng": 121.56636531337745,
+    "address": "臺北市文山區興隆路2段88號2樓之1",
+    "phone": "(02)22365186",
+    "openHours": "09:00–17:30 (週一及國定假日休館)",
+    "isPremium": true,
+    "rating": 4.8,
+    "reviewCount": 0,
+    "facilities": [
+      {
+        "id": "nursing_room",
+        "available": true
+      },
+      {
+        "id": "play_area",
+        "available": true
+      },
+      {
+        "id": "diaper_table",
+        "available": true
+      },
+      {
+        "id": "hot_water",
+        "available": true
+      }
+    ],
+    "lastUpdated": "2026-05-05",
+    "desc": "具備完善的室內空間，提供 0-6 歲嬰幼兒共玩及親子課程。",
+    "tags": [
+      "公立親子館",
+      "室內遊戲"
+    ],
+    "badge": {
+      "id": "badge_fc_7",
+      "icon": "🎨",
+      "name": "室內探索家",
+      "requirement": "抵達 臺北市文山親子館 半徑 100m"
+    }
+  },
+  {
+    "id": "fc-8",
+    "name": "臺北市北投親子館",
+    "branch": "台北市公立親子館",
+    "type": "play",
+    "lat": 25.130855864319848,
+    "lng": 121.49857437991678,
+    "address": "臺北市北投區光明路22號1、2樓",
+    "phone": "(02)28983217",
+    "openHours": "09:00–17:30 (週一及國定假日休館)",
+    "isPremium": true,
+    "rating": 4.8,
+    "reviewCount": 0,
+    "facilities": [
+      {
+        "id": "nursing_room",
+        "available": true
+      },
+      {
+        "id": "play_area",
+        "available": true
+      },
+      {
+        "id": "diaper_table",
+        "available": true
+      },
+      {
+        "id": "hot_water",
+        "available": true
+      }
+    ],
+    "lastUpdated": "2026-05-05",
+    "desc": "具備完善的室內空間，提供 0-6 歲嬰幼兒共玩及親子課程。",
+    "tags": [
+      "公立親子館",
+      "室內遊戲"
+    ],
+    "badge": {
+      "id": "badge_fc_8",
+      "icon": "🎨",
+      "name": "室內探索家",
+      "requirement": "抵達 臺北市北投親子館 半徑 100m"
+    }
+  },
+  {
+    "id": "fc-9",
+    "name": "臺北市松山親子館",
+    "branch": "台北市公立親子館",
+    "type": "play",
+    "lat": 25.05800367456792,
+    "lng": 121.5595144743809,
+    "address": "臺北市松山區民生東路5段163-1號3樓",
+    "phone": "(02)27661266",
+    "openHours": "09:00–17:30 (週一及國定假日休館)",
+    "isPremium": true,
+    "rating": 4.8,
+    "reviewCount": 0,
+    "facilities": [
+      {
+        "id": "nursing_room",
+        "available": true
+      },
+      {
+        "id": "play_area",
+        "available": true
+      },
+      {
+        "id": "diaper_table",
+        "available": true
+      },
+      {
+        "id": "hot_water",
+        "available": true
+      }
+    ],
+    "lastUpdated": "2026-05-05",
+    "desc": "具備完善的室內空間，提供 0-6 歲嬰幼兒共玩及親子課程。",
+    "tags": [
+      "公立親子館",
+      "室內遊戲"
+    ],
+    "badge": {
+      "id": "badge_fc_9",
+      "icon": "🎨",
+      "name": "室內探索家",
+      "requirement": "抵達 臺北市松山親子館 半徑 100m"
+    }
+  },
+  {
+    "id": "fc-10",
+    "name": "臺北市信義親子館",
+    "branch": "台北市公立親子館",
+    "type": "play",
+    "lat": 25.024281763803973,
+    "lng": 121.56467375475555,
+    "address": "臺北市信義區松勤街50號",
+    "phone": "(02)27202555",
+    "openHours": "09:00–17:30 (週一及國定假日休館)",
+    "isPremium": true,
+    "rating": 4.8,
+    "reviewCount": 0,
+    "facilities": [
+      {
+        "id": "nursing_room",
+        "available": true
+      },
+      {
+        "id": "play_area",
+        "available": true
+      },
+      {
+        "id": "diaper_table",
+        "available": true
+      },
+      {
+        "id": "hot_water",
+        "available": true
+      }
+    ],
+    "lastUpdated": "2026-05-05",
+    "desc": "具備完善的室內空間，提供 0-6 歲嬰幼兒共玩及親子課程。",
+    "tags": [
+      "公立親子館",
+      "室內遊戲"
+    ],
+    "badge": {
+      "id": "badge_fc_10",
+      "icon": "🎨",
+      "name": "室內探索家",
+      "requirement": "抵達 臺北市信義親子館 半徑 100m"
+    }
+  },
+  {
+    "id": "fc-11",
+    "name": "臺北市南港親子館",
+    "branch": "台北市公立親子館",
+    "type": "play",
+    "lat": 25.051851382426573,
+    "lng": 121.60691329800316,
+    "address": "臺北市南港區南港路1段287巷2弄15號1樓",
+    "phone": "(02)26510558",
+    "openHours": "09:00–17:30 (週一及國定假日休館)",
+    "isPremium": true,
+    "rating": 4.8,
+    "reviewCount": 0,
+    "facilities": [
+      {
+        "id": "nursing_room",
+        "available": true
+      },
+      {
+        "id": "play_area",
+        "available": true
+      },
+      {
+        "id": "diaper_table",
+        "available": true
+      },
+      {
+        "id": "hot_water",
+        "available": true
+      }
+    ],
+    "lastUpdated": "2026-05-05",
+    "desc": "具備完善的室內空間，提供 0-6 歲嬰幼兒共玩及親子課程。",
+    "tags": [
+      "公立親子館",
+      "室內遊戲"
+    ],
+    "badge": {
+      "id": "badge_fc_11",
+      "icon": "🎨",
+      "name": "室內探索家",
+      "requirement": "抵達 臺北市南港親子館 半徑 100m"
+    }
+  },
+  {
+    "id": "fc-12",
+    "name": "臺北市萬華親子館",
+    "branch": "台北市公立親子館",
+    "type": "play",
+    "lat": 25.035168879676988,
+    "lng": 121.50190569458489,
+    "address": "臺北市萬華區水源路199號2樓",
+    "phone": "(02)23047468",
+    "openHours": "09:00–17:30 (週一及國定假日休館)",
+    "isPremium": true,
+    "rating": 4.8,
+    "reviewCount": 0,
+    "facilities": [
+      {
+        "id": "nursing_room",
+        "available": true
+      },
+      {
+        "id": "play_area",
+        "available": true
+      },
+      {
+        "id": "diaper_table",
+        "available": true
+      },
+      {
+        "id": "hot_water",
+        "available": true
+      }
+    ],
+    "lastUpdated": "2026-05-05",
+    "desc": "具備完善的室內空間，提供 0-6 歲嬰幼兒共玩及親子課程。",
+    "tags": [
+      "公立親子館",
+      "室內遊戲"
+    ],
+    "badge": {
+      "id": "badge_fc_12",
+      "icon": "🎨",
+      "name": "室內探索家",
+      "requirement": "抵達 臺北市萬華親子館 半徑 100m"
+    }
+  },
+  {
+    "id": "fc-13",
+    "name": "臺北市廣慈親子館",
+    "branch": "台北市公立親子館",
+    "type": "play",
+    "lat": 25.030551900131634,
+    "lng": 121.57135215361532,
+    "address": "臺北市信義區大道路116-3號1樓",
+    "phone": "(02)27599796",
+    "openHours": "09:00–17:30 (週一及國定假日休館)",
+    "isPremium": true,
+    "rating": 4.8,
+    "reviewCount": 0,
+    "facilities": [
+      {
+        "id": "nursing_room",
+        "available": true
+      },
+      {
+        "id": "play_area",
+        "available": true
+      },
+      {
+        "id": "diaper_table",
+        "available": true
+      },
+      {
+        "id": "hot_water",
+        "available": true
+      }
+    ],
+    "lastUpdated": "2026-05-05",
+    "desc": "具備完善的室內空間，提供 0-6 歲嬰幼兒共玩及親子課程。",
+    "tags": [
+      "公立親子館",
+      "室內遊戲"
+    ],
+    "badge": {
+      "id": "badge_fc_13",
+      "icon": "🎨",
+      "name": "室內探索家",
+      "requirement": "抵達 臺北市廣慈親子館 半徑 100m"
+    }
+  }
+]
