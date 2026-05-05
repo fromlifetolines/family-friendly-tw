@@ -42,7 +42,7 @@ const Header: React.FC<HeaderProps> = ({ onSearch, onCategorySelect, unlockedBad
               color: 'var(--liquid-muted)', 
               marginTop: '4px', 
               textTransform: 'uppercase', 
-              tracking: '0.1em', 
+              letterSpacing: '0.1em', 
               fontWeight: 700,
               margin: 0
             }}>

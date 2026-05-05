@@ -105,7 +105,7 @@ export default function App() {
           });
         }
       })
-      .catch(err => console.log('Notice: No dynamic data found or fetch failed. Using seed data only.'));
+      .catch(() => console.log('Notice: No dynamic data found or fetch failed. Using seed data only.'));
   }, []);
 
   
