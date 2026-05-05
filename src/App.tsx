@@ -178,6 +178,19 @@ export default function App() {
     }
   }, []);
 
+  // Data Validation Hook
+  useEffect(() => {
+    if (import.meta.env.DEV) {
+      const missingUrls = locations.filter(loc => 
+        ['hospital', 'transport'].includes(loc.type) && !loc.officialWebsiteUrl
+      );
+      if (missingUrls.length > 0) {
+        console.error('🚨 [Data Error] Missing officialWebsiteUrl:', missingUrls.map(l => l.name));
+        showToast(`開發警告：有 ${missingUrls.length} 個場域缺少官網連結！請查看 Console。`);
+      }
+    }
+  }, []);
+
   const handleGPSLocate = () => {
     if (!navigator.geolocation) {
       showToast('⚠️ 您的裝置不支援 GPS 定位');
@@ -219,7 +232,7 @@ export default function App() {
     setSelectedLocation(loc);
     if (mapInstance) {
       // Pan slightly down so the marker isn't covered by the bottom sheet
-      mapInstance.flyTo([loc.lat - 0.003, loc.lng], 15, { animate: true, duration: 0.8 });
+      mapInstance.flyTo([loc.lat - 0.003, loc.lng], 15, { animate: true, duration: 1.2 });
     }
   };
 
@@ -270,6 +283,23 @@ export default function App() {
               outline: 'none'
             }}
           />
+          {searchQuery && filteredLocations.length > 0 && (
+            <ul className="search-dropdown">
+              {filteredLocations.slice(0, 5).map(loc => (
+                <li 
+                  key={loc.id} 
+                  className="search-item"
+                  onClick={() => {
+                    setSearchQuery('');
+                    handleMarkerClick(loc);
+                  }}
+                >
+                  <span className="search-item-title">{loc.name}</span>
+                  <span className="search-item-address">{loc.address}</span>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
         {closestLoc && userLat && (
@@ -644,13 +674,24 @@ export default function App() {
                   transition: 'all 0.4s cubic-bezier(0.16,1,0.3,1)',
                   cursor: medal.unlocked ? 'default' : 'pointer'
                 }}>
-                  <div style={{ 
-                    width: '56px', height: '56px', margin: '0 auto 8px', 
-                    filter: medal.unlocked ? 'none' : 'grayscale(100%) blur(1.5px)',
-                    opacity: medal.unlocked ? 1 : 0.6 
-                  }}>
+                  <motion.div 
+                    initial={false}
+                    animate={{ 
+                      filter: medal.unlocked ? 'grayscale(0%) blur(0px)' : 'grayscale(100%) blur(12px)',
+                      opacity: medal.unlocked ? 1 : 0.6
+                    }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
+                    style={{ 
+                      width: '56px', height: '56px', margin: '0 auto 8px', position: 'relative'
+                    }}
+                  >
                     {medal.icon}
-                  </div>
+                    {!medal.unlocked && (
+                      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px', opacity: 0.8 }}>
+                        🔒
+                      </div>
+                    )}
+                  </motion.div>
                   <div style={{ fontSize: '12px', fontWeight: 900, color: medal.unlocked ? 'var(--brand-navy)' : 'var(--brand-muted)', lineHeight: 1.2 }}>{medal.title}</div>
                   <div style={{ fontSize: '10px', color: medal.unlocked ? 'var(--brand-secondary)' : '#A3A3A3', fontWeight: 600, marginTop: '4px' }}>
                     {medal.unlocked ? date : '點擊查看'}

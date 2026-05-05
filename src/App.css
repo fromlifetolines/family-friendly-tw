@@ -412,3 +412,45 @@
 .medal-glow {
   filter: drop-shadow(0 0 15px rgba(149, 193, 30, 0.6));
 }
+
+/* Search Dropdown */
+.search-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 100%;
+  background: white;
+  border-radius: 20px;
+  box-shadow: var(--shadow-float);
+  list-style: none;
+  padding: 8px 0;
+  margin: 0;
+  z-index: 2000;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.search-item {
+  padding: 12px 20px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  transition: background 0.2s;
+}
+
+.search-item:active {
+  background: rgba(0,0,0,0.05);
+}
+
+.search-item-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--brand-navy);
+}
+
+.search-item-address {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--brand-muted);
+  margin-top: 4px;
+}
