@@ -48,8 +48,11 @@ export default function App() {
   });
 
   useEffect(() => {
-    fetch('/data/map-locations.json')
-      .then(res => res.json())
+    fetch('./data/map-locations.json')
+      .then(res => {
+        if (!res.ok) throw new Error('Not found');
+        return res.json();
+      })
       .then((data: unknown) => {
         if (Array.isArray(data)) {
           setLocationsList(prev => {
@@ -59,7 +62,7 @@ export default function App() {
           });
         }
       })
-      .catch(() => console.log('Notice: No dynamic data found.'));
+      .catch(err => console.log('Data loading fallback to seed:', err));
   }, []);
 
   const checkIn = (placeId: string) => {
