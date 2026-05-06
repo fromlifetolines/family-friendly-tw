@@ -48,7 +48,7 @@ export default function App() {
   });
 
   useEffect(() => {
-    fetch('./data/map-locations.json')
+    fetch('/family-friendly-tw/data/map-locations.json')
       .then(res => {
         if (!res.ok) throw new Error('Not found');
         return res.json();
