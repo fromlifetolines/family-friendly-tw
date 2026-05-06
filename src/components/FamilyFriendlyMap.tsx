@@ -137,14 +137,14 @@ const FamilyFriendlyMap: React.FC<FamilyFriendlyMapProps> = ({ searchQuery = '',
   };
 
   return (
-    <div style={{ width: '100%', height: '100%', position: 'relative', zIndex: 0 }}>
+    <div style={{ width: '100%', height: '100%', position: 'relative', zIndex: 0, background: '#f8f9fa' }}>
       <MapContainer 
-        center={[25.070685, 121.365312]} 
-        zoom={14} 
+        center={[25.033, 121.565]} 
+        zoom={13} 
         style={{ width: '100%', height: '100%' }}
         zoomControl={false}
       >
-        <TileLayer url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png" />
+        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
         {places
           .filter(p => searchQuery === '' || p.name.toLowerCase().includes(searchQuery.toLowerCase()) || p.address.toLowerCase().includes(searchQuery.toLowerCase()))
