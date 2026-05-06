@@ -81,7 +81,7 @@ const FamilyFriendlyMap: React.FC<FamilyFriendlyMapProps> = ({ searchQuery = '',
   // 1. 載入動態 JSON 圖資
   useEffect(() => {
     // 讀取爬蟲自動化產出的精準圖資
-    fetch('/data/map-locations.json')
+    fetch('/family-friendly-tw/data/map-locations.json')
       .then(res => res.json())
       .then((data: Location[]) => setPlaces(data))
       .catch(() => {});
