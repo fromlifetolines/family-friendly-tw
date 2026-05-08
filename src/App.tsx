@@ -20,16 +20,6 @@ function getDistance(lat1: number, lng1: number, lat2: number, lng2: number): nu
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
 }
 
-function openExternal(url: string) {
-  const a = document.createElement('a');
-  a.href = url;
-  a.target = '_blank';
-  a.rel = 'noopener noreferrer';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-}
-
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('map');
   const [searchQuery, setSearchQuery] = useState('');
@@ -107,155 +97,108 @@ export default function App() {
     }
   }, [updateUserLocation]);
 
-  const renderMapScreen = () => (
-    <main className="relative w-full h-screen overflow-hidden">
+  return (
+    <div className="app-container">
       <Header 
         onSearch={setSearchQuery}
         unlockedBadges={unlockedBadges}
       />
       
-      <div className="w-full h-full pt-[140px]">
-         <FamilyFriendlyMap 
-           searchQuery={searchQuery}
-           onMarkerClick={(loc) => setSelectedLocation(loc)}
-         />
-      </div>
-
-      <AnimatePresence>
-        {selectedLocation && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.4 }}
-              exit={{ opacity: 0 }}
-              className="bottom-sheet-overlay"
-              style={{
-                position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-                background: 'rgba(0,0,0,0.5)', zIndex: 1500,
-                backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)'
-              }}
-              onClick={() => setSelectedLocation(null)}
-            />
-            <motion.div
-              className="bottom-sheet"
-              initial={{ y: '100%' }}
-              animate={{ y: 0 }}
-              exit={{ y: '100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              drag="y"
-              dragConstraints={{ top: 0, bottom: 0 }}
-              onDragEnd={(_, info) => {
-                if (info.offset.y > 100) setSelectedLocation(null);
-              }}
-            >
-              <div className="sheet-drag-handle" />
-              
-              <div className="sheet-content">
-                {selectedLocation.photos && selectedLocation.photos.length > 0 ? (
-                  <img src={selectedLocation.photos[0]} className="sheet-photo" alt={selectedLocation.name} />
-                ) : (
-                  <div className="sheet-photo-placeholder">
-                    <span style={{ fontSize: '13px', fontWeight: 700, color: '#86868B' }}>親子友善地圖</span>
-                  </div>
-                )}
-                
-                <div className="sheet-header">
-                  <div className="sheet-title">{selectedLocation.name}</div>
-                  <div className="sheet-subtitle">{selectedLocation.branch} • {selectedLocation.openHours}</div>
-                </div>
-
-                <div className="sheet-body">
-                  <div className="sheet-facilities">
-                    {selectedLocation.facilities.map(f => (
-                      <div key={f.id} className={`facility-chip ${f.available ? 'available' : 'unavailable'}`}>
-                        {FACILITY_LABELS[f.id as FacilityType]}
+      {currentScreen === 'map' ? (
+        <div className="map-page">
+          <FamilyFriendlyMap 
+            locations={locationsList}
+            searchQuery={searchQuery}
+            onMarkerClick={(loc) => setSelectedLocation(loc)}
+          />
+          
+          <AnimatePresence>
+            {selectedLocation && (
+              <>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="bottom-sheet-overlay"
+                  onClick={() => setSelectedLocation(null)}
+                />
+                <motion.div
+                  className="bottom-sheet"
+                  initial={{ y: '100%' }}
+                  animate={{ y: 0 }}
+                  exit={{ y: '100%' }}
+                  transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                >
+                  <div className="sheet-drag-handle" />
+                  <div className="sheet-content">
+                    <div className="sheet-header">
+                      <div className="sheet-title">{selectedLocation.name}</div>
+                      <div className="sheet-subtitle">{selectedLocation.branch} • {selectedLocation.openHours}</div>
+                    </div>
+                    <div className="p-6 pt-0">
+                      <div className="flex flex-wrap gap-2 mb-6">
+                        {selectedLocation.facilities.map(f => (
+                          <div key={f.id} className="badge-btn unlocked" style={{ fontSize: '12px', padding: '6px 12px' }}>
+                            {FACILITY_LABELS[f.id as FacilityType]}
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-
-                  <div className="sheet-info-item">
-                    <span className="info-icon">📍</span>
-                    <div className="info-text">
-                      <div className="info-label">{selectedLocation.address}</div>
-                      <div className="info-sublabel">{selectedLocation.floorInfo}</div>
+                      <button 
+                        className="badge-btn unlocked w-full"
+                        onClick={() => checkIn(selectedLocation.id)}
+                      >
+                        📍 到達此地打卡解鎖
+                      </button>
                     </div>
                   </div>
-
-                  <div className="action-row">
-                    <button 
-                      className="primary-action-btn tactile-btn"
-                      onClick={() => {
-                        const url = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(selectedLocation.lat + ',' + selectedLocation.lng)}&travelmode=walking`;
-                        openExternal(url);
-                      }}
-                    >
-                      開始導航
-                    </button>
-                    <button 
-                      className="secondary-action-btn tactile-btn"
-                      onClick={() => checkIn(selectedLocation.id)}
-                    >
-                      打卡解鎖
-                    </button>
+                </motion.div>
+              </>
+            )}
+          </AnimatePresence>
+        </div>
+      ) : (
+        <div className="task-page">
+          <h2 className="text-2xl font-black mb-6 text-white">成就任務</h2>
+          <div className="grid grid-cols-2 gap-4">
+            {locationsList.filter(l => l.badge).map(loc => {
+              const unlocked = unlockedBadges.includes(loc.badge!.id);
+              return (
+                <div key={loc.id} className={`medal-card ${unlocked ? 'unlocked' : 'locked'}`}>
+                  <div style={{ fontSize: '40px', marginBottom: '12px' }}>{loc.badge!.icon}</div>
+                  <div className="text-sm font-bold text-white text-center">{loc.badge!.name}</div>
+                  <div className={`text-[10px] mt-2 px-3 py-1 rounded-full ${unlocked ? 'bg-green-500/20 text-green-400' : 'bg-white/10 text-white/40'}`}>
+                    {unlocked ? '已解鎖' : '未達成'}
                   </div>
                 </div>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
-      <div className="nav-bar">
+      <nav className="bottom-nav">
         <button className={`nav-item ${currentScreen === 'map' ? 'active' : ''}`} onClick={() => setCurrentScreen('map')}>
           <span className="nav-icon">🗺️</span>
-          <span className="nav-label">地圖探索</span>
+          <span className="nav-label">探索地圖</span>
         </button>
         <button className={`nav-item ${currentScreen === 'contribute' ? 'active' : ''}`} onClick={() => setCurrentScreen('contribute')}>
           <span className="nav-icon">🏆</span>
-          <span className="nav-label">成就任務</span>
+          <span className="nav-label">成就獎勵</span>
         </button>
-      </div>
+      </nav>
 
       <AnimatePresence>
         {toast && (
-          <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 50 }} className="toast-notification" style={{ zIndex: 10000 }}>
+          <motion.div 
+            initial={{ opacity: 0, y: 50 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            exit={{ opacity: 0, y: 50 }} 
+            className="toast-notification"
+          >
             {toast}
           </motion.div>
         )}
       </AnimatePresence>
-    </main>
-  );
-
-  const renderContributeScreen = () => (
-    <div className="contribute-page pt-[140px]">
-      <Header onSearch={setSearchQuery} unlockedBadges={unlockedBadges} />
-      <div className="p-6">
-        <h2 className="text-2xl font-black mb-4">成就勳章</h2>
-        <div className="grid grid-cols-2 gap-4">
-          {locationsList.filter(l => l.badge).map(loc => {
-            const unlocked = unlockedBadges.includes(loc.badge!.id);
-            return (
-              <div key={loc.id} className={`badge-card ${unlocked ? 'unlocked' : 'locked'}`}>
-                <div className="badge-icon">{loc.badge!.icon}</div>
-                <div className="badge-name">{loc.badge!.name}</div>
-                <div className="badge-status">{unlocked ? '已收藏' : '未解鎖'}</div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-      <div className="nav-bar">
-        <button className={`nav-item ${currentScreen === 'map' ? 'active' : ''}`} onClick={() => setCurrentScreen('map')}>
-          <span className="nav-icon">🗺️</span>
-          <span className="nav-label">地圖探索</span>
-        </button>
-        <button className={`nav-item ${currentScreen === 'contribute' ? 'active' : ''}`} onClick={() => setCurrentScreen('contribute')}>
-          <span className="nav-icon">🏆</span>
-          <span className="nav-label">成就任務</span>
-        </button>
-      </div>
     </div>
   );
-
-  return currentScreen === 'map' ? renderMapScreen() : renderContributeScreen();
 }

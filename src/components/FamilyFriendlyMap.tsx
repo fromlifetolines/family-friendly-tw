@@ -64,12 +64,13 @@ const DefaultIcon = L.icon({
 L.Marker.prototype.options.icon = DefaultIcon;
 
 interface FamilyFriendlyMapProps {
+  locations?: Location[];
   searchQuery?: string;
   onMarkerClick?: (loc: Location) => void;
 }
 
-const FamilyFriendlyMap: React.FC<FamilyFriendlyMapProps> = ({ searchQuery = '', onMarkerClick }) => {
-  const [places, setPlaces] = useState<Location[]>([]);
+const FamilyFriendlyMap: React.FC<FamilyFriendlyMapProps> = ({ locations = [], searchQuery = '', onMarkerClick }) => {
+  const [places, setPlaces] = useState<Location[]>(locations);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [unlockedBadges, setUnlockedBadges] = useState<string[]>(() => {
     try {
@@ -78,12 +79,25 @@ const FamilyFriendlyMap: React.FC<FamilyFriendlyMapProps> = ({ searchQuery = '',
     } catch { return []; }
   });
 
+  // 同步外部傳入的 locations
+  useEffect(() => {
+    if (locations && locations.length > 0) {
+      setPlaces(locations);
+    }
+  }, [locations]);
+
   // 1. 載入動態 JSON 圖資
   useEffect(() => {
     // 讀取爬蟲自動化產出的精準圖資
     fetch('/family-friendly-tw/data/map-locations.json')
       .then(res => res.json())
-      .then((data: Location[]) => setPlaces(data))
+      .then((data: Location[]) => {
+        setPlaces(prev => {
+          const existingIds = new Set(prev.map(p => p.id));
+          const uniqueNew = data.filter(p => !existingIds.has(p.id));
+          return [...prev, ...uniqueNew];
+        });
+      })
       .catch(() => {});
   }, []);
 
