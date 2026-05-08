@@ -1,6 +1,13 @@
 /* ── Liquid Tech Glass Design System ── */
 :root {
-  /* Liquid Tech palette — Deep Oceanic + Neon accents */
+  /* NEW: Baby Room溫暖親子配色 */
+  --brand-warm-pink:    #F5A5A5;  /* 主色 - 親子溫暖感 */
+  --brand-soft-orange:  #FFD5A3;  /* 輔色 - 活力 */
+  --brand-sky-blue:     #B4D9FF;  /* 強調 - 信任 */
+  --brand-light-green:  #C8E6C9;  /* 成功/確認 */
+  --brand-dark-text:    #2C3E50;  /* 文字 */
+  
+  /* Legacy Colors (保留相容性) */
   --liquid-deep:     #050814;
   --liquid-surface:  #0A1126;
   --liquid-card:     rgba(15, 25, 55, 0.45);
@@ -12,6 +19,16 @@
   --liquid-amber:    #FFD600;
   --liquid-coral:    #FF2D55;
   --liquid-purple:   #BF5AF2;
+
+  /* Updated Primary Colors to Baby Room Theme */
+  --primary-color:   var(--brand-warm-pink);
+  --secondary-color: var(--brand-soft-orange);
+  --accent-color:    var(--brand-sky-blue);
+  --success-color:   var(--brand-light-green);
+  --background:      #FFFFFF;
+  --text-primary:    var(--brand-dark-text);
+  --text-secondary:  rgba(44, 62, 80, 0.6);
+  --border-color:    #E8ECEF;
 
   /* Liquid Glass tokens - Higher transparency & Stronger blur */
   --glass-bg:        rgba(10, 17, 38, 0.45);
