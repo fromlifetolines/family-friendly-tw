@@ -20,8 +20,11 @@
   flex: 1;
   position: relative;
   width: 100%;
-  height: 100dvh;
-  overflow: hidden;
+  height: auto;
+  min-height: 100vh;
+  overflow: auto;
+  padding-top: 80px;
+  padding-bottom: 80px;
 }
 
 /* ── Glass Panel Foundation (Liquid Tech) ── */
@@ -54,7 +57,7 @@
 
 /* ── Brand Header ── */
 .brand-header {
-  position: absolute;
+  position: fixed;
   top: 16px;
   left: 16px;
   right: 16px;
@@ -69,16 +72,18 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  max-width: calc(100% - 32px);
 }
 
 /* ── Bottom Sheet (Liquid Dark) ── */
 .bottom-sheet {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
   max-width: 100%;
-  height: 85dvh;
+  height: auto;
+  max-height: 85dvh;
   background: rgba(5, 8, 20, 0.85);
   -webkit-backdrop-filter: blur(50px) saturate(220%);
   backdrop-filter: blur(50px) saturate(220%);
@@ -214,16 +219,17 @@
 
 /* ── Quick Filter Bar (FIXED OVERLAP) ── */
 .quick-filter-scroll {
-  position: absolute;
-  bottom: 110px; /* Lifted up to clear nav */
+  position: fixed;
+  bottom: 80px; /* Adjusted for new nav */
   left: 0;
   width: 100%;
   display: flex;
   gap: 10px;
-  padding: 0 16px;
+  padding: 8px 16px;
   overflow-x: auto;
   z-index: 1000;
   transition: transform 0.5s var(--ease-liquid), opacity 0.3s;
+  background: linear-gradient(to top, rgba(10,17,38,0.8), rgba(10,17,38,0.3));
 }
 
 .quick-filter-btn {
@@ -252,9 +258,9 @@
 
 /* ── GPS Button ── */
 .gps-btn {
-  position: absolute;
+  position: fixed;
   right: 16px;
-  bottom: 176px; /* Lifted up to clear filter bar */
+  bottom: 150px; /* Adjusted for new nav */
   z-index: 1000;
   width: 56px;
   height: 56px;
@@ -278,22 +284,22 @@
 
 /* ── Bottom Navigation (Liquid Tech) ── */
 .bottom-nav {
-  position: absolute;
-  bottom: 16px;
-  left: 16px;
-  right: 16px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
   background: rgba(10, 17, 38, 0.45); /* User requested transparency */
   -webkit-backdrop-filter: blur(30px) saturate(200%);
   backdrop-filter: blur(30px) saturate(200%);
-  border-radius: 32px;
+  border-radius: 0;
   display: flex;
   justify-content: space-around;
   align-items: center;
-  box-shadow: 0 12px 48px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.1);
-  border: 1px solid rgba(255,255,255,0.15); /* User requested border */
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.1);
+  border-top: 1px solid rgba(255,255,255,0.12); /* Top border instead */
   z-index: 3000;
-  padding: 12px 8px;
-  padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
 }
 
 .nav-item {
@@ -453,5 +459,245 @@
 
 .badge-btn:active {
   transform: scale(0.96);
+}
+
+/* ══════════════════════════════════════════════
+   MOBILE RESPONSIVE DESIGN
+   ══════════════════════════════════════════════ */
+
+/* Small phones (< 576px) */
+@media (max-width: 575px) {
+  .app-container {
+    height: 100vh;
+    height: 100dvh;
+    overflow: auto;
+  }
+
+  /* ── Header/Brand Adjustments ── */
+  .brand-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1001;
+    width: 100%;
+    border-radius: 0;
+    margin: 0;
+    padding: 12px 16px;
+    max-width: 100%;
+  }
+
+  /* ── Map Page Layout ── */
+  .map-page {
+    height: auto;
+    min-height: 100vh;
+    padding-top: 80px;
+    padding-bottom: 110px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  /* ── Bottom Sheet Mobile Optimized ── */
+  .bottom-sheet {
+    position: fixed;
+    bottom: 90px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: auto;
+    max-height: 70vh;
+    border-radius: 24px 24px 0 0;
+    z-index: 2000;
+    padding: 0 0 16px 0;
+    overflow-y: auto;
+  }
+
+  .sheet-content {
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+
+  .sheet-photo {
+    width: 100%;
+    margin: 0;
+    border-radius: 0;
+    aspect-ratio: 16 / 9;
+  }
+
+  .sheet-header {
+    padding: 16px 16px 12px 16px;
+  }
+
+  .sheet-title {
+    font-size: 18px;
+  }
+
+  .sheet-subtitle {
+    font-size: 12px;
+  }
+
+  /* ── Quick Filter Mobile Adjustments ── */
+  .quick-filter-scroll {
+    position: fixed;
+    bottom: 72px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 999;
+    padding: 8px 12px;
+    background: linear-gradient(to top, rgba(10,17,38,0.9), rgba(10,17,38,0.5));
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+
+  /* ── GPS Button Mobile ── */
+  .gps-btn {
+    position: fixed;
+    right: 12px;
+    bottom: 145px;
+    z-index: 998;
+    width: 48px;
+    height: 48px;
+    font-size: 20px;
+  }
+
+  /* ── Bottom Navigation Mobile ── */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    border-radius: 0;
+    z-index: 3000;
+    padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
+    margin: 0;
+    display: flex;
+    justify-content: space-around;
+    gap: 0;
+    background: rgba(10, 17, 38, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .nav-item {
+    flex: 1;
+    min-height: 56px;
+    padding: 8px 4px;
+    font-size: 11px;
+    gap: 2px;
+  }
+
+  .nav-icon {
+    font-size: 18px;
+  }
+
+  .nav-label {
+    font-size: 10px;
+    white-space: nowrap;
+  }
+
+  /* ── Task Page Mobile ── */
+  .task-page {
+    padding: 80px 16px 120px 16px;
+  }
+
+  .medal-card {
+    padding: 16px;
+  }
+
+  /* ── Modal Mobile ── */
+  .modal-content {
+    max-width: 95%;
+    border-radius: 20px;
+    padding: 16px;
+  }
+
+  .modal-close {
+    width: 36px;
+    height: 36px;
+    top: 12px;
+    right: 12px;
+    font-size: 1.2rem;
+  }
+
+  /* ── Action Pills Mobile ── */
+  .pill-actions {
+    padding: 8px 16px 16px 16px;
+  }
+
+  .action-pill {
+    font-size: 14px;
+    padding: 10px 16px;
+    min-height: 44px;
+  }
+
+  /* ── Scrollable Content Fix ── */
+  .sheet-content {
+    -webkit-overflow-scrolling: touch;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+  }
+}
+
+/* Medium phones (576px - 768px) */
+@media (max-width: 768px) {
+  .brand-header {
+    left: 8px;
+    right: 8px;
+    top: 8px;
+    width: auto;
+  }
+
+  .map-page {
+    padding-top: 70px;
+    padding-bottom: 100px;
+  }
+
+  .bottom-nav {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 8px;
+    padding-bottom: calc(8px + env(safe-area-inset-bottom));
+  }
+
+  .nav-item {
+    min-height: 48px;
+    font-size: 12px;
+  }
+
+  .nav-icon {
+    font-size: 20px;
+  }
+
+  .quick-filter-scroll {
+    bottom: 70px;
+  }
+
+  .gps-btn {
+    bottom: 140px;
+    right: 16px;
+  }
+}
+
+/* Landscape mode */
+@media (max-height: 500px) {
+  .brand-header {
+    padding: 8px 16px;
+  }
+
+  .bottom-sheet {
+    max-height: 80vh;
+  }
+
+  .map-page {
+    padding-top: 60px;
+    padding-bottom: 80px;
+  }
+
+  .bottom-nav {
+    padding: 4px;
+  }
 }
 

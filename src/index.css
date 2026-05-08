@@ -61,8 +61,8 @@ body {
 }
 
 #root {
-  max-width: 390px;
   width: 100%;
+  max-width: 100%;
   margin: 0 auto;
   min-height: 100vh;
   background-color: var(--liquid-deep);
@@ -94,3 +94,41 @@ input, textarea {
 
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ── Responsive Container Utilities ── */
+.container {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 12px;
+  }
+}
+
+@media (max-width: 575px) {
+  .container {
+    padding: 0 8px;
+  }
+}
+
+/* ── Touch-friendly tap targets ── */
+button, a, [role="button"] {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+@media (max-width: 575px) {
+  button, a, [role="button"] {
+    min-height: 48px;
+    min-width: 48px;
+  }
+}
+
+/* ── Prevent layout shift on scrollbar ── */
+html {
+  overflow-y: scroll;
+}

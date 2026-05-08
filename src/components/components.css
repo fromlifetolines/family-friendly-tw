@@ -284,3 +284,217 @@
     background: rgba(255, 255, 255, 0.2);
     transform: rotate(90deg) scale(1.1);
 }
+
+/* ══════════════════════════════════════════════
+   MOBILE RESPONSIVE DESIGN
+   ══════════════════════════════════════════════ */
+
+/* Mobile First Approach */
+@media (max-width: 768px) {
+    /* Header Mobile */
+    .header {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        padding: 0.8rem 0;
+    }
+
+    .header-content {
+        padding: 0 1rem;
+        flex-wrap: wrap;
+    }
+
+    .logo {
+        font-size: 1.2rem;
+    }
+
+    .nav-links {
+        gap: 1rem;
+        flex-wrap: wrap;
+        width: 100%;
+    }
+
+    .nav-link {
+        font-size: 0.9rem;
+        padding: 0.4rem 0.8rem;
+    }
+
+    /* Hero Section Mobile */
+    .hero {
+        padding: 60px 16px;
+        margin-bottom: 40px;
+    }
+
+    .hero-title {
+        font-size: 2rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+
+    /* Location Grid Mobile */
+    .location-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.5rem;
+        padding: 0 1rem 6rem 1rem;
+    }
+
+    .location-card {
+        border-radius: 16px;
+    }
+
+    .card-image {
+        height: 180px;
+    }
+
+    .card-content {
+        padding: 16px;
+    }
+
+    .card-title {
+        font-size: 1.1rem;
+    }
+
+    .amenity-tags {
+        gap: 6px;
+    }
+
+    /* Modal Mobile Responsive */
+    .modal-overlay {
+        padding: 16px;
+    }
+
+    .modal-content {
+        max-width: 95vw;
+        border-radius: 24px;
+        max-height: 85vh;
+    }
+
+    .modal-close {
+        width: 40px;
+        height: 40px;
+        top: 1rem;
+        right: 1rem;
+    }
+
+    /* Footer Mobile */
+    .footer {
+        padding: 2rem 1rem;
+    }
+
+    .footer-content {
+        font-size: 0.9rem;
+    }
+}
+
+/* Small phones (< 576px) */
+@media (max-width: 575px) {
+    .header {
+        padding: 0.6rem 0;
+    }
+
+    .header-content {
+        padding: 0 0.8rem;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .logo {
+        font-size: 1rem;
+        width: 100%;
+    }
+
+    .nav-links {
+        gap: 0.8rem;
+        width: 100%;
+        justify-content: space-around;
+    }
+
+    .nav-link {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.6rem;
+    }
+
+    /* Hero Mobile */
+    .hero {
+        padding: 40px 12px;
+        margin-bottom: 30px;
+    }
+
+    .hero-title {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+    }
+
+    .hero-subtitle {
+        font-size: 0.9rem;
+    }
+
+    /* Location Grid - Single Column */
+    .location-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 0 12px 6rem 12px;
+    }
+
+    .location-card {
+        border-radius: 12px;
+    }
+
+    .card-image {
+        height: 160px;
+    }
+
+    .card-content {
+        padding: 12px;
+    }
+
+    .card-title {
+        font-size: 1rem;
+    }
+
+    .card-address {
+        font-size: 0.85rem;
+    }
+
+    .card-category {
+        font-size: 0.7rem;
+    }
+
+    .amenity-tag {
+        font-size: 0.75rem;
+        padding: 4px 8px;
+    }
+
+    /* Modal Mobile */
+    .modal-overlay {
+        padding: 12px;
+    }
+
+    .modal-content {
+        max-width: 98vw;
+        border-radius: 20px;
+        padding: 12px;
+        max-height: 90vh;
+    }
+
+    .modal-close {
+        width: 36px;
+        height: 36px;
+        top: 8px;
+        right: 8px;
+        font-size: 1.2rem;
+    }
+
+    /* Footer Mobile */
+    .footer {
+        padding: 1.5rem 1rem;
+        margin-top: auto;
+    }
+
+    .footer-content {
+        font-size: 0.85rem;
+    }
+}
+}
