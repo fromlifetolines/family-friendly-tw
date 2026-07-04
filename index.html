@@ -1,21 +1,764 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/family-friendly-tw/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0, viewport-fit=cover" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <title>35daily 全台親子探索地圖</title>
-    <script type="module" crossorigin src="/family-friendly-tw/assets/index-CkKJn0S4.js"></script>
-    <link rel="stylesheet" crossorigin href="/family-friendly-tw/assets/index-_I30bZZk.css">
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="description" content="親子友善地圖 — 全台最完整的哺乳室、嬰兒車租借、親子設施即時情報">
+<meta name="theme-color" content="#FF8B6B">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>親子友善地圖</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+/* ══ RESET ══ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{height:100%;-webkit-text-size-adjust:100%}
+body{height:100%;font-family:'Nunito','Noto Sans TC',sans-serif;-webkit-font-smoothing:antialiased;overflow:hidden;background:#FFFAF6}
+button,input{font-family:inherit}
+
+/* ══ TOKENS ══ */
+:root{
+  /* Brand */
+  --peach:#FF8B6B;  --peach-l:#FFF0EB;  --peach-d:#D95A38;
+  --mint:#4ECBA0;   --mint-l:#E8F8F2;
+  --sky:#5BB8F5;    --sky-l:#E8F5FF;
+  --sun:#FFD166;    --sun-l:#FFF9E6;
+  --lav:#9C8FE0;    --lav-l:#F0EDFF;
+  --coral:#FF6B6B;
+  /* Neutrals */
+  --cream:#FFFAF6;
+  --navy:#2D3561;
+  --muted:#9099B7;
+  --border:rgba(45,53,97,0.09);
+  --shadow:0 4px 20px rgba(45,53,97,0.10);
+  /* Layout */
+  --banner-h:56px;
+  --tab-h:62px;
+  --r-lg:20px;
+  --r-md:14px;
+  --r-pill:999px;
+}
+
+/* ══ APP SHELL ══ */
+#app{
+  display:flex;flex-direction:column;
+  height:100dvh;height:100vh;
+  max-width:480px;margin:0 auto;
+  overflow:hidden;position:relative;
+  background:var(--cream);
+}
+
+/* ══ BANNER ══ */
+#banner{
+  flex-shrink:0;height:var(--banner-h);
+  background:linear-gradient(130deg,#FF8B6B 0%,#FFB347 100%);
+  display:flex;align-items:center;padding:0 16px;gap:10px;
+  position:relative;overflow:hidden;z-index:300;
+  box-shadow:0 2px 12px rgba(255,139,107,0.3);
+}
+#banner::before,#banner::after{content:'';position:absolute;border-radius:50%;pointer-events:none}
+#banner::before{width:140px;height:140px;background:rgba(255,255,255,0.1);right:-30px;top:-50px}
+#banner::after{width:80px;height:80px;background:rgba(255,255,255,0.07);right:60px;bottom:-40px}
+.bn-emoji{font-size:26px;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.15));position:relative;z-index:1;flex-shrink:0}
+.bn-txt{flex:1;position:relative;z-index:1;min-width:0}
+.bn-txt h1{font-size:15px;font-weight:900;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bn-txt p{font-size:10px;color:rgba(255,255,255,0.85);font-weight:700;margin-top:1px}
+.bn-badge{position:relative;z-index:1;flex-shrink:0;padding:4px 10px;border-radius:var(--r-pill);background:rgba(255,255,255,0.22);border:1.5px solid rgba(255,255,255,0.38);font-size:10px;font-weight:800;color:#fff}
+
+/* ══ SCREENS ══ */
+.screen{display:none;flex:1;flex-direction:column;overflow:hidden;min-height:0}
+.screen.active{display:flex}
+
+/* ══ TAB BAR ══ */
+#tab-bar{
+  flex-shrink:0;height:var(--tab-h);display:flex;
+  background:#fff;border-top:1.5px solid var(--border);
+  position:relative;z-index:300;
+  box-shadow:0 -2px 12px rgba(45,53,97,0.06);
+}
+.tab-btn{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:3px;
+  font-size:10px;font-weight:800;color:var(--muted);
+  background:none;border:none;cursor:pointer;
+  border-top:3px solid transparent;transition:all .18s;
+  padding-top:2px;
+}
+.tab-btn .ti{font-size:20px;transition:transform .18s;display:block}
+.tab-btn.active{color:var(--peach);border-top-color:var(--peach)}
+.tab-btn.active .ti{transform:scale(1.18) translateY(-1px)}
+.tab-btn:hover:not(.active){color:var(--navy)}
+
+/* ════════════════════════════════
+   SCREEN 1 — MAP
+════════════════════════════════ */
+#map-screen{position:relative}
+#map{flex:1;min-height:0;z-index:1}
+.leaflet-tile-pane{filter:saturate(0.75) brightness(1.03)}
+.leaflet-control-zoom a{background:#fff!important;color:var(--navy)!important;border-color:var(--border)!important;font-weight:800!important}
+
+/* floating search */
+#search-bar{
+  position:absolute;top:12px;left:12px;right:12px;z-index:500;
+  height:46px;border-radius:var(--r-pill);
+  background:rgba(255,255,255,0.97);
+  border:1.5px solid rgba(255,139,107,0.18);
+  display:flex;align-items:center;padding:0 6px 0 14px;gap:8px;
+  box-shadow:0 4px 18px rgba(45,53,97,0.13);
+}
+#search-bar .s-ico{font-size:15px;color:var(--muted);flex-shrink:0}
+#search-bar input{flex:1;border:none;outline:none;font-size:13px;font-weight:700;color:var(--navy);background:none;min-width:0}
+#search-bar input::placeholder{color:var(--muted);font-weight:600}
+#gps-btn{
+  width:36px;height:36px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--peach),#FFB347);
+  display:flex;align-items:center;justify-content:center;font-size:14px;
+  box-shadow:0 2px 8px rgba(255,139,107,0.4);transition:transform .15s;
+}
+#gps-btn:hover{transform:scale(1.1)}
+
+/* locate button */
+#locate-btn{
+  position:absolute;right:14px;z-index:500;
+  width:48px;height:48px;border-radius:50%;
+  background:#fff;border:1.5px solid var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+  box-shadow:0 4px 14px rgba(45,53,97,0.14);transition:all .2s;
+}
+#locate-btn{bottom:100px}
+#locate-btn:hover{background:var(--peach-l);border-color:var(--peach);transform:scale(1.06)}
+
+/* nearest toast */
+#nearest-toast{
+  position:absolute;left:12px;right:72px;z-index:500;
+  background:#fff;border:1.5px solid rgba(78,203,160,0.35);border-radius:14px;
+  padding:10px 14px;font-size:12px;font-weight:800;color:var(--mint);
+  display:none;box-shadow:0 4px 14px rgba(45,53,97,0.1);
+  animation:slideUp .25s ease;
+}
+#nearest-toast{bottom:96px}
+@keyframes slideUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* filter bar */
+#filter-bar{
+  position:absolute;bottom:0;left:0;right:0;z-index:400;
+  padding:10px 12px 12px;
+  background:linear-gradient(to top,#FFFAF6 55%,rgba(255,250,246,0) 100%);
+}
+#filter-scroll{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+#filter-scroll::-webkit-scrollbar{display:none}
+.f-chip{
+  flex-shrink:0;display:flex;align-items:center;gap:5px;
+  padding:8px 14px;border-radius:var(--r-pill);
+  font-size:11px;font-weight:800;
+  background:#fff;border:1.5px solid var(--border);color:var(--muted);
+  cursor:pointer;transition:all .15s;white-space:nowrap;
+  box-shadow:0 2px 8px rgba(45,53,97,0.06);
+}
+.f-chip.active{
+  background:linear-gradient(135deg,var(--peach),#FFB347);
+  border-color:transparent;color:#fff;
+  box-shadow:0 3px 12px rgba(255,139,107,0.38);
+}
+.f-chip:hover:not(.active){border-color:rgba(255,139,107,0.4);color:var(--peach)}
+
+/* ════════════════════════════════
+   SCREEN 2 — LIST
+════════════════════════════════ */
+#list-screen{background:var(--cream)}
+#list-header{
+  padding:14px 16px 10px;background:var(--cream);
+  border-bottom:1.5px solid var(--border);flex-shrink:0;
+}
+#list-header h2{font-size:16px;font-weight:900;color:var(--navy);margin-bottom:10px}
+.list-search-box{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 14px;border-radius:var(--r-pill);
+  background:#fff;border:1.5px solid var(--border);
+}
+.list-search-box input{flex:1;background:none;border:none;outline:none;font-size:13px;font-weight:700;color:var(--navy)}
+.list-search-box input::placeholder{color:var(--muted);font-weight:600}
+#list-body{flex:1;overflow-y:auto;padding:12px 14px 16px;display:flex;flex-direction:column;gap:10px}
+
+.list-card{
+  background:#fff;border-radius:var(--r-lg);padding:13px 14px;
+  display:flex;align-items:center;gap:12px;
+  border:1.5px solid var(--border);cursor:pointer;transition:all .15s;
+  box-shadow:0 2px 8px rgba(45,53,97,0.04);
+}
+.list-card:active{transform:scale(0.99)}
+.list-card:hover{border-color:rgba(255,139,107,0.35);box-shadow:0 4px 16px rgba(255,139,107,0.12)}
+.lc-icon{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.lc-info{flex:1;min-width:0}
+.lc-name{font-size:13px;font-weight:800;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lc-sub{font-size:11px;color:var(--muted);font-weight:600;margin-top:2px}
+.lc-chips{display:flex;gap:4px;margin-top:7px;flex-wrap:wrap}
+.lc-chip{padding:2px 8px;border-radius:var(--r-pill);font-size:9px;font-weight:800}
+.lc-dist{font-size:11px;font-weight:800;color:var(--mint);flex-shrink:0;text-align:right}
+
+/* ════════════════════════════════
+   SCREEN 3 — DETAIL
+════════════════════════════════ */
+#detail-screen{background:var(--cream);overflow-y:auto}
+#detail-hero{
+  flex-shrink:0;
+  background:linear-gradient(160deg,#FFF5F0 0%,#FFF9F0 100%);
+  border-bottom:1.5px solid var(--border);
+  padding:14px 16px 16px;
+}
+
+/* mini map */
+#detail-mini-map{
+  height:165px;border-radius:var(--r-lg);overflow:hidden;
+  margin-bottom:14px;position:relative;
+  box-shadow:0 2px 12px rgba(45,53,97,0.1);
+}
+#mini-map-container{width:100%;height:165px}
+#back-btn{
+  position:absolute;top:10px;left:10px;z-index:10;
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(255,255,255,0.92);backdrop-filter:blur(8px);
+  border:1.5px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;color:var(--navy);cursor:pointer;
+  box-shadow:0 2px 8px rgba(45,53,97,0.12);transition:all .15s;
+}
+#back-btn:hover{background:#fff;border-color:var(--peach)}
+
+.d-type-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:4px 12px;border-radius:var(--r-pill);
+  font-size:11px;font-weight:800;margin-bottom:8px;
+}
+#detail-name{font-size:18px;font-weight:900;color:var(--navy);line-height:1.35;margin-bottom:7px}
+#detail-name span{font-size:13px;font-weight:700;color:var(--muted);display:block;margin-top:2px}
+#detail-meta{display:flex;flex-wrap:wrap;gap:8px;font-size:12px;font-weight:700;color:var(--muted)}
+.d-open{color:var(--mint);font-weight:800}
+.d-closed{color:var(--coral);font-weight:800}
+#detail-rating{display:flex;align-items:center;gap:6px;margin-top:9px;font-size:13px;font-weight:800;color:var(--sun)}
+
+#detail-body{padding:14px 16px 24px;display:flex;flex-direction:column;gap:14px}
+.sec-lbl{font-size:11px;font-weight:900;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:9px}
+
+/* facility grid */
+#fac-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.fac-cell{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:11px 3px 9px;border-radius:14px;
+  font-size:10px;font-weight:800;text-align:center;
+  border:1.5px solid;transition:all .15s;line-height:1.2;
+}
+.fac-cell.has{background:var(--mint-l);border-color:rgba(78,203,160,0.28);color:#1C7A52}
+.fac-cell.no{background:#F5F7FA;border-color:var(--border);color:var(--muted);opacity:.42}
+.fac-cell .fi{font-size:20px;display:block;margin-bottom:1px}
+.fac-note{font-size:8px;color:var(--peach-d);font-weight:700;margin-top:2px;line-height:1.2}
+
+/* promo */
+.promo-card{
+  background:linear-gradient(135deg,#FFF9E6,#FFF3D0);
+  border-radius:var(--r-md);padding:12px 14px;
+  display:flex;align-items:center;gap:10px;
+  border:1.5px solid rgba(255,209,102,0.38);cursor:pointer;transition:all .15s;
+}
+.promo-card:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(255,209,102,0.25)}
+.promo-icon{width:40px;height:40px;border-radius:12px;background:var(--sun);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.promo-t{font-size:12px;font-weight:800;color:#7A5800;margin-bottom:2px}
+.promo-s{font-size:10px;color:#A07800;font-weight:600}
+
+/* action buttons */
+.action-row{display:flex;gap:8px}
+.btn-outline{
+  flex:1;padding:12px;border-radius:var(--r-md);
+  font-size:12px;font-weight:800;
+  background:#fff;border:1.5px solid var(--border);color:var(--navy);
+  display:flex;align-items:center;justify-content:center;gap:5px;
+  cursor:pointer;transition:all .15s;
+}
+.btn-outline:hover{border-color:var(--sky);color:var(--sky)}
+.btn-primary{
+  flex:2;padding:13px;border-radius:var(--r-md);
+  font-size:13px;font-weight:900;
+  background:linear-gradient(135deg,var(--peach),#FFB347);
+  color:#fff;border:none;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  cursor:pointer;
+  box-shadow:0 4px 16px rgba(255,139,107,0.38);transition:all .15s;
+}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 22px rgba(255,139,107,0.5)}
+.btn-primary:active{transform:scale(0.98)}
+
+/* ════════════════════════════════
+   SCREEN 4 — CONTRIBUTE
+════════════════════════════════ */
+#contrib-screen{background:var(--cream);overflow-y:auto}
+#contrib-header{
+  background:linear-gradient(130deg,#FF8B6B 0%,#FFB347 100%);
+  padding:18px 16px 28px;position:relative;overflow:hidden;flex-shrink:0;
+  box-shadow:0 2px 12px rgba(255,139,107,0.25);
+}
+#contrib-header::before{content:'🧸';position:absolute;right:14px;top:10px;font-size:46px;opacity:.22;pointer-events:none}
+#contrib-header::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:22px;background:var(--cream);border-radius:22px 22px 0 0}
+#contrib-header h2{font-size:18px;font-weight:900;color:#fff;margin-bottom:4px;position:relative;z-index:1}
+#contrib-header p{font-size:11px;color:rgba(255,255,255,.88);font-weight:600;position:relative;z-index:1}
+#loc-pill{
+  display:inline-flex;align-items:center;gap:5px;margin-top:11px;
+  padding:5px 12px;border-radius:var(--r-pill);
+  background:rgba(255,255,255,.22);border:1.5px solid rgba(255,255,255,.38);
+  font-size:11px;color:#fff;font-weight:700;position:relative;z-index:1;
+}
+#contrib-body{padding:16px 16px 28px;display:flex;flex-direction:column;gap:14px}
+
+#toggle-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.toggle-item{
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  padding:14px 8px;border-radius:16px;
+  background:#fff;border:2px solid var(--border);
+  cursor:pointer;font-size:11px;font-weight:800;color:var(--muted);
+  transition:all .18s;user-select:none;
+}
+.toggle-item .ti{font-size:24px;display:block}
+.toggle-item.on{background:var(--peach-l);border-color:var(--peach);color:var(--peach-d)}
+.toggle-item:active{transform:scale(0.97)}
+
+#photo-zone{
+  border:2px dashed rgba(255,139,107,0.38);border-radius:16px;
+  padding:18px;display:flex;flex-direction:column;align-items:center;gap:7px;
+  background:var(--peach-l);cursor:pointer;transition:all .15s;
+}
+#photo-zone:hover{border-color:var(--peach);background:#FFE8E0}
+#photo-zone .pz-ico{font-size:28px}
+#photo-zone p{font-size:12px;font-weight:800;color:var(--peach-d);text-align:center}
+#photo-zone small{font-size:10px;color:var(--peach);font-weight:600}
+#photo-input{display:none}
+
+#points-card{
+  background:linear-gradient(135deg,#F3EFFE,#EDE5FF);
+  border-radius:var(--r-md);padding:12px 14px;
+  display:flex;align-items:center;gap:10px;
+  border:1.5px solid rgba(156,143,224,0.28);
+}
+.pc-icon{font-size:22px;flex-shrink:0}
+.pc-texts{flex:1}
+.pc-main{font-size:13px;font-weight:800;color:var(--navy)}
+.pc-sub{font-size:10px;color:var(--muted);font-weight:600;margin-top:2px}
+.pc-badge{
+  padding:5px 12px;border-radius:var(--r-pill);
+  background:var(--lav);font-size:13px;font-weight:900;color:#fff;
+  flex-shrink:0;box-shadow:0 2px 8px rgba(156,143,224,0.35);
+}
+#submit-btn{
+  padding:15px;border-radius:16px;width:100%;
+  font-size:14px;font-weight:900;font-family:inherit;
+  background:linear-gradient(135deg,var(--peach),#FFB347);color:#fff;border:none;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  cursor:pointer;box-shadow:0 4px 16px rgba(255,139,107,0.38);transition:all .15s;
+}
+#submit-btn:hover{transform:translateY(-1px);box-shadow:0 6px 22px rgba(255,139,107,0.5)}
+
+/* ══ EMPTY STATE ══ */
+.empty-state{padding:48px 20px;text-align:center;color:var(--muted);flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+.empty-state .ei{font-size:52px}
+.empty-state p{font-size:14px;font-weight:700}
+
+/* ══ RWD ══ */
+@media(min-width:481px){
+  body{background:#F0E8DF}
+  #app{border-left:1.5px solid rgba(255,139,107,0.12);border-right:1.5px solid rgba(255,139,107,0.12);box-shadow:0 0 60px rgba(45,53,97,0.10)}
+}
+@media(max-width:360px){
+  #fac-grid{grid-template-columns:repeat(3,1fr)}
+  .bn-txt p{display:none}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ══ BANNER ══ -->
+  <div id="banner">
+    <div class="bn-emoji">👶</div>
+    <div class="bn-txt">
+      <h1>親子友善地圖</h1>
+      <p>進門前，先查一查 ✨</p>
+    </div>
+    <div class="bn-badge">Beta</div>
+  </div>
+
+  <!-- ══ SCREEN 1: MAP ══ -->
+  <div id="map-screen" class="screen active">
+    <div id="search-bar">
+      <span class="s-ico">🔍</span>
+      <input id="search-input" type="text" placeholder="搜尋百貨、捷運站、公園...">
+      <button id="gps-btn" aria-label="定位">📍</button>
+    </div>
+    <div id="map"></div>
+    <button id="locate-btn" aria-label="定位到我的位置">📍</button>
+    <div id="nearest-toast" role="status"></div>
+    <div id="filter-bar">
+      <div id="filter-scroll">
+        <button class="f-chip active" data-key="all">✨ 全部</button>
+        <button class="f-chip" data-key="nursing">🍼 哺乳室</button>
+        <button class="f-chip" data-key="stroller">🛒 嬰兒車借</button>
+        <button class="f-chip" data-key="diaper">👶 尿布台</button>
+        <button class="f-chip" data-key="hotwater">💧 熱水</button>
+        <button class="f-chip" data-key="elevator">🛗 電梯</button>
+        <button class="f-chip" data-key="play">🎠 遊戲區</button>
+        <button class="f-chip" data-key="queue">🎫 親子通道</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SCREEN 2: LIST ══ -->
+  <div id="list-screen" class="screen">
+    <div id="list-header">
+      <h2>📋 所有地點</h2>
+      <div class="list-search-box">
+        <span>🔍</span>
+        <input id="list-input" type="text" placeholder="搜尋名稱、城市...">
+      </div>
+    </div>
+    <div id="list-body"></div>
+  </div>
+
+  <!-- ══ SCREEN 3: DETAIL ══ -->
+  <div id="detail-screen" class="screen">
+    <div id="detail-hero">
+      <div id="detail-mini-map">
+        <div id="mini-map-container"></div>
+        <button id="back-btn" aria-label="返回">←</button>
+      </div>
+      <div class="d-type-badge" id="d-badge"></div>
+      <div id="detail-name"></div>
+      <div id="detail-meta"></div>
+      <div id="detail-rating"></div>
+    </div>
+    <div id="detail-body">
+      <div>
+        <div class="sec-lbl">設施一覽</div>
+        <div id="fac-grid"></div>
+      </div>
+      <div class="promo-card">
+        <div class="promo-icon">🧴</div>
+        <div>
+          <div class="promo-t">需要嬰兒用品？點此查看附近優惠</div>
+          <div class="promo-s">媽媽專屬・限時折扣 →</div>
+        </div>
+      </div>
+      <div class="action-row">
+        <button class="btn-outline" id="website-btn">🌐 官網</button>
+        <button class="btn-primary" id="nav-btn">📍 開始導航</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SCREEN 4: CONTRIBUTE ══ -->
+  <div id="contrib-screen" class="screen">
+    <div id="contrib-header">
+      <h2>回報設施情報 🙌</h2>
+      <p>你的 10 秒，拯救千個崩潰的爸媽</p>
+      <div id="loc-pill">📍 定位中...</div>
+    </div>
+    <div id="contrib-body">
+      <div>
+        <div class="sec-lbl" style="color:var(--muted)">這裡有哪些神隊友設施？</div>
+        <div id="toggle-grid">
+          <div class="toggle-item" data-key="nursing">  <span class="ti">🍼</span>哺乳室</div>
+          <div class="toggle-item" data-key="stroller"> <span class="ti">🛒</span>嬰兒車借</div>
+          <div class="toggle-item" data-key="diaper">   <span class="ti">👶</span>尿布台</div>
+          <div class="toggle-item" data-key="hotwater"> <span class="ti">💧</span>熱水飲水</div>
+          <div class="toggle-item" data-key="elevator"> <span class="ti">🛗</span>電梯坡道</div>
+          <div class="toggle-item" data-key="play">     <span class="ti">🎠</span>兒童遊戲</div>
+          <div class="toggle-item" data-key="queue">    <span class="ti">🎫</span>親子通道</div>
+          <div class="toggle-item" data-key="family_restroom"><span class="ti">🚻</span>親子廁所</div>
+        </div>
+      </div>
+      <div id="photo-zone">
+        <div class="pz-ico">📷</div>
+        <p>拍張現場照，拯救其他崩潰的爸媽</p>
+        <small>點此拍照或從相簿選取</small>
+        <input id="photo-input" type="file" accept="image/*" capture="environment">
+      </div>
+      <div id="points-card">
+        <div class="pc-icon">🚀</div>
+        <div class="pc-texts">
+          <div class="pc-main">送出後獲得貢獻值</div>
+          <div class="pc-sub">累積 500 點 → 解鎖「熱心育兒大使」徽章</div>
+        </div>
+        <div class="pc-badge">+50</div>
+      </div>
+      <button id="submit-btn">🚀 送出情報，獲得 50 點！</button>
+    </div>
+  </div>
+
+  <!-- ══ TAB BAR ══ -->
+  <div id="tab-bar">
+    <button class="tab-btn active" data-screen="map-screen"><span class="ti">🗺️</span>地圖</button>
+    <button class="tab-btn" data-screen="list-screen"><span class="ti">📋</span>清單</button>
+    <button class="tab-btn" data-screen="contrib-screen"><span class="ti">➕</span>回報</button>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+'use strict';
+
+/* ══ DATA ══ */
+const LOCS = [
+  {id:'linkou-mitsui',name:'三井 LaLaport 林口',branch:'2F 哺乳室',type:'mall',city:'新北市',lat:25.07917,lng:121.38928,address:'新北市林口區文化三路一段356號',phone:'02-2601-0000',website:'https://www.mitsui-shopping-park.com/lalaport/linkou/',openHours:'11:00–21:30',rating:4.7,reviewCount:203,ind:{nursing:true,stroller:true,diaper:true,hotwater:true,elevator:true,play:true,queue:true,family_restroom:true},notes:{stroller:'免費借用',nursing:'全新設備寬敞',play:'大型戶外遊樂區'}},
+  {id:'taimall',name:'台茂購物中心',branch:'4F 親子室',type:'mall',city:'桃園市',lat:25.00820,lng:121.31850,address:'桃園市蘆竹區南崁路一段112號',phone:'03-212-9966',website:'https://www.taimall.com.tw',openHours:'11:00–21:30',rating:4.2,reviewCount:67,ind:{nursing:true,stroller:true,diaper:true,hotwater:true,elevator:null,play:null,queue:null,family_restroom:true},notes:{}},
+  {id:'gloria-outlets',name:'華泰名品城',branch:'服務中心',type:'mall',city:'桃園市',lat:25.06120,lng:121.22830,address:'桃園市大園區高鐵北路二段6號',phone:'03-286-3600',website:'https://www.gloriaoutlets.com',openHours:'11:00–21:00',rating:4.1,reviewCount:44,ind:{nursing:true,stroller:true,diaper:null,hotwater:null,elevator:null,play:true,queue:null,family_restroom:true},notes:{}},
+  {id:'taoyuan-mrt-a1',name:'機場捷運 A1 台北車站',branch:'B1 哺乳室',type:'transport',city:'台北市',lat:25.04776,lng:121.51684,address:'台北市中正區北平西路3號',phone:'03-286-8789',website:'https://www.tymetro.com.tw',openHours:'06:00–23:30',rating:4.1,reviewCount:34,ind:{nursing:true,stroller:null,diaper:true,hotwater:null,elevator:true,play:null,queue:true,family_restroom:true},notes:{}},
+  {id:'taoyuan-mrt-a8',name:'機場捷運 A8 長庚醫院站',branch:'站內哺乳室',type:'transport',city:'新北市',lat:25.06812,lng:121.35598,address:'新北市林口區長庚路一段',phone:'03-286-8789',website:'https://www.tymetro.com.tw',openHours:'06:00–23:30',rating:4.0,reviewCount:23,ind:{nursing:true,stroller:null,diaper:true,hotwater:null,elevator:true,play:null,queue:null,family_restroom:true},notes:{}},
+  {id:'taoyuan-mrt-a9',name:'機場捷運 A9 林口站',branch:'站內哺乳室',type:'transport',city:'新北市',lat:25.07805,lng:121.37333,address:'新北市林口區文化三路一段',phone:'03-286-8789',website:'https://www.tymetro.com.tw',openHours:'06:00–23:30',rating:3.9,reviewCount:18,ind:{nursing:true,stroller:null,diaper:true,hotwater:null,elevator:true,play:null,queue:null,family_restroom:true},notes:{}},
+  {id:'taoyuan-mrt-a12',name:'機場捷運 A12 第一航廈站',branch:'入境層哺乳室',type:'transport',city:'桃園市',lat:25.07723,lng:121.23243,address:'桃園市大園區航站南路9號',phone:'03-286-8789',website:'https://www.tymetro.com.tw',openHours:'05:57–23:30',rating:4.3,reviewCount:45,ind:{nursing:true,stroller:true,diaper:true,hotwater:true,elevator:true,play:null,queue:true,family_restroom:true},notes:{nursing:'多間且設備新穎'}},
+  {id:'taoyuan-mrt-a13',name:'機場捷運 A13 第二航廈站',branch:'入境層哺乳室',type:'transport',city:'桃園市',lat:25.07680,lng:121.24243,address:'桃園市大園區航站南路9號',phone:'03-286-8789',website:'https://www.tymetro.com.tw',openHours:'05:57–23:30',rating:4.4,reviewCount:52,ind:{nursing:true,stroller:true,diaper:true,hotwater:true,elevator:true,play:null,queue:true,family_restroom:true},notes:{}},
+  {id:'taipei-101',name:'台北 101 購物中心',branch:'B1 及 4F 哺乳室',type:'mall',city:'台北市',lat:25.03375,lng:121.56470,address:'台北市信義區市府路45號',phone:'02-8101-7777',website:'https://www.taipei-101.com.tw',openHours:'11:00–21:30',rating:4.6,reviewCount:134,ind:{nursing:true,stroller:true,diaper:true,hotwater:true,elevator:true,play:null,queue:true,family_restroom:true},notes:{nursing:'B1及4F各一間'}},
+  {id:'shin-kong-a8',name:'新光三越信義 A8',branch:'5F 親子哺乳室',type:'mall',city:'台北市',lat:25.03586,lng:121.56696,address:'台北市信義區松高路19號',phone:'02-2723-8900',website:'https://www.skm.com.tw',openHours:'11:00–21:30',rating:4.5,reviewCount:89,ind:{nursing:true,stroller:true,diaper:true,hotwater:true,elevator:true,play:true,queue:true,family_restroom:true},notes:{nursing:'獨立隔間 x3',stroller:'押金NT$500',play:'3F兒童樂園'}},
+  {id:'sogo-zhongxiao',name:'SOGO 忠孝館',branch:'5F 哺乳室',type:'mall',city:'台北市',lat:25.04173,lng:121.54691,address:'台北市大安區忠孝東路四段45號',phone:'02-2776-5555',website:'https://www.sogo.com.tw',openHours:'11:00–21:30',rating:4.4,reviewCount:112,ind:{nursing:true,stroller:true,diaper:true,hotwater:true,elevator:true,play:true,queue:true,family_restroom:true},notes:{nursing:'獨立隔間+沙發',stroller:'免費借用'}},
+  {id:'breeze-nanshan',name:'微風南山',branch:'5F 育嬰室',type:'mall',city:'台北市',lat:25.03480,lng:121.56530,address:'台北市信義區松智路1號',phone:'02-6600-8888',website:'https://www.breezecenter.com',openHours:'11:00–21:30',rating:4.3,reviewCount:71,ind:{nursing:true,stroller:null,diaper:true,hotwater:true,elevator:true,play:null,queue:null,family_restroom:true},notes:{}},
+  {id:'qsquare',name:'京站時尚廣場',branch:'3F 哺乳室',type:'mall',city:'台北市',lat:25.04890,lng:121.51760,address:'台北市大同區承德路一段1號',phone:'02-7722-9999',website:'https://www.qsquare.com.tw',openHours:'11:00–21:30',rating:4.0,reviewCount:38,ind:{nursing:true,stroller:null,diaper:true,hotwater:true,elevator:true,play:null,queue:null,family_restroom:true},notes:{}},
+  {id:'mrt-taipei-main',name:'台北捷運台北車站',branch:'B1 哺乳室',type:'transport',city:'台北市',lat:25.04750,lng:121.51710,address:'台北市中正區北平西路3號',phone:'02-2181-2345',website:'https://www.metro.taipei',openHours:'06:00–24:00',rating:3.8,reviewCount:72,ind:{nursing:true,stroller:null,diaper:true,hotwater:null,elevator:true,play:null,queue:true,family_restroom:true},notes:{}},
+  {id:'mega-city',name:'板橋大遠百 Mega City',branch:'9F 親子哺乳室',type:'mall',city:'新北市',lat:25.01439,lng:121.46355,address:'新北市板橋區新站路28號',phone:'02-8953-1111',website:'https://www.feds.com.tw',openHours:'11:00–21:30',rating:4.6,reviewCount:156,ind:{nursing:true,stroller:true,diaper:true,hotwater:true,elevator:true,play:true,queue:true,family_restroom:true},notes:{nursing:'5間獨立隔間',play:'大型兒童遊樂場'}},
+  {id:'big-city',name:'新竹巨城 Big City',branch:'5F 哺乳室',type:'mall',city:'新竹市',lat:24.80360,lng:120.97180,address:'新竹市東區中央路229號',phone:'03-533-2123',website:'https://www.feds.com.tw',openHours:'11:00–21:30',rating:4.3,reviewCount:88,ind:{nursing:true,stroller:true,diaper:true,hotwater:true,elevator:true,play:true,queue:null,family_restroom:true},notes:{}},
+  {id:'taichung-tiger-city',name:'台中老虎城',branch:'4F 哺乳室',type:'mall',city:'台中市',lat:24.16380,lng:120.64720,address:'台中市西屯區河南路二段257號',phone:'04-2251-8899',website:'https://www.tigercity.com.tw',openHours:'11:00–21:30',rating:4.2,reviewCount:55,ind:{nursing:true,stroller:true,diaper:true,hotwater:true,elevator:true,play:true,queue:null,family_restroom:true},notes:{}},
+  {id:'taichung-top-city',name:'台中大遠百 Top City',branch:'3F 親子室',type:'mall',city:'台中市',lat:24.17190,lng:120.65440,address:'台中市西屯區台灣大道三段301號',phone:'04-2255-6789',website:'https://www.feds.com.tw',openHours:'11:00–21:30',rating:4.3,reviewCount:67,ind:{nursing:true,stroller:true,diaper:true,hotwater:true,elevator:true,play:true,queue:true,family_restroom:true},notes:{stroller:'免費借用'}},
+  {id:'tainan-mitsukoshi',name:'新光三越台南新天地',branch:'B1 哺乳室',type:'mall',city:'台南市',lat:22.99280,lng:120.21050,address:'台南市中西區西門路一段658號',phone:'06-303-0111',website:'https://www.skm.com.tw',openHours:'11:00–21:30',rating:4.4,reviewCount:89,ind:{nursing:true,stroller:true,diaper:true,hotwater:true,elevator:true,play:true,queue:true,family_restroom:true},notes:{}},
+  {id:'kaohsiung-dream-mall',name:'高雄夢時代購物中心',branch:'5F 親子哺乳室',type:'mall',city:'高雄市',lat:22.59870,lng:120.30140,address:'高雄市前鎮區中華五路789號',phone:'07-973-3888',website:'https://www.dream-mall.com.tw',openHours:'11:00–22:00',rating:4.5,reviewCount:124,ind:{nursing:true,stroller:true,diaper:true,hotwater:true,elevator:true,play:true,queue:true,family_restroom:true},notes:{nursing:'3間獨立隔間',play:'大型室內遊樂場'}},
+  {id:'kaohsiung-hanshin',name:'高雄漢神百貨',branch:'9F 哺乳室',type:'mall',city:'高雄市',lat:22.61560,lng:120.29870,address:'高雄市前金區成功一路266號',phone:'07-216-5888',website:'https://www.hanshin.com.tw',openHours:'11:00–21:30',rating:4.2,reviewCount:38,ind:{nursing:true,stroller:null,diaper:true,hotwater:true,elevator:true,play:null,queue:null,family_restroom:true},notes:{}},
+  {id:'daan-park',name:'大安森林公園',branch:'東側服務站',type:'park',city:'台北市',lat:25.02972,lng:121.53490,address:'台北市大安區新生南路二段1號',phone:'02-2700-3830',website:'https://www.daan-park.taipei.gov.tw',openHours:'全天開放',rating:3.9,reviewCount:28,ind:{nursing:true,stroller:null,diaper:true,hotwater:null,elevator:null,play:true,queue:null,family_restroom:true},notes:{play:'大型兒童遊樂設施'}},
+  {id:'taipei-zoo',name:'台北市立動物園',branch:'各服務站',type:'park',city:'台北市',lat:24.99927,lng:121.58060,address:'台北市文山區新光路二段30號',phone:'02-2938-2300',website:'https://www.zoo.taipei.gov.tw',openHours:'09:00–17:00',rating:4.5,reviewCount:187,ind:{nursing:true,stroller:true,diaper:true,hotwater:true,elevator:null,play:true,queue:null,family_restroom:true},notes:{nursing:'多處設置',stroller:'NT$100/次',play:'兒童動物區'}},
+  {id:'kids-land-linkou',name:'Kids Land 親子樂園餐廳',branch:'全館親子友善',type:'restaurant',city:'新北市',lat:25.07650,lng:121.38740,address:'新北市林口區文化三路一段392號',openHours:'10:00–21:00',rating:4.7,reviewCount:198,ind:{nursing:true,stroller:null,diaper:true,hotwater:true,elevator:null,play:true,queue:null,family_restroom:true},notes:{nursing:'獨立哺乳室',play:'超大球池+溜滑梯'}},
+];
+
+const TYPE_CFG = {
+  mall:       {label:'百貨商場', color:'#7C6FFF', bg:'#EDE9FF', emoji:'🏬'},
+  transport:  {label:'交通樞紐', color:'#5BB8F5', bg:'#E8F5FF', emoji:'🚉'},
+  hospital:   {label:'醫療院所', color:'#4ECBA0', bg:'#E8F8F2', emoji:'🏥'},
+  park:       {label:'公園景點', color:'#F0A500', bg:'#FFF4D6', emoji:'🌳'},
+  restaurant: {label:'親子餐廳', color:'#FF8B6B', bg:'#FFF0EB', emoji:'🍽️'},
+};
+const FAC_CFG = [
+  {key:'nursing',       emoji:'🍼', label:'哺乳室'},
+  {key:'stroller',      emoji:'🛒', label:'嬰兒車借'},
+  {key:'diaper',        emoji:'👶', label:'尿布台'},
+  {key:'hotwater',      emoji:'💧', label:'熱水飲水'},
+  {key:'elevator',      emoji:'🛗', label:'電梯坡道'},
+  {key:'play',          emoji:'🎠', label:'兒童遊戲'},
+  {key:'queue',         emoji:'🎫', label:'親子通道'},
+  {key:'family_restroom',emoji:'🚻',label:'親子廁所'},
+];
+
+/* ══ STATE ══ */
+let uLat = null, uLng = null;
+let activeFilter = 'all';
+let miniMap = null;
+let mkrs = {};
+
+/* ══ UTILS ══ */
+function hav(a,b,c,d){
+  const R=6371e3,dL=(c-a)*Math.PI/180,dG=(d-b)*Math.PI/180;
+  const x=Math.sin(dL/2)**2+Math.cos(a*Math.PI/180)*Math.cos(c*Math.PI/180)*Math.sin(dG/2)**2;
+  return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));
+}
+function fmtD(m){
+  if(m==null)return'';
+  if(m<800)return`步行${Math.round(m/80)}分`;
+  return`${(m/1000).toFixed(1)}km`;
+}
+function isOpen(h){
+  if(!h||h==='全天開放'||h==='24小時')return true;
+  const parts=h.split('–');if(parts.length<2)return true;
+  const toMin=t=>{const[a,b]=(t||'').split(':').map(Number);return(a||0)*60+(b||0)};
+  const s=toMin(parts[0]),e=toMin(parts[1]);
+  const now=new Date,c=now.getHours()*60+now.getMinutes();
+  return c>=s&&c<=e;
+}
+function mkIcon(loc, selected=false){
+  const t=TYPE_CFG[loc.type]||TYPE_CFG.mall;
+  const size=selected?52:42;
+  const glow=selected?`box-shadow:0 0 0 3px rgba(255,255,255,0.5),0 4px 16px ${t.color}66;`:'';
+  const scale=selected?'transform:rotate(-45deg) scale(1.18);':'transform:rotate(-45deg);';
+  return L.divIcon({
+    className:'',
+    iconSize:[size,size],iconAnchor:[size/2,size],popupAnchor:[0,-size],
+    html:`<div style="width:${size}px;height:${size}px;border-radius:50% 50% 50% 4px;${scale}background:${t.color};border:2.5px solid #fff;display:flex;align-items:center;justify-content:center;${glow}transition:all .15s"><span style="transform:rotate(45deg);font-size:${selected?20:16}px;display:block;line-height:1">${t.emoji}</span></div>`
+  });
+}
+
+/* ══ MAP ══ */
+const mainMap = L.map('map',{zoomControl:false,attributionControl:false}).setView([25.04,121.51],11);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{maxZoom:19}).addTo(mainMap);
+L.control.zoom({position:'bottomright'}).addTo(mainMap);
+
+function renderMarkers(){
+  Object.values(mkrs).forEach(m=>mainMap.removeLayer(m));
+  mkrs={};
+  LOCS.forEach(loc=>{
+    if(activeFilter!=='all'&&!loc.ind[activeFilter])return;
+    const m=L.marker([loc.lat,loc.lng],{icon:mkIcon(loc)}).addTo(mainMap);
+    m.on('click',()=>openDetail(loc));
+    mkrs[loc.id]=m;
+  });
+}
+renderMarkers();
+
+/* ══ GPS ══ */
+let uMkr=null;
+function locate(cb){
+  if(!navigator.geolocation){cb&&cb(null);return;}
+  navigator.geolocation.getCurrentPosition(pos=>{
+    uLat=pos.coords.latitude; uLng=pos.coords.longitude;
+    if(uMkr)mainMap.removeLayer(uMkr);
+    uMkr=L.circleMarker([uLat,uLng],{radius:10,color:'#fff',weight:3,fillColor:'#FF8B6B',fillOpacity:1}).addTo(mainMap);
+    mainMap.flyTo([uLat,uLng],14,{duration:1.2});
+    // nearest toast
+    let near=null,minD=Infinity;
+    LOCS.forEach(l=>{const d=hav(uLat,uLng,l.lat,l.lng);if(d<minD){minD=d;near=l;}});
+    if(near){
+      const t=document.getElementById('nearest-toast');
+      t.textContent=`📍 距你最近：${near.name}，${fmtD(minD)}`;
+      t.style.display='block';
+      setTimeout(()=>t.style.display='none',4000);
+    }
+    document.getElementById('search-input').placeholder=`附近 (${uLat.toFixed(3)},${uLng.toFixed(3)})`;
+    document.getElementById('loc-pill').textContent='📍 已自動定位';
+    cb&&cb({lat:uLat,lng:uLng});
+  },()=>{cb&&cb(null);},{enableHighAccuracy:true,timeout:8000});
+}
+document.getElementById('gps-btn').onclick=()=>locate(null);
+document.getElementById('locate-btn').onclick=()=>locate(null);
+locate(null);
+
+/* ══ FILTERS ══ */
+document.querySelectorAll('.f-chip').forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll('.f-chip').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    activeFilter=b.dataset.key;
+    renderMarkers();
+  };
+});
+
+/* ══ MAP SEARCH ══ */
+document.getElementById('search-input').oninput=e=>{
+  const q=e.target.value.trim().toLowerCase();
+  if(!q){renderMarkers();return;}
+  Object.values(mkrs).forEach(m=>mainMap.removeLayer(m));mkrs={};
+  LOCS.filter(l=>l.name.toLowerCase().includes(q)||l.city.includes(q)||(l.address||'').includes(q))
+    .forEach(loc=>{
+      const m=L.marker([loc.lat,loc.lng],{icon:mkIcon(loc)}).addTo(mainMap);
+      m.on('click',()=>openDetail(loc));mkrs[loc.id]=m;
+    });
+};
+
+/* ══ DETAIL ══ */
+function openDetail(loc){
+  // update marker styles
+  Object.entries(mkrs).forEach(([id,m])=>{
+    const l=LOCS.find(x=>x.id===id);
+    if(l)m.setIcon(mkIcon(l,id===loc.id));
+  });
+
+  const t=TYPE_CFG[loc.type]||TYPE_CFG.mall;
+  // badge
+  const badge=document.getElementById('d-badge');
+  badge.textContent=`${t.emoji} ${t.label}`;
+  badge.style.cssText=`display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:999px;font-size:11px;font-weight:800;margin-bottom:8px;background:${t.bg};color:${t.color}`;
+  // name
+  document.getElementById('detail-name').innerHTML=`${loc.name}<span>${loc.branch}</span>`;
+  // meta
+  const dist=uLat?fmtD(hav(uLat,uLng,loc.lat,loc.lng)):'';
+  const open=isOpen(loc.openHours);
+  document.getElementById('detail-meta').innerHTML=
+    `${dist?`<span>🚶 ${dist}</span>`:''}<span class="${open?'d-open':'d-closed'}">${open?'● 營業中':'● 已打烊'}</span><span>${loc.openHours||''}</span>`;
+  // rating
+  const stars='★'.repeat(Math.round(loc.rating))+'☆'.repeat(5-Math.round(loc.rating));
+  document.getElementById('detail-rating').innerHTML=
+    `<span>${stars}</span><span style="color:var(--navy)">${loc.rating}</span><span style="color:var(--muted);font-size:11px;font-weight:600">(${loc.reviewCount} 則評價)</span>`;
+  // facilities
+  document.getElementById('fac-grid').innerHTML=FAC_CFG.map(f=>{
+    const has=loc.ind[f.key]===true;
+    const note=(loc.notes||{})[f.key]||'';
+    return`<div class="fac-cell ${has?'has':'no'}"><span class="fi">${f.emoji}</span>${f.label}${note?`<div class="fac-note">${note}</div>`:''}</div>`;
+  }).join('');
+  // buttons
+  const wb=document.getElementById('website-btn');
+  wb.style.display=loc.website?'flex':'none';
+  wb.onclick=()=>window.open(loc.website,'_blank');
+  document.getElementById('nav-btn').onclick=()=>
+    window.open(`https://www.google.com/maps/dir/?api=1&destination=${loc.lat},${loc.lng}&travelmode=walking`,'_blank');
+
+  // mini map — destroy old first
+  if(miniMap){miniMap.remove();miniMap=null;}
+  const mc=document.getElementById('mini-map-container');
+  mc.innerHTML='';
+  const div=document.createElement('div');
+  div.style.cssText='width:100%;height:165px';
+  mc.appendChild(div);
+  miniMap=L.map(div,{zoomControl:false,attributionControl:false,dragging:false,scrollWheelZoom:false,doubleClickZoom:false}).setView([loc.lat,loc.lng],16);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png').addTo(miniMap);
+  L.marker([loc.lat,loc.lng],{icon:mkIcon(loc,true)}).addTo(miniMap);
+
+  switchScreen('detail-screen');
+}
+
+document.getElementById('back-btn').onclick=()=>{
+  if(miniMap){miniMap.remove();miniMap=null;}
+  document.getElementById('mini-map-container').innerHTML='';
+  renderMarkers();
+  switchScreen('map-screen');
+};
+
+/* ══ LIST ══ */
+function renderList(query=''){
+  const body=document.getElementById('list-body');
+  let locs=[...LOCS];
+  const q=query.trim().toLowerCase();
+  if(q)locs=locs.filter(l=>l.name.toLowerCase().includes(q)||l.city.includes(q));
+  if(uLat&&uLng)locs.sort((a,b)=>hav(uLat,uLng,a.lat,a.lng)-hav(uLat,uLng,b.lat,b.lng));
+  if(!locs.length){
+    body.innerHTML='<div class="empty-state"><div class="ei">🔍</div><p>找不到相關地點</p></div>';
+    return;
+  }
+  body.innerHTML=locs.map(loc=>{
+    const t=TYPE_CFG[loc.type]||TYPE_CFG.mall;
+    const d=uLat?fmtD(hav(uLat,uLng,loc.lat,loc.lng)):'';
+    const chips=FAC_CFG.filter(f=>loc.ind[f.key]===true).slice(0,4)
+      .map(f=>`<span class="lc-chip" style="background:${t.bg};color:${t.color}">${f.emoji}${f.label}</span>`).join('');
+    return`<div class="list-card" onclick="openDetail(LOCS.find(x=>x.id==='${loc.id}'))">
+      <div class="lc-icon" style="background:${t.bg}">${t.emoji}</div>
+      <div class="lc-info">
+        <div class="lc-name">${loc.name}</div>
+        <div class="lc-sub">${loc.city}・${loc.branch}</div>
+        <div class="lc-chips">${chips}</div>
+      </div>
+      ${d?`<div class="lc-dist">${d}</div>`:''}
+    </div>`;
+  }).join('');
+}
+document.getElementById('list-input').oninput=e=>renderList(e.target.value);
+
+/* ══ CONTRIBUTE ══ */
+document.querySelectorAll('.toggle-item').forEach(el=>el.onclick=()=>el.classList.toggle('on'));
+document.getElementById('photo-zone').onclick=()=>document.getElementById('photo-input').click();
+document.getElementById('submit-btn').onclick=()=>{
+  const sel=[...document.querySelectorAll('.toggle-item.on')].map(el=>el.dataset.key);
+  alert(`✅ 感謝你的回報！\n設施：${sel.join('、')||'未選擇'}\n已獲得 +50 貢獻點數 🎉`);
+  document.querySelectorAll('.toggle-item').forEach(el=>el.classList.remove('on'));
+};
+
+/* ══ NAVIGATION ══ */
+function switchScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.screen===id));
+  if(id==='list-screen')renderList();
+  if(id==='map-screen')setTimeout(()=>mainMap.invalidateSize(),120);
+}
+document.querySelectorAll('.tab-btn').forEach(b=>b.onclick=()=>switchScreen(b.dataset.screen));
+</script>
+</body>
 </html>
