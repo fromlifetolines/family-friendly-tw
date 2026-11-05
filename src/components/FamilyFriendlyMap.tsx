@@ -74,8 +74,11 @@ export default function FamilyFriendlyMap({
         className="leaflet-map"
       >
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='地圖圖資 &copy; <a href="https://maps.nlsc.gov.tw/">內政部國土測繪中心</a>'
+          url="https://wmts.nlsc.gov.tw/wmts/EMAP/default/GoogleMapsCompatible/{z}/{y}/{x}"
+          maxNativeZoom={18}
+          maxZoom={18}
+          crossOrigin
         />
         <MapController active={active} selectedLocation={selectedLocation} userPosition={userPosition} />
         {locations.filter((location) => Number.isFinite(location.lat) && Number.isFinite(location.lng)).map((location) => (

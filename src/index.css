@@ -1,9 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap');
 
 :root {
-  font-family: 'DM Sans', 'Noto Sans TC', sans-serif;
-  color: #27394b;
-  background: #fbf8f4;
+  font-family: 'Manrope', 'Noto Sans TC', sans-serif;
+  color: #204e4a;
+  background: #fff;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -17,7 +17,7 @@ body { min-width: 320px; min-height: 100vh; margin: 0; }
 button, input, select { font: inherit; }
 button { cursor: pointer; }
 button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible {
-  outline: 3px solid rgba(78, 132, 177, .45);
+  outline: 3px solid rgba(32, 78, 74, .35);
   outline-offset: 2px;
 }
 #root { min-height: 100vh; }
