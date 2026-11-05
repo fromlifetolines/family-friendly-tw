@@ -1,83 +1,28 @@
-# 部署指南
+# GitHub Pages 部署
 
-## 已完成的設定 ✅
+專案使用 GitHub Actions 建置 Vite 網站，並將 `dist/` 發佈至 `gh-pages` 分支。
 
-1. ✅ Vite 配置已更新（base: '/family-friendly-tw/'）
-2. ✅ GitHub Actions workflow 已建立（.github/workflows/deploy.yml）
-3. ✅ README.md 已更新
-4. ✅ Git commit 已完成
+## GitHub 設定
 
-## 接下來的步驟
+1. 開啟 repository 的 **Settings → Pages**。
+2. 在 **Build and deployment** 選擇 **Deploy from a branch**。
+3. 選擇 `gh-pages` 分支和 `/ (root)` 資料夾並儲存。
+4. 確認 repository 為公開，或方案支援私有 repository 的 Pages。
 
-### 步驟 1：在 GitHub 建立 Repository
+## 自動部署
 
-1. 前往：https://github.com/new
-2. Repository name：`family-friendly-tw`
-3. Description：親子友善台灣 - 展示台灣親子友善場所的互動式網站
-4. 選擇 **Public**
-5. **不要**勾選「Initialize this repository with a README」
-6. 點擊「Create repository」
+推送至 `main` 分支或手動執行 Actions 中的 **Deploy to GitHub Pages** workflow 時，流程會安裝相依套件、執行 `npm run build`，並發佈 `dist/`。部署網址：
 
-### 步驟 2：推送程式碼到 GitHub
+<https://fromlifetolines.github.io/family-friendly-tw/>
 
-在 Terminal 中執行以下指令：
+網站路徑由 `vite.config.ts` 的 `base` 設定；若 repository 名稱變更，請一併調整該值。
+
+## 本機驗證
 
 ```bash
-cd /Users/howard/Desktop/family-friendly-tw
-
-# 設定遠端 repository
-git remote add origin https://github.com/fromlifetolines/family-friendly-tw.git
-
-# 確認分支名稱為 main
-git branch -M main
-
-# 推送到 GitHub
-git push -u origin main
+npm ci
+npm run build
+npm run preview
 ```
 
-### 步驟 3：啟用 GitHub Pages
-
-1. 進入您的 repository：https://github.com/fromlifetolines/family-friendly-tw
-2. 點擊「Settings」（設定）
-3. 在左側選單找到「Pages」
-4. 在「Source」選擇：**GitHub Actions**（不是 Deploy from a branch）
-5. 儲存設定
-
-### 步驟 4：等待部署完成
-
-1. 推送程式碼後，GitHub Actions 會自動執行
-2. 前往「Actions」標籤頁查看部署進度
-3. 等待綠色勾勾出現（通常需要 1-2 分鐘）
-4. 部署完成後，您的網站將可在以下網址訪問：
-
-   **https://fromlifetolines.github.io/family-friendly-tw/**
-
-## 後續更新
-
-每次您修改程式碼並推送到 main 分支時：
-
-```bash
-git add .
-git commit -m "更新說明"
-git push
-```
-
-GitHub Actions 會自動重新建置和部署您的網站！
-
-## 疑難排解
-
-### 如果 GitHub Pages 沒有出現
-
-1. 確認 repository 是 Public
-2. 確認 Settings > Pages > Source 選擇了「GitHub Actions」
-3. 檢查 Actions 標籤頁，確認 workflow 成功執行
-
-### 如果網站顯示 404
-
-1. 等待幾分鐘，GitHub Pages 需要時間部署
-2. 確認 vite.config.ts 中的 base 路徑正確
-3. 清除瀏覽器快取後重新整理
-
----
-
-需要協助？請隨時詢問！
+預覽時請使用含 `/family-friendly-tw/` 的路徑，確認 GitHub Pages 子路徑上的資源可載入。

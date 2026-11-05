@@ -1,151 +1,27 @@
-/* ── Liquid Tech Glass Design System ── */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap');
+
 :root {
-  /* NEW: Baby Room溫暖親子配色 */
-  --brand-warm-pink:    #F5A5A5;  /* 主色 - 親子溫暖感 */
-  --brand-soft-orange:  #FFD5A3;  /* 輔色 - 活力 */
-  --brand-sky-blue:     #B4D9FF;  /* 強調 - 信任 */
-  --brand-light-green:  #C8E6C9;  /* 成功/確認 */
-  --brand-dark-text:    #2C3E50;  /* 文字 */
-  
-  /* Legacy Colors (保留相容性) */
-  --liquid-deep:     #050814;
-  --liquid-surface:  #0A1126;
-  --liquid-card:     rgba(15, 25, 55, 0.45);
-  --liquid-text:     #F0F4FF;
-  --liquid-muted:    rgba(240, 244, 255, 0.45);
-  --liquid-blue:     #007AFF;
-  --liquid-cyan:     #00F2FF;
-  --liquid-green:    #00FF85;
-  --liquid-amber:    #FFD600;
-  --liquid-coral:    #FF2D55;
-  --liquid-purple:   #BF5AF2;
-
-  /* Updated Primary Colors to Baby Room Theme */
-  --primary-color:   var(--brand-warm-pink);
-  --secondary-color: var(--brand-soft-orange);
-  --accent-color:    var(--brand-sky-blue);
-  --success-color:   var(--brand-light-green);
-  --background:      #FFFFFF;
-  --text-primary:    var(--brand-dark-text);
-  --text-secondary:  rgba(44, 62, 80, 0.6);
-  --border-color:    #E8ECEF;
-
-  /* Liquid Glass tokens - Higher transparency & Stronger blur */
-  --glass-bg:        rgba(10, 17, 38, 0.45);
-  --glass-bg-hover:  rgba(20, 34, 76, 0.6);
-  --glass-border:    rgba(255, 255, 255, 0.15);
-  --glass-highlight: inset 0 1px 1px rgba(255, 255, 255, 0.2);
-  --glass-blur:      blur(30px) saturate(200%);
-  --glass-shadow:    0 12px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  --glass-hover:     0 20px 60px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-
-  /* Radius */
-  --r-pill: 999px;
-  --r-card: 24px;
-  --r-btn:  16px;
-
-  /* Liquid easing — Fluid & Springy */
-  --ease-liquid: cubic-bezier(0.16, 1, 0.3, 1);
-
-  /* Legacy aliases */
-  --brand-primary:        var(--liquid-blue);
-  --brand-primary-light:  rgba(0, 122, 255, 0.15);
-  --brand-secondary:      var(--liquid-cyan);
-  --brand-accent:         var(--liquid-coral);
-  --brand-navy:           var(--liquid-text);
-  --brand-bg:             var(--liquid-surface);
-  --brand-muted:          var(--liquid-muted);
-  --shadow-soft:          0 8px 24px rgba(0,0,0,0.4);
-  --shadow-float:         0 16px 48px rgba(0,0,0,0.5);
-}
-
-/* ── Global Reset ── */
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  -webkit-tap-highlight-color: transparent;
-}
-
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Nunito', 'Noto Sans TC', sans-serif;
-  background-color: var(--liquid-deep);
-  color: var(--liquid-text);
+  font-family: 'DM Sans', 'Noto Sans TC', sans-serif;
+  color: #27394b;
+  background: #fbf8f4;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
-  max-width: 100vw;
+  font-optical-sizing: auto;
 }
 
-#root {
-  width: 100%;
-  max-width: 100%;
-  margin: 0 auto;
-  min-height: 100vh;
-  background-color: var(--liquid-deep);
-  position: relative;
-  overflow-x: hidden;
+* { box-sizing: border-box; }
+html { min-width: 320px; min-height: 100%; }
+body { min-width: 320px; min-height: 100vh; margin: 0; }
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 3px solid rgba(78, 132, 177, .45);
+  outline-offset: 2px;
 }
+#root { min-height: 100vh; }
 
-/* ── Global RWD Safety Net ── */
-img, video, svg, canvas {
-  max-width: 100%;
-  height: auto;
-  display: block;
-}
-
-img { object-fit: cover; }
-
-button {
-  font-family: inherit;
-  cursor: pointer;
-  border: none;
-  background: none;
-  outline: none;
-}
-
-input, textarea {
-  font-family: inherit;
-  outline: none;
-}
-
-.no-scrollbar::-webkit-scrollbar { display: none; }
-.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-/* ── Responsive Container Utilities ── */
-.container {
-  width: 100%;
-  max-width: 100%;
-  margin: 0 auto;
-  padding: 0 16px;
-}
-
-@media (max-width: 768px) {
-  .container {
-    padding: 0 12px;
-  }
-}
-
-@media (max-width: 575px) {
-  .container {
-    padding: 0 8px;
-  }
-}
-
-/* ── Touch-friendly tap targets ── */
-button, a, [role="button"] {
-  min-height: 44px;
-  min-width: 44px;
-}
-
-@media (max-width: 575px) {
-  button, a, [role="button"] {
-    min-height: 48px;
-    min-width: 48px;
-  }
-}
-
-/* ── Prevent layout shift on scrollbar ── */
-html {
-  overflow-y: scroll;
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
 }
